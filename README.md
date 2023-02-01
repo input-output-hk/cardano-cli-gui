@@ -1,5 +1,7 @@
 # cardano-cli-gui
-Simple GUI for the cardano client tool. **IMPORTANT: Project is under construction.**
+Simple GUI for the cardano client tool.
+
+**IMPORTANT:** To use the GUI a cardano node has to be running and synced to the network.
 
 The GUI functionality is seperated in 4 tabs and covers following things:
 
