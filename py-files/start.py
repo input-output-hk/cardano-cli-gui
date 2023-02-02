@@ -14,7 +14,7 @@ class Start(QWidget):
         picture_1_1.setScaledContents(True)
 
         # Widgets for Status tab 
-        label_3_0 = QLabel("Folder path:")
+        label_3_0 = QLabel("Input folder path:")
         input_4_0 = QLineEdit()
         button_4_1 = QPushButton("Set")
         label_6_0 = QLabel("Current folder path set to:")
