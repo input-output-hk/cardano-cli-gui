@@ -15,16 +15,16 @@ class Transactions(QWidget):
         picture_0_1.setScaledContents(True)
 
         # Widgets for payment address section 
-        self.label_1_0 = QLabel("Payment address name:")
+        self.label_1_0 = QLabel("Type in payment address name:")
         self.input_2_0 = QLineEdit()
         self.button_2_1 = QPushButton("Set")
         
-        self.label_4_0 = QLabel("Payment address funds:")
+        self.label_4_0 = QLabel("Funds for above payment address:")
         self.input_5_0 = QLineEdit()
         self.button_5_1 = QPushButton("Querry\nfunds")
 
         # Widgets for sending funds section 
-        self.label_8_0 = QLabel("Send funds:")
+        self.label_8_0 = QLabel("Send follwing amount:")
         self.input_9_0 = QLineEdit()
         self.radioButton_9_1 = QRadioButton("Ada")
         self.label_10_0 = QLabel("NOTE: Seperat decimal number with dot.")
@@ -33,7 +33,7 @@ class Transactions(QWidget):
         self.label_12_0 = QLabel("Input UTxO address:")
         self.input_13_0 = QLineEdit()
         self.button_13_1 = QPushButton("Set")
-        self.label_14_0 = QLabel("Receiving address:")
+        self.label_14_0 = QLabel("Input receiving address:")
         self.input_15_0 = QLineEdit()
         self.button_15_1 = QPushButton("Set")
 
