@@ -14,32 +14,34 @@ class Wallet(QWidget):
         picture_0_2.setScaledContents(True)
 
         # Widgets for verification key section 
-        self.label_1_0 = QLabel("Verification key name:")
+        self.label_1_0 = QLabel("Input verification key name:")
         self.input_2_0 = QLineEdit()
-        self.button_2_1 = QPushButton("Load")
+        self.button_2_1 = QPushButton("Set")
         self.button_2_2 = QPushButton("Generate")
 
         # Widgets for signing key section 
-        self.label_4_0 = QLabel("Signing key name:")
+        self.label_4_0 = QLabel("Input signing key name:")
         self.input_5_0 = QLineEdit()
-        self.button_5_1 = QPushButton("Load")
+        self.button_5_1 = QPushButton("Set")
         self.button_5_2 = QPushButton("Generate")
 
         # Widgets for payment address section 
-        self.label_7_0 = QLabel("Payment address name:")
+        self.label_7_0 = QLabel("Input payment address name:")
         self.input_8_0 = QLineEdit()
-        self.button_8_1 = QPushButton("Load")
+        self.button_8_1 = QPushButton("Set")
         self.button_8_2 = QPushButton("Generate")
         self.label_9_0 = QLabel("Payment address:")
         self.input_10_0 = QLineEdit()
+        self.button_10_1 = QPushButton("Show")
 
         # Widgets for payment address key hash section 
         self.label_12_0 = QLabel("Payment public key hash name:")
         self.input_13_0 = QLineEdit()
-        self.button_13_1 = QPushButton("Load")
+        self.button_13_1 = QPushButton("Set")
         self.button_13_2 = QPushButton("Generate")
         self.label_14_0 = QLabel("Key hash:")
         self.input_15_0 = QLineEdit()
+        self.button_15_1 = QPushButton("Show")
 
         # Set label fonts 
         labels = [self.label_1_0, self.label_4_0, 
@@ -61,20 +63,21 @@ class Wallet(QWidget):
         buttons = [self.button_2_1, self.button_2_2,
                    self.button_5_1, self.button_5_2,
                    self.button_8_1, self.button_8_2,
-                   self.button_13_1, self.button_13_2]
+                   self.button_10_1, self.button_13_1, 
+                   self.button_13_2, self.button_15_1] 
         for button in buttons:
-            button.setFixedSize(80,30)   
+            button.setFixedSize(80,30)  
 
         # Space between the sections
         self.emptyLabel = QLabel()
 
         # Layouts 
         layout = QGridLayout()
-        layout.addWidget(picture_0_2, 0, 2)
+        layout.addWidget(picture_0_2, 0, 2) 
         # Adding widgets for verification key section 
-        layout.addWidget(self.label_1_0, 1, 0)
-        layout.addWidget(self.input_2_0, 2, 0)
-        layout.addWidget(self.button_2_1, 2, 1)
+        layout.addWidget(self.label_1_0, 1, 0) 
+        layout.addWidget(self.input_2_0, 2, 0) 
+        layout.addWidget(self.button_2_1, 2, 1) 
         layout.addWidget(self.button_2_2, 2, 2)
         layout.addWidget(self.emptyLabel, 3, 0)
         # Adding widgets for signing key section 
@@ -90,6 +93,7 @@ class Wallet(QWidget):
         layout.addWidget(self.button_8_2, 8, 2)
         layout.addWidget(self.label_9_0, 9, 0)
         layout.addWidget(self.input_10_0, 10, 0)
+        layout.addWidget(self.button_10_1, 10, 1) 
         layout.addWidget(self.emptyLabel, 11, 0)
         # Adding widgets for payment public key hash section 
         layout.addWidget(self.label_12_0, 12, 0)
@@ -98,6 +102,7 @@ class Wallet(QWidget):
         layout.addWidget(self.button_13_2, 13, 2)
         layout.addWidget(self.label_14_0, 14, 0)
         layout.addWidget(self.input_15_0, 15, 0)
+        layout.addWidget(self.button_15_1, 15, 1)
         layout.addWidget(self.emptyLabel, 16, 0)
 
         self.setLayout(layout)
