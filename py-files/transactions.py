@@ -17,7 +17,7 @@ class Transactions(QWidget):
         # Widgets for payment address section 
         self.label_1_0 = QLabel("Payment address name:")
         self.input_2_0 = QLineEdit()
-        self.button_2_1 = QPushButton("Load")
+        self.button_2_1 = QPushButton("Set")
         
         self.label_4_0 = QLabel("Payment address funds:")
         self.input_5_0 = QLineEdit()
@@ -30,16 +30,19 @@ class Transactions(QWidget):
         self.label_10_0 = QLabel("NOTE: Seperat decimal number with dot.")
         self.radioButton_10_1 = QRadioButton("Lovelace")
 
-        self.label_12_0 = QLabel("Receiving address:")
+        self.label_12_0 = QLabel("Input UTxO address:")
         self.input_13_0 = QLineEdit()
-        self.button_13_1 = QPushButton("Load")
+        self.button_13_1 = QPushButton("Set")
+        self.label_14_0 = QLabel("Receiving address:")
+        self.input_15_0 = QLineEdit()
+        self.button_15_1 = QPushButton("Set")
 
-        self.button_15_0 = QPushButton("Send")
+        self.button_17_0 = QPushButton("Send")
 
         # Set label fonts 
         labels = [self.label_1_0, self.label_4_0, 
                   self.label_8_0, self.label_10_0,
-                  self.label_12_0]
+                  self.label_12_0, self.label_14_0]
         for label in labels:
             font = label.font()
             font.setPointSize(12)
@@ -47,7 +50,7 @@ class Transactions(QWidget):
 
         # Set lineEdit sizes 
         inputs = [self.input_2_0, self.input_9_0, 
-                  self.input_13_0]
+                  self.input_13_0, self.input_15_0]
         for input in inputs:
             input.setFixedSize(500,30)
 
@@ -57,7 +60,8 @@ class Transactions(QWidget):
         self.button_2_1.setFixedSize(80,30)
         self.button_5_1.setFixedSize(80,60)
         self.button_13_1.setFixedSize(80,30)
-        self.button_15_0.setFixedSize(160,30)
+        self.button_15_1.setFixedSize(80,30)
+        self.button_17_0.setFixedSize(160,30)
 
         # Space between the sections
         self.emptyLabel = QLabel()
@@ -87,8 +91,12 @@ class Transactions(QWidget):
         layout.addWidget(self.label_12_0, 12, 0)
         layout.addWidget(self.input_13_0, 13, 0)
         layout.addWidget(self.button_13_1, 13, 1)
-        layout.addWidget(self.emptyLabel, 14, 0)
-        layout.addWidget(self.button_15_0, 15, 0)
+        layout.addWidget(self.label_14_0, 14, 0)
+        layout.addWidget(self.input_15_0, 15, 0)
+        layout.addWidget(self.button_15_1, 15, 1)
+
         layout.addWidget(self.emptyLabel, 16, 0)
+        layout.addWidget(self.button_17_0, 17, 0)
+        layout.addWidget(self.emptyLabel, 18, 0)
 
         self.setLayout(layout)
