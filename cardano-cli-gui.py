@@ -4,6 +4,8 @@ import sys
 sys.path.insert(1, './py-files')
 from wallet import Wallet
 from start import Start
+from transactions import Transactions
+#from smart_contracts import Smart_contracts
 
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QTabWidget)
 
@@ -18,6 +20,8 @@ class MainWindow(QMainWindow):
 
         tabs.addTab(Start(),"Start")
         tabs.addTab(Wallet(),"Wallet")
+        tabs.addTab(Transactions(),"Transactions")
+        #tabs.addTab(Smart_contracts(),"Smart contrancts")
         self.setCentralWidget(tabs)
 
 app = QApplication(sys.argv)
