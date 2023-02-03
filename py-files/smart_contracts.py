@@ -38,7 +38,7 @@ class Smart_contracts(QWidget):
         self.input_15_0 = QLineEdit()
         self.radioButton_15_1 = QRadioButton("Ada")
         self.radioButton_15_2 = QRadioButton("Lovelace")
-        self.label_16_0 = QLabel("Tyoe in datum file name:")
+        self.label_16_0 = QLabel("Type in datum file name:")
         self.input_17_0 = QLineEdit()
         self.button_17_1 = QPushButton("Set")
 
