@@ -1,5 +1,5 @@
 # cardano-cli-gui
-Simple GUI for the cardano client tool.
+Simple GUI for the cardano client tool. Project is under construction. The gui does not work yet.
 
 **IMPORTANT:** To use the GUI a cardano node has to be running and synced to the network.
 
