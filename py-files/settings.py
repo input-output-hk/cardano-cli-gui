@@ -1,4 +1,5 @@
 
-def init():
-    global folder_path
-    folder_path = ""
+global debug_mode
+global folder_path
+
+    

@@ -16,7 +16,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         # Initiate global variables
-        settings.init()
+        self.init_global_variables()
 
         # Set window title
         self.setWindowTitle("Cardano client GUI 1.0")
@@ -33,19 +33,34 @@ class MainWindow(QMainWindow):
         debug_menu.addSeparator()
         debug_menu.addAction(off_toggle)
 
+        on_toggle.triggered.connect(self.set_debug_on)
+        off_toggle.triggered.connect(self.set_debug_off)
+
         tutorial_btn = QAction("&Tutorial", self)
         help_menu.addAction(tutorial_btn)
 
         # Create tabs and add windows 
-        tabs = QTabWidget()
-        tabs.setTabPosition(QTabWidget.North)
-        tabs.setMovable(True)
+        self.tabs = QTabWidget()
+        self.tabs.setTabPosition(QTabWidget.North)
+        self.tabs.setMovable(True)
 
-        tabs.addTab(Start(),"Start")
-        tabs.addTab(Wallet(),"Wallet")
-        tabs.addTab(Transactions(),"Transactions")
-        tabs.addTab(Smart_contracts(),"Smart contrancts")
-        self.setCentralWidget(tabs)
+        self.tabs.addTab(Start(),"Start")
+        self.tabs.addTab(Wallet(),"Wallet")
+        self.tabs.addTab(Transactions(),"Transactions")
+        self.tabs.addTab(Smart_contracts(),"Smart contrancts")
+        self.setCentralWidget(self.tabs)
+
+    def init_global_variables(self):
+        settings.folder_path = ""
+        settings.debug_mode = "OFF"
+
+    def set_debug_on(self):
+        settings.debug_mode = "ON"
+        self.tabs.widget(0).label_8_0.setText("Debug mode: ON")
+
+    def set_debug_off(self):
+        settings.debug_mode = "OFF"
+        self.tabs.widget(0).label_8_0.setText("Debug mode: OFF")
 
 app = QApplication(sys.argv)
 window = MainWindow()

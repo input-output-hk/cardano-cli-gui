@@ -5,8 +5,6 @@ from os.path import exists
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QPushButton, QLabel, QLineEdit, QWidget, QGridLayout)
 
-folder_path = ""
-
 class Start(QWidget):
     def __init__(self):
         super().__init__()
@@ -17,12 +15,16 @@ class Start(QWidget):
         picture_1_1.setFixedSize(80,80)
         picture_1_1.setScaledContents(True)
 
-        # Widgets for Status tab 
+        # Widgets for folder section 
         label_3_0 = QLabel("Input folder path:")
         self.input_4_0 = QLineEdit()
         button_4_1 = QPushButton("Set")
-        label_6_0 = QLabel("Current folder path set to:")
-        self.label_7_0 = QLabel("NO FOLDER PATH SET")
+        label_5_0 = QLabel("Current folder path set to:")
+        self.label_6_0 = QLabel("NO FOLDER PATH SET")
+
+        # Widgets for notification section
+        self.label_8_0 = QLabel("Debug mode: OFF")
+        label_9_0 = QLabel("If debug mode is ON, the programm prints the cardano-cli\ncommands to the terminal instead of executing them.")
         label_11_0 = QLabel("IMPORTANT:")
         label_12_0 = QLabel("A cardano node has to be synced and running.")
 
@@ -30,8 +32,9 @@ class Start(QWidget):
         button_4_1.clicked.connect(self.set_folder_path)
 
         # Set label fonts 
-        labels = [label_3_0, label_6_0, 
-                  self.label_7_0, label_11_0, 
+        labels = [label_3_0, label_5_0, 
+                  self.label_6_0, self.label_8_0,
+                  label_9_0, label_11_0, 
                   label_12_0]
         for label in labels:
             font = label.font()
@@ -56,15 +59,14 @@ class Start(QWidget):
         layout.addWidget(label_3_0, 3, 0)
         layout.addWidget(self.input_4_0, 4, 0)
         layout.addWidget(button_4_1, 4, 1)
-        layout.addWidget(emptyLabel, 5, 0)
-        layout.addWidget(label_6_0, 6, 0)
-        layout.addWidget(self.label_7_0, 7, 0)
-        layout.addWidget(emptyLabel, 8, 0)
-        layout.addWidget(emptyLabel, 9, 0)
+        layout.addWidget(label_5_0, 5, 0)
+        layout.addWidget(self.label_6_0, 6, 0)
+        layout.addWidget(emptyLabel, 7, 0)
+        layout.addWidget(self.label_8_0, 8, 0)
+        layout.addWidget(label_9_0, 9, 0)
         layout.addWidget(emptyLabel, 10, 0)
         layout.addWidget(label_11_0, 11, 0)
         layout.addWidget(label_12_0, 12, 0)
-        layout.addWidget(emptyLabel, 13, 0)
         layout.addWidget(emptyLabel, 14, 0)
         layout.addWidget(emptyLabel, 15, 0)
 
