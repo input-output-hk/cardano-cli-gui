@@ -3,8 +3,9 @@
 import sys
 sys.path.insert(1, './py-files')
 
-from wallet import Wallet
+import settings
 from start import Start
+from wallet import Wallet
 from transactions import Transactions
 from smart_contracts import Smart_contracts
 
@@ -13,6 +14,11 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QTabWidget, QAction)
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+
+        # Initiate global variables
+        settings.init()
+
+        # Set window title
         self.setWindowTitle("Cardano client GUI 1.0")
 
         # Create the applications menu 
