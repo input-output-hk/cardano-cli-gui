@@ -52,14 +52,14 @@ class MainWindow(QMainWindow):
 
     def init_global_variables(self):
         settings.folder_path = ""
-        settings.debug_mode = "OFF"
+        settings.debug_mode = False
 
     def set_debug_on(self):
-        settings.debug_mode = "ON"
+        settings.debug_mode = True
         self.tabs.widget(0).label_8_0.setText("Debug mode: ON")
 
     def set_debug_off(self):
-        settings.debug_mode = "OFF"
+        settings.debug_mode = False
         self.tabs.widget(0).label_8_0.setText("Debug mode: OFF")
 
 app = QApplication(sys.argv)

@@ -74,6 +74,8 @@ class Start(QWidget):
 
     def set_folder_path(self):
         folder_path_input = self.input_4_0.text()
+        if folder_path_input[-1] == "/":
+            folder_path_input = folder_path_input[0:-1]
         folder_exists = exists(folder_path_input)
         
         if folder_exists:
