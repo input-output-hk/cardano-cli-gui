@@ -4,7 +4,6 @@ import settings
 import subprocess
 import traceback
 from os.path import exists
-from notification import Notification
 
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QPushButton, QLabel, QLineEdit, 
