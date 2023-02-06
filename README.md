@@ -1,7 +1,7 @@
 # cardano-cli-gui
 Simple GUI for the cardano client tool. Works only on linux operating systems.
 
-**IMPORTANT:** Project is under construction. The gui does not work yet.
+**IMPORTANT:** Project is under construction. The gui does not work yet.<br>
 **IMPORTANT:** To use the GUI a cardano node has to be running and synced to the network.
 
 The GUI functionality is seperated in 4 tabs and covers following things:
