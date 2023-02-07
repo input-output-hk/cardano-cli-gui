@@ -60,20 +60,26 @@ class MainWindow(QMainWindow):
         settings.folder_path = ""
         settings.debug_mode = False
 
-    # Sets debug mode to on
+    # Sets debug mode to ON
     def set_debug_on(self):
         settings.debug_mode = True
-        self.tabs.widget(0).label_8_0.setText("Debug mode: ON")
+        
+        self.label_8_0.setText("Debug mode: ON")
+        # When start window was in a separated class
+        # self.tabs.widget(0).label_8_0.setText("Debug mode: OFF")
 
-    # Sets debug mode to off
+    # Sets debug mode to OFF
     def set_debug_off(self):
         settings.debug_mode = False
-        self.tabs.widget(0).label_8_0.setText("Debug mode: OFF")
+        
+        self.label_8_0.setText("Debug mode: OFF")
+        # When start window was in a separated class
+        # self.tabs.widget(0).label_8_0.setText("Debug mode: OFF")
 
     # Creates the start tab window
     def init_start_tab(self):
         # Initial message
-        label_1_0 = QLabel("To unlock other tabs a folder path needs to be set.")
+        label_1_0 = QLabel("To unlock other tabs a folder path needs to be set.\nAll files will be loaded or saved to this folder.")
 
         # Cardano picture
         picture_1_1 = QLabel("")
