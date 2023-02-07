@@ -1,17 +1,22 @@
 
 
+import os
 import settings
 import subprocess
 import traceback
-from os.path import exists
 
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QPushButton, QLabel, QLineEdit, 
-                             QWidget, QGridLayout, QMessageBox)
+                             QWidget, QGridLayout, QMessageBox,
+                             QRadioButton)
 
 class Wallet(QWidget):
     def __init__(self):
         super().__init__()
+
+        # Creating local variables
+        self.vkey_name = ""
+        self.address = ""
 
         # Cardano picture
         picture_0_2 = QLabel("")
@@ -30,7 +35,7 @@ class Wallet(QWidget):
         self.button_4_1 = QPushButton("Set")
         self.button_5_0 = QPushButton("Generate both keys")
 
-        # Widget actions for signing and verifaction key
+        # Widget actions for signing and verifaction key section
         self.button_2_1.clicked.connect(self.set_verification_key)
         self.button_4_1.clicked.connect(self.set_signing_key)
         self.button_5_0.clicked.connect(self.generate_both_keys)
@@ -41,8 +46,15 @@ class Wallet(QWidget):
         self.button_8_1 = QPushButton("Set")
         self.button_8_2 = QPushButton("Generate")
         self.label_9_0 = QLabel("Payment address:")
+        self.radioButton_9_1 = QRadioButton("Mainnet")
+        self.radioButton_9_2 = QRadioButton("Testnet")
         self.input_10_0 = QLineEdit()
         self.button_10_1 = QPushButton("Show")
+
+        # Widget actions for payment address section  
+        self.button_8_1.clicked.connect(self.set_address) 
+        self.button_8_2.clicked.connect(self.generate_address) 
+        self.button_10_1.clicked.connect(self.show_address) 
 
         # Widgets for payment address key hash section 
         self.label_12_0 = QLabel("Payment public key hash name:")
@@ -102,6 +114,8 @@ class Wallet(QWidget):
         layout.addWidget(self.button_8_1, 8, 1)
         layout.addWidget(self.button_8_2, 8, 2)
         layout.addWidget(self.label_9_0, 9, 0)
+        layout.addWidget(self.radioButton_9_1, 9, 1)
+        layout.addWidget(self.radioButton_9_2, 9, 2)
         layout.addWidget(self.input_10_0, 10, 0)
         layout.addWidget(self.button_10_1, 10, 1) 
         layout.addWidget(self.emptyLabel, 11, 0)
@@ -120,7 +134,7 @@ class Wallet(QWidget):
     def set_verification_key(self):
         verification_key_name = self.input_2_0.text
         verification_key_path = settings.folder_path + "/" + verification_key_name
-        verification_key_exists = exists(verification_key_path)
+        verification_key_exists = os.path.isfile(verification_key_path)
         
         if verification_key_exists:
             with open(verification_key_path, "r") as file:
@@ -129,7 +143,7 @@ class Wallet(QWidget):
     def set_signing_key(self):
         signing_key_name = self.input_4_0.text
         signing_key_path = settings.folder_path + "/" + signing_key_name
-        signing_key_exists = exists(signing_key_path)
+        signing_key_exists = os.path.isfile(signing_key_path)
         
         if signing_key_exists:
             with open(signing_key_path, "r") as file:
@@ -139,31 +153,31 @@ class Wallet(QWidget):
         file_number_counter = 1
         while(True):
             if len(str(file_number_counter)) == 1:
-                vkey_name = "0" + str(file_number_counter) + ".vkey"
+                self.vkey_name = "0" + str(file_number_counter) + ".vkey"
                 skey_name = "0" + str(file_number_counter) + ".skey"
             else:
-                vkey_name = str(file_number_counter) + ".vkey"
+                self.vkey_name = str(file_number_counter) + ".vkey"
                 skey_name = str(file_number_counter) + ".skey"
             
-            vkey_file_path = settings.folder_path + "/" + vkey_name
-            vkey_file_exists = exists(vkey_file_path)
+            vkey_file_path = settings.folder_path + "/" + self.vkey_name
+            vkey_file_exists = os.path.isfile(vkey_file_path)
 
             skey_file_path = settings.folder_path + "/" + skey_name
-            skey_file_exists = exists(skey_file_path)
+            skey_file_exists = os.path.isfile(skey_file_path)
 
             if (not vkey_file_exists) and (not skey_file_exists):
-                self.input_2_0.text = vkey_name
+                self.input_2_0.text = self.vkey_name
                 self.input_4_0.text = skey_name
 
                 if settings.debug_mode:
                     command = "cardano-cli address key-gen " + \
-                              "--verification-key-file " + vkey_name + " "\
+                              "--verification-key-file " + self.vkey_name + " "\
                               "--signing-key-file " + skey_name
                     print(command)
                 else:
                     try:
                         subprocess.Popen(["cardano-cli", "address", "key-gen", \
-                                          "--verification-key-file", vkey_name, \
+                                          "--verification-key-file", self.vkey_name, \
                                           "--signing-key-file", skey_name], \
                                           cwd=settings.folder_path)
 
@@ -183,6 +197,68 @@ class Wallet(QWidget):
                 break
             
             file_number_counter += 1
+
+    def set_address(self): 
+        address_name = self.input_8_0.text
+        address_path = settings.folder_path + "/" + address_name
+        address_exists = os.path.isfile(address_path)
+        
+        if address_exists:
+            with open(address_path, "r") as file:
+                self.address = file.read()
+
+    def generate_address(self):
+        is_mainnet = self.radioButton_9_1.isChecked()
+        is_testnet = self.radioButton_9_2.isChecked()
+
+        if (not is_mainnet) and (not is_testnet):
+            msg = "Select option mainnet or testnet."    
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+        else:
+            file_number_counter = 1
+            while(True):
+                if len(str(file_number_counter)) == 1:
+                    address_name = "0" + str(file_number_counter) + ".addr"
+                else:
+                    address_name = str(file_number_counter) + ".addr"
+                
+                address_file_path = settings.folder_path + "/" + address_name
+                address_file_exists = os.path.isfile(address_file_path)
+
+                if not address_file_exists:
+                    self.input_8_0.text = address_name
+
+                    if settings.debug_mode:
+                        command = "cardano-cli address build " + \
+                                "--payment-verification-key-file " + self.vkey_name + " "\
+                                "--testnet-magic 1097911063 " + \
+                                "--out-file " + address_name
+                        print(command)
+                    else:
+                        try:
+                            subprocess.Popen(["cardano-cli", "address", "build", \
+                                            "--payment-verification-key-file", self.vkey_name, \
+                                            "--testnet-magic", "1097911063", \
+                                            "--out-file", address_name], \
+                                            cwd=settings.folder_path)
+
+                            with open(address_file_path, "r") as file:
+                                self.address = file.read()
+                        except Exception:
+                            output = traceback.format_exc()
+                            log_error_msg(output)
+                            
+                            msg = "Address could not be generated.\n" + \
+                                "Check if node is running."                    
+                            QMessageBox.warning(self, "Notification:", msg,
+                                                QMessageBox.Close)
+                    break
+                
+                file_number_counter += 1
+
+    def show_address(self): 
+        self.input_10_0.setText(self.address)
 
 def log_error_msg(output):
     with open("./errors.log", "a") as file:
