@@ -1,8 +1,8 @@
 
 
+import os
 import sys
 sys.path.insert(1, './py-files')
-from os.path import exists
 
 import settings
 from wallet import Wallet
@@ -13,7 +13,7 @@ from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QTabWidget, 
                              QAction, QPushButton, QLabel, QLineEdit, 
-                             QWidget, QGridLayout)
+                             QWidget, QGridLayout, QMessageBox)
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -70,9 +70,8 @@ class MainWindow(QMainWindow):
         settings.debug_mode = False
         self.tabs.widget(0).label_8_0.setText("Debug mode: OFF")
 
-    # Creates the start tab
+    # Creates the start tab window
     def init_start_tab(self):
-
         # Initial message
         label_1_0 = QLabel("To unlock other tabs a folder path needs to be set.")
 
@@ -143,7 +142,7 @@ class MainWindow(QMainWindow):
         folder_path_input = self.input_4_0.text()
         if folder_path_input[-1] == "/":
             folder_path_input = folder_path_input[0:-1]
-        folder_exists = exists(folder_path_input)
+        folder_exists = os.path.isdir(folder_path_input)
         
         if folder_exists:
             settings.folder_path = folder_path_input
@@ -152,6 +151,10 @@ class MainWindow(QMainWindow):
             self.tabs.addTab(Wallet(),"Wallet")
             self.tabs.addTab(Transactions(),"Transactions")
             self.tabs.addTab(Smart_contracts(),"Smart contrancts")
+        else:
+            msg = "This path is not a valid folder path."                    
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
 
 app = QApplication(sys.argv)
 window = MainWindow()
