@@ -1,19 +1,19 @@
 # cardano-cli-gui
 Simple GUI for the cardano client tool. Works only on linux operating systems.
 
-**IMPORTANT:** Project is under construction. The gui does not work yet.<br>
+**IMPORTANT:** Project is under construction. The gui does not work fully yet.<br>
 **IMPORTANT:** To use the GUI a cardano node has to be running and synced to the network.
 
 The GUI functionality is seperated in 4 tabs and covers following things:
 
 1. **Start** tab, that notifies the user that a cardano node has to be
-running in order for the GUI to work. The user can also set the current 
-folder from this tab, that will be used to load and save files.
+running in order for the GUI to work. The user also has to set the current 
+folder from this tab, that will be used to load and save files. 
 
 ![alt text](https://github.com/LukaKurnjek/cardano-cli-gui/blob/main/images/start.png) 
 
 2. **Wallet** tab, that handles loading or generating verification and 
-signing keys, payment addresses and payment public key hashes. 
+signing keys, payment address and payment public key hash. 
 
 ![alt text](https://github.com/LukaKurnjek/cardano-cli-gui/blob/main/images/wallet.png)
 
