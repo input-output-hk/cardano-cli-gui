@@ -174,17 +174,14 @@ class Wallet(QWidget):
                 self.input_2_0.text = self.vkey_name
                 self.input_4_0.text = skey_name
 
+                command = "cardano-cli address key-gen " + \
+                          "--verification-key-file " + self.vkey_name + " " + \
+                          "--signing-key-file " + skey_name 
                 if settings.debug_mode:
-                    command = "cardano-cli address key-gen " + \
-                              "--verification-key-file " + self.vkey_name + " "\
-                              "--signing-key-file " + skey_name
                     print(command)
                 else:
                     try:
-                        subprocess.Popen(["cardano-cli", "address", "key-gen", \
-                                          "--verification-key-file", self.vkey_name, \
-                                          "--signing-key-file", skey_name], \
-                                          cwd=settings.folder_path)
+                        subprocess.Popen(command.split(), cwd=settings.folder_path)
 
                         with open(vkey_file_path, "r") as file:
                             self.verification_key = file.read()
@@ -221,72 +218,57 @@ class Wallet(QWidget):
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
         else:
-            file_number_counter = 1
-            while(True):
-                if len(str(file_number_counter)) == 1:
-                    address_name = "0" + str(file_number_counter) + ".addr"
-                else:
-                    address_name = str(file_number_counter) + ".addr"
-                
-                address_file_path = settings.folder_path + "/" + address_name
-                address_file_exists = os.path.isfile(address_file_path)
+            if self.vkey_name == "":
+                msg = "Please set or generate first a verification key."     
+                QMessageBox.warning(self, "Notification:", msg,
+                                    QMessageBox.Close)
+            else:
+                file_number_counter = 1
+                while(True):
+                    if len(str(file_number_counter)) == 1:
+                        address_name = "0" + str(file_number_counter) + ".addr"
+                    else:
+                        address_name = str(file_number_counter) + ".addr"
+                    
+                    address_file_path = settings.folder_path + "/" + address_name
+                    address_file_exists = os.path.isfile(address_file_path)
 
-                if not address_file_exists:
-                    self.input_8_0.text = address_name
+                    if not address_file_exists:
+                        self.input_8_0.text = address_name
 
-                    if is_testnet:
-                        if settings.debug_mode:
+                        def handle_command(command):
+                            if settings.debug_mode:
+                                print(command)
+                            else:
+                                try:
+                                    subprocess.Popen(command.split(), cwd=settings.folder_path)
+
+                                    with open(address_file_path, "r") as file:
+                                        self.address = file.read()
+                                except Exception:
+                                    output = traceback.format_exc()
+                                    log_error_msg(output)
+                                    
+                                    msg = "Address could not be generated.\n" + \
+                                          "Check if cardano node is running."                    
+                                    QMessageBox.warning(self, "Notification:", msg,
+                                                        QMessageBox.Close)
+
+                        if is_testnet:
                             command = "cardano-cli address build " + \
-                                      "--payment-verification-key-file " + self.vkey_name + " "\
-                                      "--testnet-magic 1097911063 " + \
-                                      "--out-file " + address_name
-                            print(command)
-                        else:
-                            try:
-                                subprocess.Popen(["cardano-cli", "address", "build", \
-                                                  "--payment-verification-key-file", self.vkey_name, \
-                                                  "--testnet-magic", "1097911063", \
-                                                  "--out-file", address_name], \
-                                                 cwd=settings.folder_path)
-
-                                with open(address_file_path, "r") as file:
-                                    self.address = file.read()
-                            except Exception:
-                                output = traceback.format_exc()
-                                log_error_msg(output)
-                                
-                                msg = "Address could not be generated.\n" + \
-                                      "Check if cardano node is running."                    
-                                QMessageBox.warning(self, "Notification:", msg,
-                                                    QMessageBox.Close)
-                        break
-                    elif is_mainnet:
-                        if settings.debug_mode:
+                                    "--payment-verification-key-file " + self.vkey_name + " " + \
+                                    "--testnet-magic 1097911063 " + \
+                                    "--out-file " + address_name
+                            handle_command(command)
+                        elif is_mainnet:
                             command = "cardano-cli address build " + \
-                                      "--payment-verification-key-file " + self.vkey_name + " "\
-                                      "--mainnet " + \
-                                      "--out-file " + address_name
-                            print(command)
-                        else:
-                            try:
-                                subprocess.Popen(["cardano-cli", "address", "build", \
-                                                  "--payment-verification-key-file", self.vkey_name, \
-                                                  "--mainnet", "--out-file", address_name], \
-                                                 cwd=settings.folder_path)
-
-                                with open(address_file_path, "r") as file:
-                                    self.address = file.read()
-                            except Exception:
-                                output = traceback.format_exc()
-                                log_error_msg(output)
-                                
-                                msg = "Address could not be generated.\n" + \
-                                      "Check if cardano node is running."                    
-                                QMessageBox.warning(self, "Notification:", msg,
-                                                    QMessageBox.Close)
+                                    "--payment-verification-key-file " + self.vkey_name + " " + \
+                                    "--mainnet " + "--out-file " + address_name
+                            handle_command(command)
+                        
                         break
 
-                file_number_counter += 1
+                    file_number_counter += 1 
 
     def show_address(self): 
         self.input_10_0.setText(self.address)
@@ -301,44 +283,46 @@ class Wallet(QWidget):
                 self.pkh = file.read()
 
     def generate_pkh(self):
-        file_number_counter = 1
-        while(True):
-            if len(str(file_number_counter)) == 1:
-                pkh_name = "0" + str(file_number_counter) + ".pkh"
-            else:
-                pkh_name = str(file_number_counter) + ".pkh"
-            
-            pkh_file_path = settings.folder_path + "/" + pkh_name
-            pkh_file_exists = os.path.isfile(pkh_file_path)
-
-            if not pkh_file_exists:
-                self.input_13_0.text = pkh_name
-
-                if settings.debug_mode:
-                    command = "cardano-cli address key-hash " + \
-                              "--payment-verification-key-file " + self.vkey_name + " "\
-                              "--out-file " + pkh_name
-                    print(command)
+        if self.vkey_name == "":
+            msg = "Please set or generate first a verification key."     
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+        else:
+            file_number_counter = 1
+            while(True):
+                if len(str(file_number_counter)) == 1:
+                    pkh_name = "0" + str(file_number_counter) + ".pkh"
                 else:
-                    try:
-                        subprocess.Popen(["cardano-cli", "address", "key-hash", \
-                                          "--payment-verification-key-file", self.vkey_name, \
-                                          "--out-file", pkh_name], \
-                                         cwd=settings.folder_path)
+                    pkh_name = str(file_number_counter) + ".pkh"
+                
+                pkh_file_path = settings.folder_path + "/" + pkh_name
+                pkh_file_exists = os.path.isfile(pkh_file_path)
 
-                        with open(pkh_file_path, "r") as file:
-                            self.pkh = file.read()
-                    except Exception:
-                        output = traceback.format_exc()
-                        log_error_msg(output)
-                        
-                        msg = "Public key hash could not be generated.\n" + \
-                              "Check if cardano node is running."                    
-                        QMessageBox.warning(self, "Notification:", msg,
-                                            QMessageBox.Close)
-                break
+                if not pkh_file_exists:
+                    self.input_13_0.text = pkh_name
 
-            file_number_counter += 1
+                    command = "cardano-cli address key-hash " + \
+                            "--payment-verification-key-file " + self.vkey_name + " " + \
+                            "--out-file " + pkh_name
+                    if settings.debug_mode:
+                        print(command)
+                    else:
+                        try:
+                            subprocess.Popen(command.split(), cwd=settings.folder_path)
+
+                            with open(pkh_file_path, "r") as file:
+                                self.pkh = file.read()
+                        except Exception:
+                            output = traceback.format_exc()
+                            log_error_msg(output)
+                            
+                            msg = "Public key hash could not be generated.\n" + \
+                                  "Check if cardano node is running."                    
+                            QMessageBox.warning(self, "Notification:", msg,
+                                                QMessageBox.Close)
+                    break
+
+                file_number_counter += 1
 
     def show_pkh(self): 
         self.input_15_0.setText(self.pkh)
