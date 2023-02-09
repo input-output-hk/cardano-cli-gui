@@ -1,12 +1,21 @@
 
 
-from PyQt5.QtGui import QPixmap
+import os
+import settings
+import subprocess
+import traceback
+
+from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtWidgets import (QPushButton, QLabel, QLineEdit, 
-                             QWidget, QGridLayout, QRadioButton)
+                             QWidget, QGridLayout, QRadioButton,
+                             QMessageBox, QPlainTextEdit)
 
 class Transactions(QWidget):
     def __init__(self):
         super().__init__()
+
+        # Creating local variables
+        self.address = ""
 
         # Cardano picture
         picture_0_1 = QLabel("")
@@ -20,8 +29,14 @@ class Transactions(QWidget):
         self.button_2_1 = QPushButton("Set")
         
         self.label_4_0 = QLabel("Funds for above payment address:")
-        self.input_5_0 = QLineEdit()
+        self.input_5_0 = QPlainTextEdit()
         self.button_5_1 = QPushButton("Querry\nfunds")
+        self.radioButton_6_1 = QRadioButton("Mainnet")
+        self.radioButton_7_1 = QRadioButton("Testnet")
+
+        # Widget actions for payment address section
+        self.button_2_1.clicked.connect(self.set_address_name)
+        self.button_5_1.clicked.connect(self.querry_address_funds)
 
         # Widgets for sending funds section 
         self.label_8_0 = QLabel("Send follwing amount:")
@@ -54,7 +69,21 @@ class Transactions(QWidget):
         for input in inputs:
             input.setFixedSize(500,30)
 
-        self.input_5_0.setFixedSize(500,80)
+        # Set plainTextEdit properties
+        self.input_5_0.setFixedSize(500,80) 
+        consolas_font = QFont()
+        consolas_font.setFamily("Consolas")
+        self.input_5_0.setFont(consolas_font)
+
+        self.input_5_0.setLineWrapMode(QPlainTextEdit.LineWrapMode.NoWrap) 
+        # In pure Qt code the above line would translate to:
+        # #include <QPlainTextEdit>
+        # QPlainTextEdit plainText;
+        # plainText.setLineWrapMode(QPlainTextEdit::LineWrapMode::NoWrap);
+
+        self.init_text = "                              TxHash                              TxIx          Amount\n" + \
+                         "--------------------------------------------------------------------------------------------"
+        self.input_5_0.setPlainText(self.init_text)
 
         # Set button sizes         
         self.button_2_1.setFixedSize(80,30)
@@ -79,7 +108,9 @@ class Transactions(QWidget):
         layout.addWidget(self.input_5_0, 5, 0)
         layout.addWidget(self.button_5_1, 5, 1)
         layout.addWidget(self.emptyLabel, 6, 0)
+        layout.addWidget(self.radioButton_6_1, 6, 1)
         layout.addWidget(self.emptyLabel, 7, 0)
+        layout.addWidget(self.radioButton_7_1, 7, 1)
         # Adding widgets for payment address section 
         layout.addWidget(self.label_8_0, 8, 0)
         layout.addWidget(self.input_9_0, 9, 0)
@@ -100,3 +131,66 @@ class Transactions(QWidget):
         layout.addWidget(self.emptyLabel, 18, 0)
 
         self.setLayout(layout)
+
+    def set_address_name(self):
+        address_name = self.input_2_0.text()
+        address_path = settings.folder_path + "/" + address_name
+        address_exists = os.path.isfile(address_path)
+        
+        if address_exists:
+            with open(address_path, "r") as file:
+                self.address = file.read()
+        else:
+            msg = "Address file does not exists.\n" + \
+                  "Please specify a valid file name." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+
+    def querry_address_funds(self):
+        if self.address == "":
+            msg = "Address file not set.\n" + \
+                  "Please set a valid file name."                   
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+        else:
+            is_mainnet = self.radioButton_6_1.isChecked()
+            is_testnet = self.radioButton_7_1.isChecked()
+
+            if (not is_mainnet) and (not is_testnet):
+                msg = "Select option mainnet or testnet."    
+                QMessageBox.warning(self, "Notification:", msg,
+                                    QMessageBox.Close)
+            else:
+                def handle_command(command):
+                    if settings.debug_mode:
+                        print(command)
+                    else:
+                        try:
+                            response = subprocess.Popen(command.split(), cwd=settings.folder_path) 
+                            output = response.communicate()[0]
+                            self.input_5_0.setPlainText(output.decode("utf-8"))
+                        except Exception:
+                            output = traceback.format_exc()
+                            log_error_msg(output)
+                            
+                            msg = "Address could not be querried.\n" + \
+                                  "Check if cardano node is running."                    
+                            QMessageBox.warning(self, "Notification:", msg,
+                                                QMessageBox.Close)
+
+                if is_testnet:
+                    command = "cardano-cli query utxo " + \
+                              "--address " + self.address + " " + \
+                              "--testnet-magic 1097911063 " 
+                    handle_command(command)
+                elif is_mainnet:
+                    command = "cardano-cli query utxo " + \
+                              "--address " + self.address + " " + \
+                              "--mainnet"
+                    handle_command(command)
+
+def log_error_msg(output):
+    with open("./errors.log", "a") as file:
+        file.write(output)
+        file.write("\n-------------------------------------------------------------------\n\n")
+
