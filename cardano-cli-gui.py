@@ -158,6 +158,7 @@ class MainWindow(QMainWindow):
             self.tabs.addTab(Transactions(),"Transactions")
             self.tabs.addTab(Smart_contracts(),"Smart contrancts")
         else:
+            self.input_4_0.setText(settings.folder_path)
             msg = "This path is not a valid folder path."                    
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
