@@ -16,9 +16,12 @@ class Transactions(QWidget):
 
         # Creating local variables
         self.address = ""
-        self.receiving_address = ""
-        self.era = ""
         self.skey = ""
+        self.net = ""
+        self.era = ""
+        self.utxo = ""
+        self.receiving_address = ""
+        self.command_failed = False
 
         # Intro text and cardano picture
         self.label_0_0 = QLabel("Send funds from your address to another one.")
@@ -37,13 +40,16 @@ class Transactions(QWidget):
         self.label_5_0 = QLabel("Funds for above payment address:")
         self.input_6_0 = QPlainTextEdit()
         self.button_6_1 = QPushButton("Querry\nfunds")
-        self.radioButton_7_1 = QRadioButton("Mainnet")
-        self.radioButton_8_1 = QRadioButton("Testnet")
+        self.label_7_0 = QLabel("Select mainnet or testnet:")
+        self.comboBox_8_0 = QComboBox()
 
         # Widget actions for payment address section
         self.button_2_1.clicked.connect(self.set_address_name)
         self.button_4_1.clicked.connect(self.set_skey_name)
         self.button_6_1.clicked.connect(self.querry_address_funds)
+
+        self.comboBox_8_0.addItems(["", "mainnet", "testnet"])
+        self.comboBox_8_0.currentTextChanged.connect(self.set_net)
 
         # Widgets for sending funds section 
         self.label_9_0 = QLabel("Send amount (seperat decimal number with dot):")
@@ -65,14 +71,15 @@ class Transactions(QWidget):
         self.button_16_1.clicked.connect(self.set_receiving_address)
         self.button_18_0.clicked.connect(self.send_funds)
 
-        self.comboBox_12_0.addItems(["byron-era", "shelley-era", "allegra-era", "mary-era", "alonzo-era", "babbage-era"])
+        self.comboBox_12_0.addItems(["", "byron-era", "shelley-era", "allegra-era", "mary-era", "alonzo-era", "babbage-era"])
         self.comboBox_12_0.currentTextChanged.connect(self.update_era)
 
         # Set label fonts 
         labels = [self.label_0_0, self.label_1_0, 
-                  self.label_3_0, self.label_5_0, 
-                  self.label_9_0, self.label_11_0,
-                  self.label_13_0, self.label_15_0]
+                  self.label_3_0, self.label_5_0,
+                  self.label_7_0, self.label_9_0, 
+                  self.label_11_0, self.label_13_0, 
+                  self.label_15_0]
         for label in labels:
             font = label.font()
             font.setPointSize(12)
@@ -127,8 +134,8 @@ class Transactions(QWidget):
         layout.addWidget(self.label_5_0, 5, 0)
         layout.addWidget(self.input_6_0, 6, 0)
         layout.addWidget(self.button_6_1, 6, 1)
-        layout.addWidget(self.radioButton_7_1, 7, 1)
-        layout.addWidget(self.radioButton_8_1, 8, 1)
+        layout.addWidget(self.label_7_0, 7, 0)
+        layout.addWidget(self.comboBox_8_0, 8, 0)
         layout.addWidget(self.emptyLabel, 7, 0)
         layout.addWidget(self.emptyLabel, 8, 0)
         # Adding widgets for payment address section 
@@ -185,10 +192,10 @@ class Transactions(QWidget):
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
         else:
-            is_mainnet = self.radioButton_7_1.isChecked()
-            is_testnet = self.radioButton_8_1.isChecked()
+            is_mainnet = self.net == "mainnet" 
+            is_testnet = self.net == "testnet" 
 
-            if (not is_mainnet) and (not is_testnet):
+            if self.net == "":
                 msg = "Select option mainnet or testnet."    
                 QMessageBox.warning(self, "Notification:", msg,
                                     QMessageBox.Close)
@@ -210,16 +217,18 @@ class Transactions(QWidget):
                             QMessageBox.warning(self, "Notification:", msg,
                                                 QMessageBox.Close)
 
-                if is_testnet:
-                    command = "cardano-cli query utxo " + \
-                              "--address " + self.address + " " + \
-                              "--testnet-magic 1097911063 " 
-                    handle_command(command)
-                elif is_mainnet:
-                    command = "cardano-cli query utxo " + \
-                              "--address " + self.address + " " + \
-                              "--mainnet"
-                    handle_command(command)
+                if self.net == "mainnet": 
+                    net_part =  "--mainnet "
+                elif self.net == "testnet":
+                    net_part = "--testnet-magic 1097911063 "
+                command = "cardano-cli query utxo " + \
+                          "--address " + self.address + " " + \
+                          net_part
+                handle_command(command)
+
+    def set_net(self, selected_net):
+        if selected_net != "":
+            self.net = selected_net 
 
     def update_era(self, selected_era):
         if selected_era != "":
@@ -229,11 +238,11 @@ class Transactions(QWidget):
         utxo_input = self.input_14_0.text()
         if "#" in utxo_input:
             trans_hash = utxo_input.split("#")[0]
-            if len(trans_hash) == 65:
+            if len(trans_hash) == 64:
                 self.utxo = utxo_input
             else:
-                msg = "UTxO transaction hash has to be 65 characters long." + \
-                      "Please inout a valid transaction hash." 
+                msg = "UTxO transaction hash has to be 64 characters long." + \
+                      "Please input a valid transaction hash." 
                 QMessageBox.warning(self, "Notification:", msg,
                                     QMessageBox.Close)
         else:
@@ -267,10 +276,7 @@ class Transactions(QWidget):
                 QMessageBox.warning(self, "Notification:", msg,
                                     QMessageBox.Close)
             else:
-                is_mainnet = self.radioButton_7_1.isChecked()
-                is_testnet = self.radioButton_8_1.isChecked()
-
-                if (not is_mainnet) and (not is_testnet):
+                if self.net == "":
                     msg = "Select option mainnet or testnet."    
                     QMessageBox.warning(self, "Notification:", msg,
                                         QMessageBox.Close)
@@ -291,7 +297,8 @@ class Transactions(QWidget):
                         amount_in_lovelace = parse_amount(amount_text, currency)
 
                         if amount_in_lovelace == -1:
-                            msg = "The specified amount in " + currency + " is not a valid input." 
+                            msg = "The specified amount in " + currency + " is not a valid input.\n" + \
+                                  "Amount in ADA can have max 6 decimal numbers.\nSpaces and characters are not allowed." 
                             QMessageBox.warning(self, "Notification:", msg,
                                                 QMessageBox.Close)
                         else: 
@@ -321,29 +328,28 @@ class Transactions(QWidget):
                                                     log_error_msg(output)                   
                                                     QMessageBox.warning(self, "Notification:", msg,
                                                                         QMessageBox.Close)
+                                                    self.command_failed = True
 
-                                        
-                                        if is_testnet:
+                                        if self.net == "mainnet":
                                             net_part = "--mainnet "
-                                        elif is_mainnet:
+                                        elif self.net == "testnet": 
                                             net_part = "--testnet-magic 1097911063 "
 
-                                        #TODO hadle era variable
                                         command_build = "cardano-cli transaction build " + \
                                                         "--" + self.era + " " + \
                                                         net_part + \
                                                         "--change-address " + self.address + " " + \
                                                         "--tx-in " + self.utxo + " " + \
-                                                        "--tx-out " + self.receiving_address + " " + amount_in_lovelace + " lovelace " + \
+                                                        "--tx-out " + self.receiving_address + " " + str(amount_in_lovelace) + " lovelace " + \
                                                         "--out-file tx.body"
                                         command_sign = "cardano-cli transaction sign " + \
-                                                    "--tx-body-file tx.body " + \
-                                                    "--signing-key-file " + self.skey + " " + \
-                                                    net_part + \
-                                                    "--out-file tx.signed" 
+                                                       "--tx-body-file tx.body " + \
+                                                       "--signing-key-file " + self.skey + " " + \
+                                                       net_part + \
+                                                       "--out-file tx.signed" 
                                         command_submit = "cardano-cli transaction submit " + \
-                                                        net_part + \
-                                                        "--tx-file tx.signed"
+                                                         net_part + \
+                                                         "--tx-file tx.signed"
 
                                         msg_common = "Look at the log file for error output."
                                         msg_build = "Transaction build command failed.\n" + msg_common
@@ -351,8 +357,10 @@ class Transactions(QWidget):
                                         msg_submit = "Transaction submit command failed.\n" + msg_common
                                                     
                                         handle_command(command_build, msg_build)
-                                        handle_command(command_sign, msg_sign)
-                                        handle_command(command_submit, msg_submit)
+                                        if not self.command_failed:
+                                            handle_command(command_sign, msg_sign)
+                                        if not self.command_failed:
+                                            handle_command(command_submit, msg_submit)
 
 # Writes an error message to a log file 
 def log_error_msg(output):
