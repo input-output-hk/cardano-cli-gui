@@ -1,5 +1,6 @@
 # cardano-cli-gui
-Simple GUI for the cardano client tool. Works only on linux operating systems.
+Simple GUI for the cardano client tool. To start the gui run from terminal:<br>
+`python cardano-cli-gui.py`
 
 **IMPORTANT:** Project is under construction. The gui does not work fully yet.<br>
 **IMPORTANT:** To use the GUI a cardano node has to be running and synced to the network.
