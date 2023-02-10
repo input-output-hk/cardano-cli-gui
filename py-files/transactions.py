@@ -65,6 +65,9 @@ class Transactions(QWidget):
         self.button_16_1.clicked.connect(self.set_receiving_address)
         self.button_18_0.clicked.connect(self.send_funds)
 
+        self.comboBox_12_0.addItems(["byron-era", "shelley-era", "allegra-era", "mary-era", "alonzo-era", "babbage-era"])
+        self.comboBox_12_0.currentTextChanged.connect(self.update_era)
+
         # Set label fonts 
         labels = [self.label_0_0, self.label_1_0, 
                   self.label_3_0, self.label_5_0, 
@@ -218,6 +221,10 @@ class Transactions(QWidget):
                               "--mainnet"
                     handle_command(command)
 
+    def update_era(self, selected_era):
+        if selected_era != "":
+            self.era = selected_era
+
     def set_utxo(self):
         utxo_input = self.input_14_0.text()
         if "#" in utxo_input:
@@ -255,87 +262,97 @@ class Transactions(QWidget):
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
         else:
-            is_mainnet = self.radioButton_7_1.isChecked()
-            is_testnet = self.radioButton_8_1.isChecked()
-
-            if (not is_mainnet) and (not is_testnet):
-                msg = "Select option mainnet or testnet."    
+            if self.skey == "":
+                msg = "Please set a valid signing key." 
                 QMessageBox.warning(self, "Notification:", msg,
                                     QMessageBox.Close)
             else:
-                is_ada = self.radioButton_9_1.isChecked()
-                is_lovelace = self.radioButton_10_1.isChecked()
+                is_mainnet = self.radioButton_7_1.isChecked()
+                is_testnet = self.radioButton_8_1.isChecked()
 
-                if (not is_ada) and (not is_lovelace):
-                    msg = "Select option ada or lovelace."    
+                if (not is_mainnet) and (not is_testnet):
+                    msg = "Select option mainnet or testnet."    
                     QMessageBox.warning(self, "Notification:", msg,
                                         QMessageBox.Close)
                 else:
-                    if self.utxo == "":
-                        msg = "Please set a valid UTxO transaction input." 
+                    is_ada = self.radioButton_9_1.isChecked()
+                    is_lovelace = self.radioButton_10_1.isChecked()
+
+                    if (not is_ada) and (not is_lovelace):
+                        msg = "Select option ada or lovelace."    
                         QMessageBox.warning(self, "Notification:", msg,
                                             QMessageBox.Close)
                     else:
-                        if self.receiving_address == "":
-                            msg = "Please set the receiving address." 
+                        if is_ada:
+                            currency = "ADA"
+                        elif is_lovelace: 
+                            currency = "Lovelace"
+                        amount_text = self.input_10_0.text() 
+                        amount_in_lovelace = parse_amount(amount_text, currency)
+
+                        if amount_in_lovelace == -1:
+                            msg = "The specified amount in " + currency + " is not a valid input." 
                             QMessageBox.warning(self, "Notification:", msg,
                                                 QMessageBox.Close)
-                        else:
-                            if is_ada:
-                                currency = "ADA"
-                            elif is_lovelace: 
-                                currency = "Lovelace"
-                            amount_text = self.input_10_0.text() 
-                            amount_in_lovelace = parse_amount(amount_text, currency)
-
-                            if amount_in_lovelace == -1:
-                                msg = "The specified amount in " + currency + " is not a valid input." 
+                        else: 
+                            if self.era == "":
+                                msg = "Please select an era." 
                                 QMessageBox.warning(self, "Notification:", msg,
                                                     QMessageBox.Close)
-                            else: 
-                                def handle_command(command, msg):
-                                    if settings.debug_mode:
-                                        print(command)
+                            else:
+                                if self.utxo == "":
+                                    msg = "Please set a valid UTxO transaction input." 
+                                    QMessageBox.warning(self, "Notification:", msg,
+                                                        QMessageBox.Close)
+                                else:
+                                    if self.receiving_address == "":
+                                        msg = "Please set the receiving address." 
+                                        QMessageBox.warning(self, "Notification:", msg,
+                                                            QMessageBox.Close)
                                     else:
-                                        try:
-                                            subprocess.Popen(command.split(), cwd=settings.folder_path)
-                                        except Exception:
-                                            output = traceback.format_exc()
-                                            log_error_msg(output)                   
-                                            QMessageBox.warning(self, "Notification:", msg,
-                                                                QMessageBox.Close)
+                                        def handle_command(command, msg):
+                                            if settings.debug_mode:
+                                                print(command)
+                                            else:
+                                                try:
+                                                    subprocess.Popen(command.split(), cwd=settings.folder_path)
+                                                except Exception:
+                                                    output = traceback.format_exc()
+                                                    log_error_msg(output)                   
+                                                    QMessageBox.warning(self, "Notification:", msg,
+                                                                        QMessageBox.Close)
 
-                                
-                                if is_testnet:
-                                    net_part = "--mainnet "
-                                elif is_mainnet:
-                                    net_part = "--testnet-magic 1097911063 "
+                                        
+                                        if is_testnet:
+                                            net_part = "--mainnet "
+                                        elif is_mainnet:
+                                            net_part = "--testnet-magic 1097911063 "
 
-                                #TODO hadle era variable
-                                command_build = "cardano-cli transaction build " + \
-                                                "--alonzo-era " + \
-                                                net_part + \
-                                                "--change-address " + self.address + " " + \
-                                                "--tx-in " + self.utxo + " " + \
-                                                "--tx-out " + self.receiving_address + " " + amount_in_lovelace + " lovelace " + \
-                                                "--out-file tx.body"
-                                command_sign = "cardano-cli transaction sign " + \
-                                               "--tx-body-file tx.body " + \
-                                               "--signing-key-file " + self.skey + " " + \
-                                               net_part + \
-                                               "--out-file tx.signed" 
-                                command_submit = "cardano-cli transaction submit " + \
-                                                 net_part + \
-                                                 "--tx-file tx.signed"
+                                        #TODO hadle era variable
+                                        command_build = "cardano-cli transaction build " + \
+                                                        "--" + self.era + " " + \
+                                                        net_part + \
+                                                        "--change-address " + self.address + " " + \
+                                                        "--tx-in " + self.utxo + " " + \
+                                                        "--tx-out " + self.receiving_address + " " + amount_in_lovelace + " lovelace " + \
+                                                        "--out-file tx.body"
+                                        command_sign = "cardano-cli transaction sign " + \
+                                                    "--tx-body-file tx.body " + \
+                                                    "--signing-key-file " + self.skey + " " + \
+                                                    net_part + \
+                                                    "--out-file tx.signed" 
+                                        command_submit = "cardano-cli transaction submit " + \
+                                                        net_part + \
+                                                        "--tx-file tx.signed"
 
-                                msg_common = "Look at the log file for error output."
-                                msg_build = "Transaction build command failed.\n" + msg_common
-                                msg_sign = "Transaction sign command failed.\n" + msg_common
-                                msg_submit = "Transaction submit command failed.\n" + msg_common
-                                             
-                                handle_command(command_build, msg_build)
-                                handle_command(command_sign, msg_sign)
-                                handle_command(command_submit, msg_submit)
+                                        msg_common = "Look at the log file for error output."
+                                        msg_build = "Transaction build command failed.\n" + msg_common
+                                        msg_sign = "Transaction sign command failed.\n" + msg_common
+                                        msg_submit = "Transaction submit command failed.\n" + msg_common
+                                                    
+                                        handle_command(command_build, msg_build)
+                                        handle_command(command_sign, msg_sign)
+                                        handle_command(command_submit, msg_submit)
 
 # Writes an error message to a log file 
 def log_error_msg(output):
