@@ -212,6 +212,7 @@ class Transactions(QWidget):
                             log_error_msg(output)
                             
                             msg = "Address could not be querried.\n" + \
+                                  "Check if cardano node is running and is synced.\n" + \
                                   "Look at the error.log file for error output."                    
                             QMessageBox.warning(self, "Notification:", msg,
                                                 QMessageBox.Close)
@@ -350,7 +351,8 @@ class Transactions(QWidget):
                                                          net_part + \
                                                          "--tx-file tx.signed"
 
-                                        msg_common = "Look at the error.log file for error output."
+                                        msg_common = "Check if cardano node is running and is synced.\n" + \
+                                                     "Look at the error.log file for error output." 
                                         msg_build = "Transaction build command failed.\n" + msg_common
                                         msg_sign = "Transaction sign command failed.\n" + msg_common
                                         msg_submit = "Transaction submit command failed.\n" + msg_common
