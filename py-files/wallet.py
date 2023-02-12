@@ -31,14 +31,12 @@ class Wallet(QWidget):
         self.button_2_1 = QPushButton("Set")
 
         # Widgets for signing key section 
-        self.label_3_0 = QLabel("Input signing key name:")
+        self.label_3_0 = QLabel("Signing key name:")
         self.input_4_0 = QLineEdit()
-        self.button_4_1 = QPushButton("Set")
         self.button_5_0 = QPushButton("Generate both keys")
 
         # Widget actions for signing and verifaction key section
         self.button_2_1.clicked.connect(self.set_verification_key)
-        self.button_4_1.clicked.connect(self.set_signing_key)
         self.button_5_0.clicked.connect(self.generate_skey_and_vkey)
 
         # Widgets for payment address section 
@@ -88,7 +86,7 @@ class Wallet(QWidget):
             input.setFixedSize(500,30)
 
         # Set button sizes 
-        buttons = [self.button_2_1, self.button_4_1, 
+        buttons = [self.button_2_1,  
                    self.button_8_1, self.button_8_2, 
                    self.button_10_1, self.button_13_1, 
                    self.button_13_2, self.button_15_1] 
@@ -111,7 +109,6 @@ class Wallet(QWidget):
         # Adding widgets for signing key section 
         layout.addWidget(self.label_3_0, 3, 0)
         layout.addWidget(self.input_4_0, 4, 0)
-        layout.addWidget(self.button_4_1, 4, 1)
         layout.addWidget(self.button_5_0, 5, 0)
         layout.addWidget(self.emptyLabel, 6, 0)
         # Adding widgets for payment address section 
@@ -138,29 +135,20 @@ class Wallet(QWidget):
         self.setLayout(layout)
 
     def set_verification_key(self):
-        verification_key_name = self.input_2_0.text()
-        verification_key_path = settings.folder_path + "/" + verification_key_name
-        verification_key_exists = os.path.isfile(verification_key_path)
+        vkey_name = self.input_2_0.text()
+        vkey_path = settings.folder_path + "/" + vkey_name
+        vkey_exists = os.path.isfile(vkey_path)
         
-        if verification_key_exists:
-            with open(verification_key_path, "r") as file:
-                self.verification_key = file.read()
+        skey_name = vkey_name.split(".")[0] + ".skey"
+        skey_path = settings.folder_path + "/" + skey_name
+        skey_exists = os.path.isfile(skey_path) 
+
+        if vkey_exists:
+            self.vkey_name = vkey_name
+            if skey_exists:
+                self.input_4_0.setText(skey_name)
         else:
             msg = "Verification key does not exists.\n" + \
-                  "Please specify a valid file name."                        
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-
-    def set_signing_key(self):
-        signing_key_name = self.input_4_0.text()
-        signing_key_path = settings.folder_path + "/" + signing_key_name
-        signing_key_exists = os.path.isfile(signing_key_path)
-        
-        if signing_key_exists:
-            with open(signing_key_path, "r") as file:
-                self.signing_key = file.read()
-        else:
-            msg = "Signing key does not exists.\n" + \
                   "Please specify a valid file name."                        
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
@@ -185,6 +173,7 @@ class Wallet(QWidget):
                 command = "cardano-cli address key-gen " + \
                           "--verification-key-file " + self.vkey_name + " " + \
                           "--signing-key-file " + skey_name 
+
                 if settings.debug_mode:
                     print(command)
                 else:
@@ -192,17 +181,13 @@ class Wallet(QWidget):
                         subprocess.Popen(command.split(), cwd=settings.folder_path)
                         self.input_2_0.setText(self.vkey_name)
                         self.input_4_0.setText(skey_name)
-
-                        with open(vkey_file_path, "r") as file:
-                            self.verification_key = file.read()
-                        with open(vkey_file_path, "r") as file:
-                            self.verification_key = file.read()
                     except Exception:
                         output = traceback.format_exc()
                         log_error_msg(output)
                         
                         msg = "Verification and signing key could not be generated.\n" + \
-                              "Check if cardano node is running."                        
+                              "Check if cardano node is running and is synced.\n" + \
+                              "Look at the error.log file for error output." 
                         QMessageBox.warning(self, "Notification:", msg,
                                             QMessageBox.Close)
                 break
@@ -248,39 +233,35 @@ class Wallet(QWidget):
                     address_file_exists = os.path.isfile(address_file_path)
 
                     if not address_file_exists:
-                        self.input_8_0.seText(address_name)
-
                         def handle_command(command):
                             if settings.debug_mode:
                                 print(command)
                             else:
                                 try:
                                     subprocess.Popen(command.split(), cwd=settings.folder_path)
-
+                                    self.input_8_0.seText(address_name) 
                                     with open(address_file_path, "r") as file:
-                                        self.address = file.read()
+                                        self.address = file.read() 
                                 except Exception:
                                     output = traceback.format_exc()
                                     log_error_msg(output)
                                     
                                     msg = "Address could not be generated.\n" + \
-                                          "Check if cardano node is running."                    
+                                          "Check if cardano node is running and is synced.\n" + \
+                                          "Look at the error.log file for error output."                    
                                     QMessageBox.warning(self, "Notification:", msg,
                                                         QMessageBox.Close)
 
                         if is_testnet:
-                            command = "cardano-cli address build " + \
-                                      "--payment-verification-key-file " + self.vkey_name + " " + \
-                                      "--testnet-magic 1097911063 " + \
-                                      "--out-file " + address_name
-                            handle_command(command)
+                            net_part = "--testnet-magic 1097911063 "
                         elif is_mainnet:
-                            command = "cardano-cli address build " + \
-                                      "--payment-verification-key-file " + self.vkey_name + " " + \
-                                      "--mainnet " + \
-                                      "--out-file " + address_name
-                            handle_command(command)
-                        
+                            net_part = "--mainnet "
+
+                        command = "cardano-cli address build " + \
+                                  "--payment-verification-key-file " + self.vkey_name + " " + \
+                                  net_part + \
+                                  "--out-file " + address_name
+                        handle_command(command)
                         break
 
                     file_number_counter += 1 
@@ -319,8 +300,6 @@ class Wallet(QWidget):
                 pkh_file_exists = os.path.isfile(pkh_file_path)
 
                 if not pkh_file_exists:
-                    self.input_13_0.setText(pkh_name)
-
                     command = "cardano-cli address key-hash " + \
                               "--payment-verification-key-file " + self.vkey_name + " " + \
                               "--out-file " + pkh_name
@@ -329,7 +308,7 @@ class Wallet(QWidget):
                     else:
                         try:
                             subprocess.Popen(command.split(), cwd=settings.folder_path)
-
+                            self.input_13_0.setText(pkh_name)
                             with open(pkh_file_path, "r") as file:
                                 self.pkh = file.read()
                         except Exception:
@@ -337,7 +316,8 @@ class Wallet(QWidget):
                             log_error_msg(output)
                             
                             msg = "Public key hash could not be generated.\n" + \
-                                  "Check if cardano node is running."                    
+                                  "Check if cardano node is running and is synced.\n" + \
+                                  "Look at the error.log file for error output."                     
                             QMessageBox.warning(self, "Notification:", msg,
                                                 QMessageBox.Close)
                     break
@@ -348,7 +328,6 @@ class Wallet(QWidget):
         self.input_15_0.setText(self.pkh)
 
 def log_error_msg(output):
-    with open("./errors.log", "a") as file:
+    with open("./error.log", "a") as file:
         file.write(output)
-        file.write("\n-------------------------------------------------------------------\n\n")
 
