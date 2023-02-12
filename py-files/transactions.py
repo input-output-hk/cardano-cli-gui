@@ -212,7 +212,7 @@ class Transactions(QWidget):
                             log_error_msg(output)
                             
                             msg = "Address could not be querried.\n" + \
-                                  "Check if cardano node is running."                    
+                                  "Look at the error.log file for error output."                    
                             QMessageBox.warning(self, "Notification:", msg,
                                                 QMessageBox.Close)
 
@@ -350,7 +350,7 @@ class Transactions(QWidget):
                                                          net_part + \
                                                          "--tx-file tx.signed"
 
-                                        msg_common = "Look at the log file for error output."
+                                        msg_common = "Look at the error.log file for error output."
                                         msg_build = "Transaction build command failed.\n" + msg_common
                                         msg_sign = "Transaction sign command failed.\n" + msg_common
                                         msg_submit = "Transaction submit command failed.\n" + msg_common
@@ -360,12 +360,14 @@ class Transactions(QWidget):
                                             handle_command(command_sign, msg_sign)
                                         if not self.command_failed:
                                             handle_command(command_submit, msg_submit)
+                                        if not self.command_failed:
+                                            os.remove(settings.folder_path + "/tx.body")
+                                            os.remove(settings.folder_path + "/tx.signed")
 
 # Writes an error message to a log file 
 def log_error_msg(output):
-    with open("./errors.log", "a") as file:
+    with open("./error.log", "w") as file:
         file.write(output)
-        file.write("\n-------------------------------------------------------------------\n\n")
 
 # Parses the input string for the ADA or Lovelace amount
 def parse_amount(input, currency):
