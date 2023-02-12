@@ -19,7 +19,8 @@ class Wallet(QWidget):
         self.address = ""
         self.pkh = ""
 
-        # Cardano picture
+        # Starting text and Cardano picture
+        self.label_0_0 = QLabel("Manage wallet address and its keys.")
         picture_0_2 = QLabel("")
         picture_0_2.setPixmap(QPixmap("./images/cardano.png"))
         picture_0_2.setFixedSize(80,80)
@@ -70,7 +71,8 @@ class Wallet(QWidget):
         self.button_15_1.clicked.connect(self.show_pkh) 
 
         # Set label fonts 
-        labels = [self.label_1_0, self.label_3_0, 
+        labels = [self.label_0_0, 
+                  self.label_1_0, self.label_3_0, 
                   self.label_7_0, self.label_9_0,
                   self.label_12_0, self.label_14_0]
         for label in labels:
@@ -100,6 +102,7 @@ class Wallet(QWidget):
 
         # Layouts 
         layout = QGridLayout()
+        layout.addWidget(self.label_0_0, 0, 0) 
         layout.addWidget(picture_0_2, 0, 2) 
         # Adding widgets for verification key section 
         layout.addWidget(self.label_1_0, 1, 0) 
@@ -328,6 +331,6 @@ class Wallet(QWidget):
         self.input_15_0.setText(self.pkh)
 
 def log_error_msg(output):
-    with open("./error.log", "a") as file:
+    with open("./error.log", "w") as file:
         file.write(output)
 
