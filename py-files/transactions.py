@@ -16,7 +16,7 @@ class Transactions(QWidget):
 
         # Creating local variables
         self.address = ""
-        self.skey = ""
+        self.skey_name = ""
         self.net = ""
         self.era = ""
         self.utxo = ""
@@ -177,8 +177,7 @@ class Transactions(QWidget):
         skey_exists = os.path.isfile(skey_path)
         
         if skey_exists:
-            with open(skey_path, "r") as file:
-                self.skey = file.read()
+            self.skey_name = skey_name
         else:
             msg = "Signing key file does not exists.\n" + \
                   "Please specify a valid file name."  
@@ -271,7 +270,7 @@ class Transactions(QWidget):
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
         else:
-            if self.skey == "":
+            if self.skey_name == "":
                 msg = "Please set a valid signing key." 
                 QMessageBox.warning(self, "Notification:", msg,
                                     QMessageBox.Close)
@@ -344,7 +343,7 @@ class Transactions(QWidget):
                                                         "--out-file tx.body"
                                         command_sign = "cardano-cli transaction sign " + \
                                                        "--tx-body-file tx.body " + \
-                                                       "--signing-key-file " + self.skey + " " + \
+                                                       "--signing-key-file " + self.skey_name + " " + \
                                                        net_part + \
                                                        "--out-file tx.signed" 
                                         command_submit = "cardano-cli transaction submit " + \
