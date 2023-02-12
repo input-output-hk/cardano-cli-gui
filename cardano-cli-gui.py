@@ -9,8 +9,8 @@ from wallet import Wallet
 from transactions import Transactions
 from smart_contracts import Smart_contracts
 
-from PyQt5.QtCore import QSize
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import QSize 
+from PyQt5.QtGui import QPixmap 
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QTabWidget, 
                              QAction, QPushButton, QLabel, QLineEdit, 
                              QWidget, QGridLayout, QMessageBox)
@@ -29,8 +29,9 @@ class MainWindow(QMainWindow):
         # Create the applications menu 
         self.app_menu = self.menuBar()
         debug_menu = self.app_menu.addMenu("&Debug")
-        help_menu = self.app_menu.addMenu("&Help")
+        style_menu = self.app_menu.addMenu("&Style")
 
+        # Debug menu widgets
         on_toggle = QAction("&ON", self)
         off_toggle = QAction("&OFF", self)
 
@@ -41,8 +42,16 @@ class MainWindow(QMainWindow):
         on_toggle.triggered.connect(self.set_debug_on)
         off_toggle.triggered.connect(self.set_debug_off)
 
-        tutorial_btn = QAction("&Tutorial", self)
-        help_menu.addAction(tutorial_btn)
+        # Style menu widgets
+        light_style = QAction("&Light", self)
+        dark_style = QAction("&Dark", self)
+
+        style_menu.addAction(light_style)
+        style_menu.addSeparator()
+        style_menu.addAction(dark_style)
+
+        light_style.triggered.connect(self.set_light_style)
+        dark_style.triggered.connect(self.set_dark_style)
 
         # Create tabs and adds start window 
         self.tabs = QTabWidget()
@@ -79,7 +88,7 @@ class MainWindow(QMainWindow):
     # Creates the start tab window
     def init_start_tab(self):
         # Initial message
-        label_1_0 = QLabel("To unlock other tabs a folder path needs to be set.\nAll files will be loaded or saved to this folder.")
+        label_1_0 = QLabel("To unlock other tabs set a valid folder path.\nAll files will be loaded or saved to this folder.")
 
         # Cardano picture
         picture_1_1 = QLabel("")
@@ -163,8 +172,13 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
 
+    def set_light_style(self):
+        app.setPalette(settings.lightPallet)
+
+    def set_dark_style(self):
+        app.setPalette(settings.darkPalette)
+
 app = QApplication(sys.argv)
 window = MainWindow()
 window.show()
 app.exec_()
-
