@@ -23,7 +23,7 @@ class MainWindow(QMainWindow):
         self.init_global_variables()
 
         # Set window properties
-        self.setMinimumSize(QSize(700, 820))  
+        self.setMinimumSize(QSize(740, 900)) 
         self.setWindowTitle("Cardano client GUI 1.0")
 
         # Create the applications menu 
