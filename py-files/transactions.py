@@ -31,7 +31,7 @@ class Transactions(QWidget):
         picture_0_1.setScaledContents(True)
 
         # Widgets for payment address section 
-        self.label_1_0 = QLabel("Type in your address name (will be also used as change address)):")
+        self.label_1_0 = QLabel("Type in your address name (will be also used as change address):")
         self.input_2_0 = QLineEdit()
         self.button_2_1 = QPushButton("Set")
         self.label_3_0 = QLabel("Type in your signing key name:")
@@ -357,10 +357,9 @@ class Transactions(QWidget):
                                         handle_command(command_build, msg_build)
                                         if not self.command_failed:
                                             handle_command(command_sign, msg_sign)
+                                            os.remove(settings.folder_path + "/tx.body")
                                         if not self.command_failed:
                                             handle_command(command_submit, msg_submit)
-                                        if not self.command_failed:
-                                            os.remove(settings.folder_path + "/tx.body")
                                             os.remove(settings.folder_path + "/tx.signed")
 
 # Writes an error message to a log file 
