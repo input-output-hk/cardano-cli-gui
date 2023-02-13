@@ -4,6 +4,7 @@ import os
 import settings
 import subprocess
 import traceback
+import common_functions
 
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QPushButton, QLabel, QLineEdit, 
@@ -186,7 +187,7 @@ class Wallet(QWidget):
                         self.input_4_0.setText(skey_name)
                     except Exception:
                         output = traceback.format_exc()
-                        log_error_msg(output)
+                        common_functions.log_error_msg(output)
                         
                         msg = "Verification and signing key could not be generated.\n" + \
                               "Check if cardano node is running and is synced.\n" + \
@@ -247,7 +248,7 @@ class Wallet(QWidget):
                                         self.address = file.read() 
                                 except Exception:
                                     output = traceback.format_exc()
-                                    log_error_msg(output)
+                                    common_functions.log_error_msg(output)
                                     
                                     msg = "Address could not be generated.\n" + \
                                           "Check if cardano node is running and is synced.\n" + \
@@ -316,7 +317,7 @@ class Wallet(QWidget):
                                 self.pkh = file.read()
                         except Exception:
                             output = traceback.format_exc()
-                            log_error_msg(output)
+                            common_functions.log_error_msg(output)
                             
                             msg = "Public key hash could not be generated.\n" + \
                                   "Check if cardano node is running and is synced.\n" + \
@@ -329,8 +330,4 @@ class Wallet(QWidget):
 
     def show_pkh(self): 
         self.input_15_0.setText(self.pkh)
-
-def log_error_msg(output):
-    with open("./error.log", "w") as file:
-        file.write(output)
 

@@ -4,6 +4,7 @@ import os
 import settings
 import subprocess
 import traceback
+import common_functions
 
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QPushButton, QLabel, QLineEdit, 
@@ -37,13 +38,13 @@ class Smart_contracts(QWidget):
         self.label_1_0 = QLabel("Type in script file name:")
         self.input_2_0 = QLineEdit()
         self.button_2_1 = QPushButton("Set")
-        self.label_3_0 = QLabel("Script payment address file name:")
+        self.label_3_0 = QLabel("Script address file name:")
         self.input_4_0 = QLineEdit()
         self.button_4_1 = QPushButton("Set")
         self.button_4_2 = QPushButton("Generate")
         self.label_5_0 = QLabel("Select mainnet or testnet:")
         self.comboBox_6_0 = QComboBox()
-        self.label_7_0 = QLabel("Script payment address:")
+        self.label_7_0 = QLabel("Script address:")
         self.input_8_0 = QLineEdit() 
         self.button_8_1 = QPushButton("Show")
 
@@ -218,7 +219,7 @@ class Smart_contracts(QWidget):
                                 self.input_4_0.setText(script_address_file) 
                             except Exception:
                                 output = traceback.format_exc()
-                                log_error_msg(output)
+                                common_functions.log_error_msg(output)
                                 
                                 msg = "Script address could not be generated.\n" + \
                                       "Check if cardano node is running and is synced.\n" + \
@@ -311,54 +312,54 @@ class Smart_contracts(QWidget):
                                 QMessageBox.Close)
 
     def send_funds(self):
-        if self.change_address == "":
-            msg = "Please set a valid change address." 
+        if self.script_address == "":
+            msg = "Please set the receiving script address." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
         else:
-            if self.skey_name == "":
-                msg = "Please set a valid signing key." 
+            if self.net == "":
+                msg = "Select option mainnet or testnet."    
                 QMessageBox.warning(self, "Notification:", msg,
                                     QMessageBox.Close)
             else:
-                if self.net == "":
-                    msg = "Select option mainnet or testnet."    
+                if self.change_address == "":
+                    msg = "Please set a valid change address." 
                     QMessageBox.warning(self, "Notification:", msg,
                                         QMessageBox.Close)
                 else:
-                    is_ada = self.radioButton_14_1.isChecked()
-                    is_lovelace = self.radioButton_14_2.isChecked()
-
-                    if (not is_ada) and (not is_lovelace):
-                        msg = "Select option ada or lovelace."    
+                    if self.skey_name == "":
+                        msg = "Please set a valid signing key." 
                         QMessageBox.warning(self, "Notification:", msg,
                                             QMessageBox.Close)
                     else:
-                        if is_ada:
-                            currency = "ADA"
-                        elif is_lovelace: 
-                            currency = "Lovelace"
-                        amount_text = self.input_14_0.text() 
-                        amount_in_lovelace = parse_amount(amount_text, currency)
+                        is_ada = self.radioButton_14_1.isChecked()
+                        is_lovelace = self.radioButton_14_2.isChecked()
 
-                        if amount_in_lovelace == -1:
-                            msg = "The specified amount in " + currency + " is not a valid input.\n" + \
-                                  "Amount in ADA can have max 6 decimal numbers.\nSpaces and characters are not allowed." 
+                        if (not is_ada) and (not is_lovelace):
+                            msg = "Select option ada or lovelace."    
                             QMessageBox.warning(self, "Notification:", msg,
                                                 QMessageBox.Close)
-                        else: 
-                            if self.era == "":
-                                msg = "Please select an era." 
+                        else:
+                            if is_ada:
+                                currency = "ADA"
+                            elif is_lovelace: 
+                                currency = "Lovelace"
+                            amount_text = self.input_14_0.text() 
+                            amount_in_lovelace = common_functions.parse_amount(amount_text, currency)
+
+                            if amount_in_lovelace == -1:
+                                msg = "The specified amount in " + currency + " is not a valid input.\n" + \
+                                    "Amount in ADA can have max 6 decimal numbers.\nSpaces and characters are not allowed." 
                                 QMessageBox.warning(self, "Notification:", msg,
                                                     QMessageBox.Close)
-                            else:
-                                if self.utxo == "":
-                                    msg = "Please set a valid UTxO transaction input." 
+                            else: 
+                                if self.era == "":
+                                    msg = "Please select an era." 
                                     QMessageBox.warning(self, "Notification:", msg,
                                                         QMessageBox.Close)
                                 else:
-                                    if self.script_address == "":
-                                        msg = "Please set the receiving script address." 
+                                    if self.utxo == "":
+                                        msg = "Please set a valid UTxO transaction input." 
                                         QMessageBox.warning(self, "Notification:", msg,
                                                             QMessageBox.Close)
                                     else:
@@ -375,7 +376,7 @@ class Smart_contracts(QWidget):
                                                         subprocess.Popen(command.split(), cwd=settings.folder_path)
                                                     except Exception:
                                                         output = traceback.format_exc()
-                                                        log_error_msg(output)                   
+                                                        common_functions.log_error_msg(output)                   
                                                         QMessageBox.warning(self, "Notification:", msg,
                                                                             QMessageBox.Close)
                                                         self.command_failed = True
@@ -415,45 +416,4 @@ class Smart_contracts(QWidget):
                                             if not self.command_failed:
                                                 handle_command(command_submit, msg_submit)                                                
                                                 os.remove(settings.folder_path + "/tx.signed")
-
-# Writes an error message to a log file 
-def log_error_msg(output):
-    with open("./error.log", "w") as file:
-        file.write(output)
-
-# Parses the input string for the ADA or Lovelace amount
-def parse_amount(input, currency):
-    input_check = True
-    input_lovelace = -1 
-
-    if currency == "ADA":
-        if '.' in input:
-            input_parts = input.split(".")
-            input_check1 = len(input_parts) == 2
-            input_check2 = input[-1] != "." and input[0] != "."
-            input_check3 = len(input_parts[1]) < 7
-            if input_check1 and input_check2 and input_check3:
-                for el in input_parts[0]:
-                    if not el.isdigit():
-                        input_check = False
-                        break
-                for el in input_parts[1]:
-                    if not el.isdigit():
-                        input_check = False
-                        break
-                if input_check:
-                    if len(input_parts[1]) < 6:
-                        lovelace_part = input_parts[1] + (6 - len(input_parts[1]))*"0"
-                    else: 
-                        lovelace_part = input_parts[1]
-                    input_lovelace = int(input_parts[0])*1000000 + int(lovelace_part)
-        return input_lovelace
-    elif currency == "Lovelace":
-        for el in input:
-            if not el.isdigit():
-                input_check = False
-                break
-        if input_check:
-            input_lovelace = int(input)
-        return input_lovelace
 
