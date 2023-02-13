@@ -338,9 +338,9 @@ class Transactions(QWidget):
                                         command_build = "cardano-cli transaction build " + \
                                                         "--" + self.era + " " + \
                                                         net_part + \
-                                                        "--change-address " + self.address + " " + \
                                                         "--tx-in " + self.utxo + " " + \
                                                         "--tx-out " + self.receiving_address + " " + str(amount_in_lovelace) + " lovelace " + \
+                                                        "--change-address " + self.address + " " + \
                                                         "--out-file tx.body"
                                         command_sign = "cardano-cli transaction sign " + \
                                                        "--tx-body-file tx.body " + \
