@@ -31,7 +31,7 @@ class Transactions(QWidget):
         picture_0_1.setScaledContents(True)
 
         # Widgets for payment address section 
-        self.label_1_0 = QLabel("Type in your address name:")
+        self.label_1_0 = QLabel("Type in your address name (will be also used as change address)):")
         self.input_2_0 = QLineEdit()
         self.button_2_1 = QPushButton("Set")
         self.label_3_0 = QLabel("Type in your signing key name:")
@@ -264,7 +264,7 @@ class Transactions(QWidget):
 
     def send_funds(self): 
         if self.address == "":
-            msg = "Please set a valid payment address." 
+            msg = "Please set a valid change address." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
         else:
