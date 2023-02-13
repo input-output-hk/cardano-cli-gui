@@ -1,20 +1,29 @@
 
+
+import os
+import settings
+import subprocess
+import traceback
+
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QPushButton, QLabel, QLineEdit, 
                              QWidget, QGridLayout, QRadioButton,
-                             QComboBox)
+                             QComboBox, QMessageBox)
 
 class Smart_contracts(QWidget):
     def __init__(self):
         super().__init__()
 
         # Creating local variables
-        self.address = ""
-        self.skey_name = ""
+        self.script_file = ""
+        self.script_address = ""
         self.net = ""
+
+        self.change_address = ""
+        self.skey_name = ""
         self.era = ""
         self.utxo = ""
-        self.script_address = ""
+        self.datum_file_name = ""
         self.command_failed = False
 
         # Cardano picture
@@ -48,7 +57,7 @@ class Smart_contracts(QWidget):
         self.button_8_1.clicked.connect(self.show_script_address)
 
         # Widgets for sending funds to script address section
-        self.label_9_0 = QLabel("Type in your address:")
+        self.label_9_0 = QLabel("Type in your change address:")
         self.input_10_0 = QLineEdit()
         self.button_10_1 = QPushButton("Set")
         self.label_11_0 = QLabel("Type in your signing key file name:")
@@ -70,8 +79,8 @@ class Smart_contracts(QWidget):
         self.button_22_0 = QPushButton("Send")
 
         # Widget actions for building script address section  
-        self.button_10_1.clicked.connect(self.set_sending_address)
-        self.button_12_1.clicked.connect(self.set_signing_key)
+        self.button_10_1.clicked.connect(self.set_change_address)
+        self.button_12_1.clicked.connect(self.set_skey_name)
 
         self.comboBox_16_0.addItems(["", "byron-era", "shelley-era", "allegra-era", "mary-era", "alonzo-era", "babbage-era"])
         self.comboBox_16_0.currentTextChanged.connect(self.update_era)
@@ -155,36 +164,193 @@ class Smart_contracts(QWidget):
         self.setLayout(layout) 
 
     def set_script_file(self):
-        pass
+        script_file_name = self.input_2_0.text()
+        script_file_path = settings.folder_path + "/" + script_file_name
+        script_file_exists = os.path.isfile(script_file_path)
+        
+        if script_file_exists:
+            self.script_file = script_file_name
+        else:
+            msg = "Script file does not exists.\n" + \
+                  "Please specify a valid file name." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close) 
 
     def set_script_address_file(self):
-        pass
+        script_address_file_name = self.input_4_0.text()
+        script_address_file_path = settings.folder_path + "/" + script_address_file_name
+        script_address_file_exists = os.path.isfile(script_address_file_path)
+        
+        if script_address_file_exists:
+            with open(script_address_file_path, "r") as file:
+                self.script_address = file.read() 
+        else:
+            msg = "Script address file does not exists.\n" + \
+                  "Please specify a valid file name." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
 
     def generate_script_address_file(self):
-        pass 
+        if self.script_file == "":
+            msg = "Script file not set.\n" + \
+                  "Please set a valid file name."                   
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+        else:
+            if self.net == "":
+                msg = "Select option mainnet or testnet."    
+                QMessageBox.warning(self, "Notification:", msg,
+                                    QMessageBox.Close)
+            else:
+                script_address_file = self.script_file.split(".")[0] + ".addr"
+                if os.path.isfile(script_address_file):
+                    msg = "Address file with same name as script file already exists.\n" + \
+                          "Please delete it and try again to generate address file."    
+                    QMessageBox.warning(self, "Notification:", msg,
+                                        QMessageBox.Close)
+                else:
+                    def handle_command(command):
+                        if settings.debug_mode:
+                            print(command)
+                        else:
+                            try:
+                                subprocess.Popen(command.split(), cwd=settings.folder_path) 
+                                self.input_4_0.setText(script_address_file) 
+                            except Exception:
+                                output = traceback.format_exc()
+                                log_error_msg(output)
+                                
+                                msg = "Script address could not be generated.\n" + \
+                                      "Check if cardano node is running and is synced.\n" + \
+                                      "Look at the error.log file for error output."                  
+                                QMessageBox.warning(self, "Notification:", msg,
+                                                    QMessageBox.Close)
 
-    def set_net(self):
-        pass
+                    if self.net == "mainnet": 
+                        net_part =  "--mainnet "
+                    elif self.net == "testnet":
+                        net_part = "--testnet-magic 1097911063 "
+                    command = "cardano-cli address build-script " + \
+                              "--script-file " + self.script_file + " " + \
+                              net_part + \
+                              "--out-file " + script_address_file
+                    handle_command(command)
+
+    def set_net(self, selected_net):
+        if selected_net != "":
+            self.net = selected_net
 
     def show_script_address(self):
-        pass
+        self.input_8_0.setText(self.script_address)
 
-    def set_sending_address(self):
-        pass
+    def set_change_address(self): 
+        change_address_name = self.input_2_0.text()
+        change_address_path = settings.folder_path + "/" + change_address_name
+        change_address_exists = os.path.isfile(change_address_path)
+        
+        if change_address_exists:
+            with open(change_address_path, "r") as file:
+                self.change_address = file.read()
+        else:
+            msg = "Address file does not exists.\n" + \
+                  "Please specify a valid file name." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
 
-    def set_signing_key(self):
-        pass
+    def set_skey_name(self):
+        skey_name = self.input_12_0.text()
+        skey_path = settings.folder_path + "/" + skey_name
+        skey_exists = os.path.isfile(skey_path)
+        
+        if skey_exists:
+            self.skey_name = skey_name
+        else:
+            msg = "Signing key file does not exists.\n" + \
+                  "Please specify a valid file name."  
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close) 
 
-    def update_era(self):
-        pass 
+    def update_era(self, selected_era):
+        if selected_era != "":
+            self.era = selected_era
 
     def set_utxo(self):
-        pass
+        utxo_input = self.input_18_0.text()
+        if "#" in utxo_input:
+            trans_hash = utxo_input.split("#")[0]
+            if len(trans_hash) == 64:
+                self.utxo = utxo_input
+            else:
+                msg = "UTxO transaction hash has to be 64 characters long." + \
+                      "Please input a valid transaction hash." 
+                QMessageBox.warning(self, "Notification:", msg,
+                                    QMessageBox.Close)
+        else:
+            msg = "UTxO transaction input has to contain # sign and transaction index." + \
+                  "Please write a valid transaction input." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
 
     def set_datum(self):
-        pass
+        datum_file_name = self.input_20_0.text() 
+        datum_file_path = settings.folder_path + "/" + datum_file_name
+        datum_file_exists = os.path.isfile(datum_file_path)
+        
+        if ".json" in datum_file_name:
+            if datum_file_exists:
+                self.datum_file_name = datum_file_name 
+            else:
+                msg = "Datum file does not exists.\n" + \
+                      "Please specify a valid file name." 
+                QMessageBox.warning(self, "Notification:", msg,
+                                    QMessageBox.Close) 
+        else:
+            msg = "Datum has to be a file in JSON fromat." + \
+                  "Please type in a name with a .json extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
 
     def send_funds(self):
         pass
 
-    
+# Writes an error message to a log file 
+def log_error_msg(output):
+    with open("./error.log", "w") as file:
+        file.write(output)
+
+# Parses the input string for the ADA or Lovelace amount
+def parse_amount(input, currency):
+    input_check = True
+    input_lovelace = -1 
+
+    if currency == "ADA":
+        if '.' in input:
+            input_parts = input.split(".")
+            input_check1 = len(input_parts) == 2
+            input_check2 = input[-1] != "." and input[0] != "."
+            input_check3 = len(input_parts[1]) < 7
+            if input_check1 and input_check2 and input_check3:
+                for el in input_parts[0]:
+                    if not el.isdigit():
+                        input_check = False
+                        break
+                for el in input_parts[1]:
+                    if not el.isdigit():
+                        input_check = False
+                        break
+                if input_check:
+                    if len(input_parts[1]) < 6:
+                        lovelace_part = input_parts[1] + (6 - len(input_parts[1]))*"0"
+                    else: 
+                        lovelace_part = input_parts[1]
+                    input_lovelace = int(input_parts[0])*1000000 + int(lovelace_part)
+        return input_lovelace
+    elif currency == "Lovelace":
+        for el in input:
+            if not el.isdigit():
+                input_check = False
+                break
+        if input_check:
+            input_lovelace = int(input)
+        return input_lovelace
+
