@@ -191,9 +191,6 @@ class Transactions(QWidget):
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
         else:
-            is_mainnet = self.net == "mainnet" 
-            is_testnet = self.net == "testnet" 
-
             if self.net == "":
                 msg = "Select option mainnet or testnet."    
                 QMessageBox.warning(self, "Notification:", msg,
