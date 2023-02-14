@@ -197,45 +197,49 @@ class Smart_contracts(QWidget):
                   "Please set a valid file name."                   
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
-        else:
-            if self.net == "":
-                msg = "Select option mainnet or testnet."    
-                QMessageBox.warning(self, "Notification:", msg,
-                                    QMessageBox.Close)
+            return None
+        
+        if self.net == "":
+            msg = "Select option mainnet or testnet."    
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        script_address_file = self.script_file.split(".")[0] + ".addr"
+        if os.path.isfile(script_address_file):
+            msg = "Address file with same name as script file already exists.\n" + \
+                  "Please delete it and try again to generate address file."    
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        def handle_command(command):
+            if settings.debug_mode:
+                print(command)
             else:
-                script_address_file = self.script_file.split(".")[0] + ".addr"
-                if os.path.isfile(script_address_file):
-                    msg = "Address file with same name as script file already exists.\n" + \
-                          "Please delete it and try again to generate address file."    
+                try:
+                    subprocess.Popen(command.split(), cwd=settings.folder_path) 
+                    self.input_4_0.setText(script_address_file) 
+                except Exception:
+                    output = traceback.format_exc()
+                    common_functions.log_error_msg(output)
+                    
+                    msg = "Script address could not be generated.\n" + \
+                          "Check if cardano node is running and is synced.\n" + \
+                          "Look at the error.log file for error output."                  
                     QMessageBox.warning(self, "Notification:", msg,
                                         QMessageBox.Close)
-                else:
-                    def handle_command(command):
-                        if settings.debug_mode:
-                            print(command)
-                        else:
-                            try:
-                                subprocess.Popen(command.split(), cwd=settings.folder_path) 
-                                self.input_4_0.setText(script_address_file) 
-                            except Exception:
-                                output = traceback.format_exc()
-                                common_functions.log_error_msg(output)
-                                
-                                msg = "Script address could not be generated.\n" + \
-                                      "Check if cardano node is running and is synced.\n" + \
-                                      "Look at the error.log file for error output."                  
-                                QMessageBox.warning(self, "Notification:", msg,
-                                                    QMessageBox.Close)
 
-                    if self.net == "mainnet": 
-                        net_part =  "--mainnet "
-                    elif self.net == "testnet":
-                        net_part = "--testnet-magic 1097911063 "
-                    command = "cardano-cli address build-script " + \
-                              "--script-file " + self.script_file + " " + \
-                              net_part + \
-                              "--out-file " + script_address_file
-                    handle_command(command)
+        if self.net == "mainnet": 
+            net_part =  "--mainnet "
+        elif self.net == "testnet":
+            net_part = "--testnet-magic 1097911063 "
+        
+        command = "cardano-cli address build-script " + \
+                  "--script-file " + self.script_file + " " + \
+                  net_part + \
+                  "--out-file " + script_address_file
+        handle_command(command)
 
     def set_net(self, selected_net):
         if selected_net != "":
@@ -277,143 +281,155 @@ class Smart_contracts(QWidget):
 
     def set_utxo(self):
         utxo_input = self.input_18_0.text()
-        if "#" in utxo_input:
-            trans_hash = utxo_input.split("#")[0]
-            if len(trans_hash) == 64:
-                self.utxo = utxo_input
-            else:
-                msg = "UTxO transaction hash has to be 64 characters long." + \
-                      "Please input a valid transaction hash." 
-                QMessageBox.warning(self, "Notification:", msg,
-                                    QMessageBox.Close)
-        else:
+        if not ("#" in utxo_input):
             msg = "UTxO transaction input has to contain # sign and transaction index." + \
                   "Please write a valid transaction input." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
+            return None
+
+        trans_hash = utxo_input.split("#")[0]
+        if not (len(trans_hash) == 64):
+            msg = "UTxO transaction hash has to be 64 characters long." + \
+                  "Please input a valid transaction hash." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        self.utxo = utxo_input 
 
     def set_datum(self):
         datum_file_name = self.input_20_0.text() 
-        datum_file_path = settings.folder_path + "/" + datum_file_name
-        datum_file_exists = os.path.isfile(datum_file_path)
-        
-        if ".json" in datum_file_name:
-            if datum_file_exists:
-                self.datum_file_name = datum_file_name 
-            else:
-                msg = "Datum file does not exists.\n" + \
-                      "Please specify a valid file name." 
-                QMessageBox.warning(self, "Notification:", msg,
-                                    QMessageBox.Close) 
-        else:
+        if not (".json" in datum_file_name):
             msg = "Datum has to be a file in JSON fromat." + \
                   "Please type in a name with a .json extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
+            return None
 
-    def send_funds(self):
+        datum_file_path = settings.folder_path + "/" + datum_file_name
+        datum_file_exists = os.path.isfile(datum_file_path)
+        if not datum_file_exists:
+            msg = "Datum file does not exists.\n" + \
+                  "Please specify a valid file name." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close) 
+            return None
+
+        self.datum_file_name = datum_file_name 
+
+    def send_funds(self): 
         if self.script_address == "":
             msg = "Please set the receiving script address." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
-        else:
-            if self.net == "":
-                msg = "Select option mainnet or testnet."    
-                QMessageBox.warning(self, "Notification:", msg,
-                                    QMessageBox.Close)
+            return None
+
+        if self.net == "":
+            msg = "Select option mainnet or testnet."    
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        if self.change_address == "":
+            msg = "Please set a valid change address." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        if self.skey_name == "":
+            msg = "Please set a valid signing key." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        
+        is_ada = self.radioButton_14_1.isChecked()
+        is_lovelace = self.radioButton_14_2.isChecked()
+
+        if (not is_ada) and (not is_lovelace):
+            msg = "Select option ada or lovelace."    
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        if is_ada:
+            currency = "ADA"
+        elif is_lovelace: 
+            currency = "Lovelace"
+        amount_text = self.input_14_0.text() 
+        amount_in_lovelace = common_functions.parse_amount(amount_text, currency)
+
+        if amount_in_lovelace == -1:
+            msg = "The specified amount in " + currency + " is not a valid input.\n" + \
+                  "Amount in ADA can have max 6 decimal numbers.\nSpaces and characters are not allowed." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        if self.era == "":
+            msg = "Please select an era." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        if self.utxo == "":
+            msg = "Please set a valid UTxO transaction input." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        if self.datum_file_name == "":
+            msg = "Please set a valid datum file name." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        def handle_command(command, msg):
+            if settings.debug_mode:
+                print(command)
             else:
-                if self.change_address == "":
-                    msg = "Please set a valid change address." 
+                try:
+                    subprocess.Popen(command.split(), cwd=settings.folder_path)
+                except Exception:
+                    output = traceback.format_exc()
+                    common_functions.log_error_msg(output)                   
                     QMessageBox.warning(self, "Notification:", msg,
                                         QMessageBox.Close)
-                else:
-                    if self.skey_name == "":
-                        msg = "Please set a valid signing key." 
-                        QMessageBox.warning(self, "Notification:", msg,
-                                            QMessageBox.Close)
-                    else:
-                        is_ada = self.radioButton_14_1.isChecked()
-                        is_lovelace = self.radioButton_14_2.isChecked()
+                    self.command_failed = True
 
-                        if (not is_ada) and (not is_lovelace):
-                            msg = "Select option ada or lovelace."    
-                            QMessageBox.warning(self, "Notification:", msg,
-                                                QMessageBox.Close)
-                        else:
-                            if is_ada:
-                                currency = "ADA"
-                            elif is_lovelace: 
-                                currency = "Lovelace"
-                            amount_text = self.input_14_0.text() 
-                            amount_in_lovelace = common_functions.parse_amount(amount_text, currency)
+        if self.net == "mainnet":
+            net_part = "--mainnet "
+        elif self.net == "testnet": 
+            net_part = "--testnet-magic 1097911063 "
 
-                            if amount_in_lovelace == -1:
-                                msg = "The specified amount in " + currency + " is not a valid input.\n" + \
-                                    "Amount in ADA can have max 6 decimal numbers.\nSpaces and characters are not allowed." 
-                                QMessageBox.warning(self, "Notification:", msg,
-                                                    QMessageBox.Close)
-                            else: 
-                                if self.era == "":
-                                    msg = "Please select an era." 
-                                    QMessageBox.warning(self, "Notification:", msg,
-                                                        QMessageBox.Close)
-                                else:
-                                    if self.utxo == "":
-                                        msg = "Please set a valid UTxO transaction input." 
-                                        QMessageBox.warning(self, "Notification:", msg,
-                                                            QMessageBox.Close)
-                                    else:
-                                        if self.datum_file_name == "":
-                                            msg = "Please set a valid datum file name." 
-                                            QMessageBox.warning(self, "Notification:", msg,
-                                                                QMessageBox.Close)
-                                        else:
-                                            def handle_command(command, msg):
-                                                if settings.debug_mode:
-                                                    print(command)
-                                                else:
-                                                    try:
-                                                        subprocess.Popen(command.split(), cwd=settings.folder_path)
-                                                    except Exception:
-                                                        output = traceback.format_exc()
-                                                        common_functions.log_error_msg(output)                   
-                                                        QMessageBox.warning(self, "Notification:", msg,
-                                                                            QMessageBox.Close)
-                                                        self.command_failed = True
+        command_build = "cardano-cli transaction build " + \
+                        "--" + self.era + " " + \
+                        net_part + \
+                        "--tx-in " + self.utxo + " " + \
+                        "--tx-out " + self.script_address + " " + str(amount_in_lovelace) + " lovelace " + \
+                        "--tx-out-datum-hash-file " + self.datum_file_name + " " + \
+                        "--change-address " + self.change_address + " " + \
+                        "--out-file tx.body"
+        command_sign = "cardano-cli transaction sign " + \
+                        "--tx-body-file tx.body " + \
+                        "--signing-key-file " + self.skey_name + " " + \
+                        net_part + \
+                        "--out-file tx.signed" 
+        command_submit = "cardano-cli transaction submit " + \
+                            net_part + \
+                            "--tx-file tx.signed"
 
-                                            if self.net == "mainnet":
-                                                net_part = "--mainnet "
-                                            elif self.net == "testnet": 
-                                                net_part = "--testnet-magic 1097911063 "
-
-                                            command_build = "cardano-cli transaction build " + \
-                                                            "--" + self.era + " " + \
-                                                            net_part + \
-                                                            "--tx-in " + self.utxo + " " + \
-                                                            "--tx-out " + self.script_address + " " + str(amount_in_lovelace) + " lovelace " + \
-                                                            "--tx-out-datum-hash-file " + self.datum_file_name + " " + \
-                                                            "--change-address " + self.change_address + " " + \
-                                                            "--out-file tx.body"
-                                            command_sign = "cardano-cli transaction sign " + \
-                                                           "--tx-body-file tx.body " + \
-                                                           "--signing-key-file " + self.skey_name + " " + \
-                                                           net_part + \
-                                                           "--out-file tx.signed" 
-                                            command_submit = "cardano-cli transaction submit " + \
-                                                             net_part + \
-                                                             "--tx-file tx.signed"
-
-                                            msg_common = "Check if cardano node is running and is synced.\n" + \
-                                                        "Look at the error.log file for error output." 
-                                            msg_build = "Transaction build command failed.\n" + msg_common
-                                            msg_sign = "Transaction sign command failed.\n" + msg_common
-                                            msg_submit = "Transaction submit command failed.\n" + msg_common
-                                                        
-                                            handle_command(command_build, msg_build)
-                                            if not self.command_failed:
-                                                handle_command(command_sign, msg_sign)
-                                                os.remove(settings.folder_path + "/tx.body")
-                                            if not self.command_failed:
-                                                handle_command(command_submit, msg_submit)                                                
-                                                os.remove(settings.folder_path + "/tx.signed")
+        msg_common = "Check if cardano node is running and is synced.\n" + \
+                    "Look at the error.log file for error output." 
+        msg_build = "Transaction build command failed.\n" + msg_common
+        msg_sign = "Transaction sign command failed.\n" + msg_common
+        msg_submit = "Transaction submit command failed.\n" + msg_common
+                    
+        handle_command(command_build, msg_build)
+        if not self.command_failed:
+            handle_command(command_sign, msg_sign)
+            os.remove(settings.folder_path + "/tx.body")
+        if not self.command_failed:
+            handle_command(command_submit, msg_submit)                                                
+            os.remove(settings.folder_path + "/tx.signed")
 
