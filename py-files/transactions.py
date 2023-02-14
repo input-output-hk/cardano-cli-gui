@@ -199,7 +199,7 @@ class Transactions(QWidget):
                                 QMessageBox.Close)
             return None
 
-        def handle_command(command):
+        def manage_command(command):
             if settings.debug_mode:
                 print(command)
             else:
@@ -225,7 +225,7 @@ class Transactions(QWidget):
         command = "cardano-cli query utxo " + \
                   "--address " + self.address + " " + \
                   net_part
-        handle_command(command)
+        manage_command(command)
 
     def set_net(self, selected_net):
         if selected_net != "":
@@ -330,7 +330,7 @@ class Transactions(QWidget):
                                 QMessageBox.Close)
             return None
 
-        def handle_command(command, msg):
+        def manage_command(command, msg):
             if settings.debug_mode:
                 print(command)
             else:
@@ -370,10 +370,10 @@ class Transactions(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
                     
-        handle_command(command_build, msg_build)
+        manage_command(command_build, msg_build)
         if not self.command_failed:
-            handle_command(command_sign, msg_sign)
+            manage_command(command_sign, msg_sign)
             os.remove(settings.folder_path + "/tx.body")
         if not self.command_failed:
-            handle_command(command_submit, msg_submit)
+            manage_command(command_submit, msg_submit)
             os.remove(settings.folder_path + "/tx.signed")

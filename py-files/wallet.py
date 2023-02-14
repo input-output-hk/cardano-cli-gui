@@ -237,7 +237,7 @@ class Wallet(QWidget):
                     address_file_exists = os.path.isfile(address_file_path)
 
                     if not address_file_exists:
-                        def handle_command(command):
+                        def manage_command(command):
                             if settings.debug_mode:
                                 print(command)
                             else:
@@ -265,7 +265,7 @@ class Wallet(QWidget):
                                   "--payment-verification-key-file " + self.vkey_name + " " + \
                                   net_part + \
                                   "--out-file " + address_name
-                        handle_command(command)
+                        manage_command(command)
                         break
 
                     file_number_counter += 1 
