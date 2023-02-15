@@ -164,13 +164,13 @@ class Wallet(QWidget):
         file_number_counter = 1
         while(True):
             if len(str(file_number_counter)) == 1:
-                self.vkey_name = "0" + str(file_number_counter) + ".vkey"
+                vkey_name = "0" + str(file_number_counter) + ".vkey"
                 skey_name = "0" + str(file_number_counter) + ".skey"
             else:
-                self.vkey_name = str(file_number_counter) + ".vkey"
+                vkey_name = str(file_number_counter) + ".vkey"
                 skey_name = str(file_number_counter) + ".skey"
             
-            vkey_file_path = settings.folder_path + "/" + self.vkey_name
+            vkey_file_path = settings.folder_path + "/" + vkey_name
             vkey_file_exists = os.path.isfile(vkey_file_path)
 
             skey_file_path = settings.folder_path + "/" + skey_name
@@ -178,7 +178,7 @@ class Wallet(QWidget):
 
             if (not vkey_file_exists) and (not skey_file_exists):
                 command = "cardano-cli address key-gen " + \
-                          "--verification-key-file " + self.vkey_name + " " + \
+                          "--verification-key-file " + vkey_name + " " + \
                           "--signing-key-file " + skey_name 
 
                 if settings.debug_mode:
@@ -187,6 +187,7 @@ class Wallet(QWidget):
                 else:
                     try:
                         subprocess.Popen(command.split(), cwd=settings.folder_path)
+                        self.vkey_name = vkey_name
                         self.input_2_0.setText(self.vkey_name)
                         self.input_4_0.setText(skey_name)
                     except Exception:
@@ -254,7 +255,7 @@ class Wallet(QWidget):
                   "--out-file " + address_name
 
         if settings.debug_mode:
-            print("Command below is defined in py-files/wallet.py line 251:")
+            print("Command below is defined in py-files/wallet.py line 252:")
             print(command)
         else:
             try:
@@ -310,8 +311,9 @@ class Wallet(QWidget):
         command = "cardano-cli address key-hash " + \
                   "--payment-verification-key-file " + self.vkey_name + " " + \
                   "--out-file " + pkh_name
+        
         if settings.debug_mode:
-            print("Command below is defined in py-files/wallet.py line 310:")
+            print("Command below is defined in py-files/wallet.py line 311:")
             print(command)
         else:
             try:
