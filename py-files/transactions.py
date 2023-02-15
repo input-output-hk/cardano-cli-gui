@@ -168,7 +168,7 @@ class Transactions(QWidget):
                 self.address = file.read()
         else:
             msg = "Address file does not exists.\n" + \
-                  "Please specify a valid file name." 
+                  "Please enter a valid file name." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
 
@@ -181,7 +181,7 @@ class Transactions(QWidget):
             self.skey_name = skey_name
         else:
             msg = "Signing key file does not exists.\n" + \
-                  "Please specify a valid file name."  
+                  "Please enter a valid file name."  
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close) 
 
@@ -239,7 +239,7 @@ class Transactions(QWidget):
         utxo_input = self.input_14_0.text()
         if not ("#" in utxo_input):
             msg = "UTxO transaction input has to contain # sign and transaction index." + \
-                  "Please write a valid transaction input." 
+                  "Please enter a valid transaction input." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -247,7 +247,7 @@ class Transactions(QWidget):
         trans_hash = utxo_input.split("#")[0]
         if len(trans_hash) != 64:
             msg = "UTxO transaction hash has to be 64 characters long." + \
-                  "Please input a valid transaction hash." 
+                  "Please enter a valid transaction hash." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -264,7 +264,7 @@ class Transactions(QWidget):
                 self.receiving_address = file.read()
         else:
             msg = "Receiving address does not exists.\n" + \
-                  "Please specify a valid file name."                       
+                  "Please enter a valid file name."                       
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
 

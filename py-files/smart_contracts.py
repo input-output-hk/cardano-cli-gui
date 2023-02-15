@@ -173,7 +173,7 @@ class Smart_contracts(QWidget):
             self.script_file = script_file_name
         else:
             msg = "Script file does not exists.\n" + \
-                  "Please specify a valid file name." 
+                  "Please enter a valid file name." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close) 
 
@@ -187,7 +187,7 @@ class Smart_contracts(QWidget):
                 self.script_address = file.read() 
         else:
             msg = "Script address file does not exists.\n" + \
-                  "Please specify a valid file name." 
+                  "Please enter a valid file name." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
 
@@ -258,7 +258,7 @@ class Smart_contracts(QWidget):
                 self.change_address = file.read()
         else:
             msg = "Address file does not exists.\n" + \
-                  "Please specify a valid file name." 
+                  "Please enter a valid file name." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
 
@@ -271,7 +271,7 @@ class Smart_contracts(QWidget):
             self.skey_name = skey_name
         else:
             msg = "Signing key file does not exists.\n" + \
-                  "Please specify a valid file name."  
+                  "Please enter a valid file name."  
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close) 
 
@@ -283,7 +283,7 @@ class Smart_contracts(QWidget):
         utxo_input = self.input_18_0.text()
         if not ("#" in utxo_input):
             msg = "UTxO transaction input has to contain # sign and transaction index." + \
-                  "Please write a valid transaction input." 
+                  "Please enter a valid transaction input." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -291,7 +291,7 @@ class Smart_contracts(QWidget):
         trans_hash = utxo_input.split("#")[0]
         if not (len(trans_hash) == 64):
             msg = "UTxO transaction hash has to be 64 characters long." + \
-                  "Please input a valid transaction hash." 
+                  "Please enter a valid transaction hash." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -311,7 +311,7 @@ class Smart_contracts(QWidget):
         datum_file_exists = os.path.isfile(datum_file_path)
         if not datum_file_exists:
             msg = "Datum file does not exists.\n" + \
-                  "Please specify a valid file name." 
+                  "Please enter a valid file name." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close) 
             return None
