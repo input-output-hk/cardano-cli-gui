@@ -210,6 +210,7 @@ class Transactions(QWidget):
                   net_part 
         
         if settings.debug_mode:
+            print("Command below is defined in py-files/transactions.py line 208:")
             print(command)
         else:
             try:
@@ -329,8 +330,9 @@ class Transactions(QWidget):
                                 QMessageBox.Close)
             return None
 
-        def manage_command(command, msg):
+        def manage_command(command, msg, debug_msg):
             if settings.debug_mode:
+                print(debug_msg)
                 print(command)
             else:
                 try:
@@ -368,11 +370,15 @@ class Transactions(QWidget):
         msg_build = "Transaction build command failed.\n" + msg_common
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
+
+        debug_msg_build = "Command below is defined in py-files/transactions.py line 352:"
+        debug_msg_sign = "Command below is defined in py-files/transactions.py line 359:"
+        debug_msg_submit = "Command below is defined in py-files/transactions.py line 364:" 
                     
-        manage_command(command_build, msg_build)
+        manage_command(command_build, msg_build, debug_msg_build)
         if not self.command_failed:
-            manage_command(command_sign, msg_sign)
+            manage_command(command_sign, msg_sign, debug_msg_sign)
             os.remove(settings.folder_path + "/tx.body")
         if not self.command_failed:
-            manage_command(command_submit, msg_submit)
+            manage_command(command_submit, msg_submit, debug_msg_submit)
             os.remove(settings.folder_path + "/tx.signed")

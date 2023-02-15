@@ -225,7 +225,8 @@ class Smart_contracts(QWidget):
                   "--out-file " + script_address_file
         
         if settings.debug_mode:
-            print(command)
+            print("Command below is defined in py-files/smart_contracts.py line 222:")
+            print(command) 
         else:
             try:
                 subprocess.Popen(command.split(), cwd=settings.folder_path) 
@@ -383,8 +384,9 @@ class Smart_contracts(QWidget):
                                 QMessageBox.Close)
             return None
 
-        def manage_command(command, msg):
+        def manage_command(command, msg, debug_msg):
             if settings.debug_mode:
+                print(debug_msg)
                 print(command)
             else:
                 try:
@@ -423,12 +425,16 @@ class Smart_contracts(QWidget):
         msg_build = "Transaction build command failed.\n" + msg_common
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
+
+        debug_msg_build = "Command below is defined in py-files/smart_contracts.py line 406:" 
+        debug_msg_sign = "Command below is defined in py-files/smart_contracts.py line 416:" 
+        debug_msg_submit = "Command below is defined in py-files/smart_contracts.py line 419:" 
                     
-        manage_command(command_build, msg_build)
+        manage_command(command_build, msg_build, debug_msg_build)
         if not self.command_failed:
-            manage_command(command_sign, msg_sign)
+            manage_command(command_sign, msg_sign, debug_msg_sign)
             os.remove(settings.folder_path + "/tx.body")
         if not self.command_failed:
-            manage_command(command_submit, msg_submit)                                                
+            manage_command(command_submit, msg_submit, debug_msg_submit)                                                
             os.remove(settings.folder_path + "/tx.signed")
 
