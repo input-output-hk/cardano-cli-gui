@@ -13,9 +13,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QTabWidget,
                              QWidget, QGridLayout, QMessageBox,
                              QRadioButton, QPlainTextEdit, QComboBox)
 
-global debug_mode
-global folder_path
-global testnet_magic
+global folder_path, debug_mode, testnet_magic
 
 lightPallet = QPalette()
 lightPallet.setColor(QPalette.Window, QColor(224, 224, 224))
@@ -94,12 +92,14 @@ class MainWindow(QMainWindow):
 
     # Sets initial values for global variables
     def init_global_variables(self):
+        global folder_path, debug_mode, testnet_magic, testnet_magic
         folder_path = ""
         debug_mode = False
         testnet_magic = "1097911063"
 
     # Sets debug mode to ON
     def set_debug_on(self):
+        global debug_mode
         debug_mode = True
         
         self.label_8_0.setText("Debug mode: ON")
@@ -108,6 +108,7 @@ class MainWindow(QMainWindow):
 
     # Sets debug mode to OFF
     def set_debug_off(self):
+        global debug_mode
         debug_mode = False
         
         self.label_8_0.setText("Debug mode: OFF")
@@ -184,6 +185,7 @@ class MainWindow(QMainWindow):
 
     # Function for setting the folder_path global variable
     def set_folder_path(self):
+        global folder_path
         folder_path_input = self.input_4_0.text()
         if folder_path_input[-1] == "/":
             folder_path_input = folder_path_input[0:-1]
@@ -337,6 +339,7 @@ class Wallet(QWidget):
         self.setLayout(layout)
 
     def set_verification_key(self):
+        global folder_path
         vkey_name = self.input_2_0.text()
         vkey_path = folder_path + "/" + vkey_name
         vkey_exists = os.path.isfile(vkey_path)
@@ -358,6 +361,7 @@ class Wallet(QWidget):
             self.input_4_0.setText(skey_name)
 
     def generate_skey_and_vkey(self):
+        global folder_path, debug_mode
         file_number_counter = 1
         while(True):
             if len(str(file_number_counter)) == 1:
@@ -401,6 +405,7 @@ class Wallet(QWidget):
             file_number_counter += 1
 
     def set_address(self): 
+        global folder_path
         address_name = self.input_8_0.text()
         address_path = folder_path + "/" + address_name
         address_exists = os.path.isfile(address_path)
@@ -415,6 +420,7 @@ class Wallet(QWidget):
                                 QMessageBox.Close)
 
     def generate_address(self):
+        global folder_path, debug_mode, testnet_magic
         is_mainnet = self.radioButton_9_1.isChecked()
         is_testnet = self.radioButton_9_2.isChecked()
 
@@ -474,6 +480,7 @@ class Wallet(QWidget):
         self.input_10_0.setText(self.address)
 
     def set_pkh(self): 
+        global folder_path
         pkh_name = self.input_13_0.text()
         pkh_path = folder_path + "/" + pkh_name
         pkh_exists = os.path.isfile(pkh_path)
@@ -488,6 +495,7 @@ class Wallet(QWidget):
                                 QMessageBox.Close)
 
     def generate_pkh(self):
+        global folder_path, debug_mode 
         if self.vkey_name == "":
             msg = "Please set or generate first a verification key."     
             QMessageBox.warning(self, "Notification:", msg,
@@ -679,6 +687,7 @@ class Transactions(QWidget):
         self.setLayout(layout)
 
     def set_address_name(self):
+        global folder_path
         address_name = self.input_2_0.text()
         address_path = folder_path + "/" + address_name
         address_exists = os.path.isfile(address_path)
@@ -693,6 +702,7 @@ class Transactions(QWidget):
                                 QMessageBox.Close)
 
     def set_skey_name(self):
+        global folder_path
         skey_name = self.input_4_0.text()
         skey_path = folder_path + "/" + skey_name
         skey_exists = os.path.isfile(skey_path)
@@ -706,6 +716,7 @@ class Transactions(QWidget):
                                 QMessageBox.Close) 
 
     def querry_address_funds(self):
+        global folder_path, debug_mode, testnet_magic
         if self.address == "":
             msg = "Address file not set.\n" + \
                   "Please set a valid file name."                   
@@ -774,6 +785,7 @@ class Transactions(QWidget):
         self.utxo = utxo_input 
 
     def set_receiving_address(self):
+        global folder_path
         receiving_address_name = self.input_16_0.text()
         receiving_address_path = folder_path + "/" + receiving_address_name
         receiving_address_exists = os.path.isfile(receiving_address_path)
@@ -788,6 +800,7 @@ class Transactions(QWidget):
                                 QMessageBox.Close)
 
     def send_funds(self): 
+        global folder_path, debug_mode, testnet_magic
         self.command_failed = False
 
         if self.address == "":
@@ -852,6 +865,7 @@ class Transactions(QWidget):
             return None
 
         def manage_command(command, msg, debug_msg):
+            global folder_path, debug_mode
             if debug_mode:
                 print(debug_msg)
                 print(command + "\n")
@@ -1060,6 +1074,7 @@ class Smart_contracts(QWidget):
         self.setLayout(layout) 
 
     def set_script_file(self):
+        global folder_path
         script_file_name = self.input_2_0.text()
         script_file_path = folder_path + "/" + script_file_name
         script_file_exists = os.path.isfile(script_file_path)
@@ -1073,6 +1088,7 @@ class Smart_contracts(QWidget):
                                 QMessageBox.Close) 
 
     def set_script_address_file(self):
+        global folder_path
         script_address_file_name = self.input_4_0.text()
         script_address_file_path = folder_path + "/" + script_address_file_name
         script_address_file_exists = os.path.isfile(script_address_file_path)
@@ -1087,6 +1103,7 @@ class Smart_contracts(QWidget):
                                 QMessageBox.Close)
 
     def generate_script_address_file(self):
+        global debug_mode, testnet_magic
         if self.script_file == "":
             msg = "Script file not set.\n" + \
                   "Please set a valid file name."                   
@@ -1143,6 +1160,7 @@ class Smart_contracts(QWidget):
         self.input_8_0.setText(self.script_address)
 
     def set_change_address(self): 
+        global folder_path
         change_address_name = self.input_2_0.text()
         change_address_path = folder_path + "/" + change_address_name
         change_address_exists = os.path.isfile(change_address_path)
@@ -1156,7 +1174,8 @@ class Smart_contracts(QWidget):
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
 
-    def set_skey_name(self):
+    def set_skey_name(self): 
+        global folder_path 
         skey_name = self.input_12_0.text()
         skey_path = folder_path + "/" + skey_name
         skey_exists = os.path.isfile(skey_path)
@@ -1193,6 +1212,7 @@ class Smart_contracts(QWidget):
         self.utxo = utxo_input 
 
     def set_datum(self):
+        global folder_path 
         self.command_failed = False
 
         datum_file_name = self.input_20_0.text() 
@@ -1215,6 +1235,7 @@ class Smart_contracts(QWidget):
         self.datum_file_name = datum_file_name 
 
     def send_funds(self): 
+        global folder_path, debug_mode, testnet_magic
         if self.script_address == "":
             msg = "Please set the receiving script address." 
             QMessageBox.warning(self, "Notification:", msg,
@@ -1281,6 +1302,7 @@ class Smart_contracts(QWidget):
             return None
 
         def manage_command(command, msg, debug_msg):
+            global folder_path, debug_mode
             if debug_mode:
                 print(debug_msg)
                 print(command + "\n")
