@@ -210,7 +210,7 @@ class Transactions(QWidget):
         
         if settings.debug_mode:
             print("Command below is defined in py-files/transactions.py line 208:")
-            print(command)
+            print(command + "\n")
         else:
             try:
                 response = subprocess.Popen(command.split(), cwd=settings.folder_path) 
@@ -334,7 +334,7 @@ class Transactions(QWidget):
         def manage_command(command, msg, debug_msg):
             if settings.debug_mode:
                 print(debug_msg)
-                print(command)
+                print(command + "\n")
             else:
                 try:
                     subprocess.Popen(command.split(), cwd=settings.folder_path)

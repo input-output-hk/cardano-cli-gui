@@ -225,7 +225,7 @@ class Smart_contracts(QWidget):
         
         if settings.debug_mode:
             print("Command below is defined in py-files/smart_contracts.py line 222:")
-            print(command) 
+            print(command + "\n") 
         else:
             try:
                 subprocess.Popen(command.split(), cwd=settings.folder_path) 
@@ -299,7 +299,7 @@ class Smart_contracts(QWidget):
 
     def set_datum(self):
         self.command_failed = False
-        
+
         datum_file_name = self.input_20_0.text() 
         if not (".json" in datum_file_name):
             msg = "Datum has to be a file in JSON fromat." + \
@@ -388,7 +388,7 @@ class Smart_contracts(QWidget):
         def manage_command(command, msg, debug_msg):
             if settings.debug_mode:
                 print(debug_msg)
-                print(command)
+                print(command + "\n")
             else:
                 try:
                     subprocess.Popen(command.split(), cwd=settings.folder_path)
