@@ -203,7 +203,7 @@ class Transactions(QWidget):
         if self.net == "mainnet": 
             net_part =  "--mainnet "
         elif self.net == "testnet":
-            net_part = "--testnet-magic 1097911063 "
+            net_part = "--testnet-magic " + settings.testnet_magic + " "
         
         command = "cardano-cli query utxo " + \
                   "--address " + self.address + " " + \
@@ -345,7 +345,7 @@ class Transactions(QWidget):
         if self.net == "mainnet":
             net_part = "--mainnet "
         elif self.net == "testnet": 
-            net_part = "--testnet-magic 1097911063 "
+            net_part = "--testnet-magic " + settings.testnet_magic + " "
 
         command_build = "cardano-cli transaction build " + \
                         "--" + self.era + " " + \

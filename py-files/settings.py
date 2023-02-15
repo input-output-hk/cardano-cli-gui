@@ -1,6 +1,7 @@
 
 global debug_mode
 global folder_path
+global testnet_magic
 
 from PyQt5.QtGui import QPalette, QColor
 from PyQt5.QtCore import Qt

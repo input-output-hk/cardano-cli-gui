@@ -69,6 +69,7 @@ class MainWindow(QMainWindow):
     def init_global_variables(self):
         settings.folder_path = ""
         settings.debug_mode = False
+        settings.testnet_magic = "1097911063"
 
     # Sets debug mode to ON
     def set_debug_on(self):

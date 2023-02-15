@@ -243,7 +243,7 @@ class Wallet(QWidget):
             return None
 
         if is_testnet:
-            net_part = "--testnet-magic 1097911063 "
+            net_part = "--testnet-magic " + settings.testnet_magic + " "
         elif is_mainnet:
             net_part = "--mainnet "
 
