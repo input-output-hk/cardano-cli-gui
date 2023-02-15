@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import (QPushButton, QLabel, QLineEdit,
                              QWidget, QGridLayout, QRadioButton,
                              QMessageBox, QPlainTextEdit, QComboBox)
 
+# Widgets and functions for the transactions tab
 class Transactions(QWidget):
     def __init__(self):
         super().__init__()
@@ -199,24 +200,6 @@ class Transactions(QWidget):
                                 QMessageBox.Close)
             return None
 
-        def manage_command(command):
-            if settings.debug_mode:
-                print(command)
-            else:
-                try:
-                    response = subprocess.Popen(command.split(), cwd=settings.folder_path) 
-                    output = response.communicate()[0]
-                    self.input_6_0.setPlainText(output.decode("utf-8"))
-                except Exception:
-                    output = traceback.format_exc()
-                    common_functions.log_error_msg(output)
-                    
-                    msg = "Address could not be querried.\n" + \
-                          "Check if cardano node is running and is synced.\n" + \
-                          "Look at the error.log file for error output."                    
-                    QMessageBox.warning(self, "Notification:", msg,
-                                        QMessageBox.Close)
-
         if self.net == "mainnet": 
             net_part =  "--mainnet "
         elif self.net == "testnet":
@@ -224,8 +207,24 @@ class Transactions(QWidget):
         
         command = "cardano-cli query utxo " + \
                   "--address " + self.address + " " + \
-                  net_part
-        manage_command(command)
+                  net_part 
+        
+        if settings.debug_mode:
+            print(command)
+        else:
+            try:
+                response = subprocess.Popen(command.split(), cwd=settings.folder_path) 
+                output = response.communicate()[0]
+                self.input_6_0.setPlainText(output.decode("utf-8"))
+            except Exception:
+                output = traceback.format_exc()
+                common_functions.log_error_msg(output)
+                
+                msg = "Address could not be querried.\n" + \
+                      "Check if cardano node is running and is synced.\n" + \
+                      "Look at the error.log file for error output."                    
+                QMessageBox.warning(self, "Notification:", msg,
+                                    QMessageBox.Close)
 
     def set_net(self, selected_net):
         if selected_net != "":
@@ -361,11 +360,11 @@ class Transactions(QWidget):
                         net_part + \
                         "--out-file tx.signed" 
         command_submit = "cardano-cli transaction submit " + \
-                            net_part + \
-                            "--tx-file tx.signed"
+                         net_part + \
+                         "--tx-file tx.signed"
 
         msg_common = "Check if cardano node is running and is synced.\n" + \
-                        "Look at the error.log file for error output." 
+                     "Look at the error.log file for error output." 
         msg_build = "Transaction build command failed.\n" + msg_common
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common

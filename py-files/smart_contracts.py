@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import (QPushButton, QLabel, QLineEdit,
                              QWidget, QGridLayout, QRadioButton,
                              QComboBox, QMessageBox)
 
+# Widgets and functions for the smart contracts tab
 class Smart_contracts(QWidget):
     def __init__(self):
         super().__init__()
@@ -213,23 +214,6 @@ class Smart_contracts(QWidget):
                                 QMessageBox.Close)
             return None
 
-        def manage_command(command):
-            if settings.debug_mode:
-                print(command)
-            else:
-                try:
-                    subprocess.Popen(command.split(), cwd=settings.folder_path) 
-                    self.input_4_0.setText(script_address_file) 
-                except Exception:
-                    output = traceback.format_exc()
-                    common_functions.log_error_msg(output)
-                    
-                    msg = "Script address could not be generated.\n" + \
-                          "Check if cardano node is running and is synced.\n" + \
-                          "Look at the error.log file for error output."                  
-                    QMessageBox.warning(self, "Notification:", msg,
-                                        QMessageBox.Close)
-
         if self.net == "mainnet": 
             net_part =  "--mainnet "
         elif self.net == "testnet":
@@ -239,7 +223,22 @@ class Smart_contracts(QWidget):
                   "--script-file " + self.script_file + " " + \
                   net_part + \
                   "--out-file " + script_address_file
-        manage_command(command)
+        
+        if settings.debug_mode:
+            print(command)
+        else:
+            try:
+                subprocess.Popen(command.split(), cwd=settings.folder_path) 
+                self.input_4_0.setText(script_address_file) 
+            except Exception:
+                output = traceback.format_exc()
+                common_functions.log_error_msg(output)
+                
+                msg = "Script address could not be generated.\n" + \
+                      "Check if cardano node is running and is synced.\n" + \
+                      "Look at the error.log file for error output."                  
+                QMessageBox.warning(self, "Notification:", msg,
+                                    QMessageBox.Close)
 
     def set_net(self, selected_net):
         if selected_net != "":
@@ -416,11 +415,11 @@ class Smart_contracts(QWidget):
                         net_part + \
                         "--out-file tx.signed" 
         command_submit = "cardano-cli transaction submit " + \
-                            net_part + \
-                            "--tx-file tx.signed"
+                         net_part + \
+                         "--tx-file tx.signed"
 
         msg_common = "Check if cardano node is running and is synced.\n" + \
-                    "Look at the error.log file for error output." 
+                     "Look at the error.log file for error output." 
         msg_build = "Transaction build command failed.\n" + msg_common
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common

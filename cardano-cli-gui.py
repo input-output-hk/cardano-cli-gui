@@ -15,6 +15,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QTabWidget,
                              QAction, QPushButton, QLabel, QLineEdit, 
                              QWidget, QGridLayout, QMessageBox)
 
+# Widgets and functions for the main window 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -85,7 +86,7 @@ class MainWindow(QMainWindow):
         # When start window was in a separated class
         # self.tabs.widget(0).label_8_0.setText("Debug mode: OFF")
 
-    # Creates the start tab window
+    # Widgets for the start tab 
     def init_start_tab(self):
         # Initial message
         label_1_0 = QLabel("To unlock other tabs set a valid folder path.\nAll files will be loaded or saved to this folder.")
@@ -153,6 +154,7 @@ class MainWindow(QMainWindow):
 
         self.start_window.setLayout(layout)
 
+    # Functions for the start tab 
     def set_folder_path(self):
         folder_path_input = self.input_4_0.text()
         if folder_path_input[-1] == "/":

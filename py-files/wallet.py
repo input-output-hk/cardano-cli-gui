@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import (QPushButton, QLabel, QLineEdit,
                              QWidget, QGridLayout, QMessageBox,
                              QRadioButton)
 
+# Widgets and functions for the wallet tab
 class Wallet(QWidget):
     def __init__(self):
         super().__init__()
