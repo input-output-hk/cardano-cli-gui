@@ -26,7 +26,6 @@ class Smart_contracts(QWidget):
         self.era = ""
         self.utxo = ""
         self.datum_file_name = ""
-        self.command_failed = False
 
         # Cardano picture
         self.label_0_0 = QLabel("Generate cardano script address and send funds to it.")
@@ -299,6 +298,8 @@ class Smart_contracts(QWidget):
         self.utxo = utxo_input 
 
     def set_datum(self):
+        self.command_failed = False
+        
         datum_file_name = self.input_20_0.text() 
         if not (".json" in datum_file_name):
             msg = "Datum has to be a file in JSON fromat." + \
@@ -433,8 +434,10 @@ class Smart_contracts(QWidget):
         manage_command(command_build, msg_build, debug_msg_build)
         if not self.command_failed:
             manage_command(command_sign, msg_sign, debug_msg_sign)
-            os.remove(settings.folder_path + "/tx.body")
+            if not settings.debug_mode:
+                os.remove(settings.folder_path + "/tx.body")
         if not self.command_failed:
-            manage_command(command_submit, msg_submit, debug_msg_submit)                                                
-            os.remove(settings.folder_path + "/tx.signed")
+            manage_command(command_submit, msg_submit, debug_msg_submit) 
+            if not settings.debug_mode:                                              
+                os.remove(settings.folder_path + "/tx.signed")
 

@@ -23,7 +23,6 @@ class Transactions(QWidget):
         self.era = ""
         self.utxo = ""
         self.receiving_address = ""
-        self.command_failed = False
 
         # Intro text and cardano picture
         self.label_0_0 = QLabel("Send funds from your address to another one.")
@@ -269,6 +268,8 @@ class Transactions(QWidget):
                                 QMessageBox.Close)
 
     def send_funds(self): 
+        self.command_failed = False
+
         if self.address == "":
             msg = "Please set a valid change address." 
             QMessageBox.warning(self, "Notification:", msg,
@@ -378,7 +379,9 @@ class Transactions(QWidget):
         manage_command(command_build, msg_build, debug_msg_build)
         if not self.command_failed:
             manage_command(command_sign, msg_sign, debug_msg_sign)
-            os.remove(settings.folder_path + "/tx.body")
+            if not settings.debug_mode:
+                os.remove(settings.folder_path + "/tx.body")
         if not self.command_failed:
             manage_command(command_submit, msg_submit, debug_msg_submit)
-            os.remove(settings.folder_path + "/tx.signed")
+            if not settings.debug_mode:
+                os.remove(settings.folder_path + "/tx.signed")
