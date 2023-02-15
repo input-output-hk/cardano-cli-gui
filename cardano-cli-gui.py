@@ -155,7 +155,7 @@ class MainWindow(QMainWindow):
 
         self.start_window.setLayout(layout)
 
-    # Functions for the start tab 
+    # Function for setting the folder_path global variable
     def set_folder_path(self):
         folder_path_input = self.input_4_0.text()
         if folder_path_input[-1] == "/":
