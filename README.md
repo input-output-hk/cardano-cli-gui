@@ -3,8 +3,9 @@ Simple GUI that cover some basic functionality of the Cardano CLI command line t
 **IMPORTANT:** Project is under construction and may contain bugs. 
 
 To run the GUI you can use the executable files. You can also run it from the terminal.<br>
-In that case you need to have `python 3` and `PyQt 5` installed:<br>
 `python cardano-cli-gui.py`
+
+In that case you need to have `python 3` and `PyQt 5` installed for the GUI to work.
 
 **IMPORTANT:** To use the *query* and *send* command in the GUI a cardano node has to be 
 running and synced to the test or main network.
