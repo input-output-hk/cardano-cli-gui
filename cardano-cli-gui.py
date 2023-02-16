@@ -69,7 +69,8 @@ class MainWindow(QMainWindow):
     def init_global_variables(self):
         settings.folder_path = ""
         settings.debug_mode = False
-        settings.testnet_magic = "1097911063"
+        settings.testnet_magic = "2"
+        settings.current_era = "babbage-era"
 
     # Sets debug mode to ON
     def set_debug_on(self):
@@ -109,7 +110,7 @@ class MainWindow(QMainWindow):
         self.label_8_0 = QLabel("Debug mode: OFF")
         label_9_0 = QLabel("If debug mode is ON, the programm prints the cardano-cli\ncommands to the terminal instead of executing them.")
         label_11_0 = QLabel("IMPORTANT:")
-        label_12_0 = QLabel("A cardano node has to be synced and running.")
+        label_12_0 = QLabel("A cardano node has to be synced and running\nfor the query and send command to work.")
 
         # Widget actions
         button_4_1.clicked.connect(self.set_folder_path)

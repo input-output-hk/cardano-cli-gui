@@ -20,7 +20,7 @@ class Transactions(QWidget):
         self.address = ""
         self.skey_name = ""
         self.net = ""
-        self.era = ""
+        self.era = settings.current_era
         self.utxo = ""
         self.receiving_address = ""
 
@@ -57,8 +57,8 @@ class Transactions(QWidget):
         self.radioButton_9_1 = QRadioButton("Ada")
         self.input_10_0 = QLineEdit()
         self.radioButton_10_1 = QRadioButton("Lovelace")
-        self.label_11_0 = QLabel("Select era:")
-        self.comboBox_12_0 = QComboBox()
+        self.label_11_0 = QLabel("Current era parameter set to:")
+        self.label_12_0 = QLabel(settings.current_era)
         self.label_13_0 = QLabel("Input UTxO address:")
         self.input_14_0 = QLineEdit()
         self.button_14_1 = QPushButton("Set")
@@ -72,15 +72,12 @@ class Transactions(QWidget):
         self.button_16_1.clicked.connect(self.set_receiving_address)
         self.button_18_0.clicked.connect(self.send_funds)
 
-        self.comboBox_12_0.addItems(["", "byron-era", "shelley-era", "allegra-era", "mary-era", "alonzo-era", "babbage-era"])
-        self.comboBox_12_0.currentTextChanged.connect(self.update_era)
-
         # Set label fonts 
         labels = [self.label_0_0, self.label_1_0, 
                   self.label_3_0, self.label_5_0,
                   self.label_7_0, self.label_9_0, 
-                  self.label_11_0, self.label_13_0, 
-                  self.label_15_0]
+                  self.label_11_0, self.label_12_0,
+                  self.label_13_0, self.label_15_0]
         for label in labels:
             font = label.font()
             font.setPointSize(12)
@@ -145,7 +142,7 @@ class Transactions(QWidget):
         layout.addWidget(self.input_10_0, 10, 0)
         layout.addWidget(self.radioButton_10_1, 10, 1)
         layout.addWidget(self.label_11_0, 11, 0)
-        layout.addWidget(self.comboBox_12_0, 12, 0)
+        layout.addWidget(self.label_12_0, 12, 0)
         layout.addWidget(self.label_13_0, 13, 0)
         layout.addWidget(self.input_14_0, 14, 0)
         layout.addWidget(self.button_14_1, 14, 1)
@@ -230,10 +227,6 @@ class Transactions(QWidget):
         if selected_net != "":
             self.net = selected_net 
 
-    def update_era(self, selected_era):
-        if selected_era != "":
-            self.era = selected_era
-
     def set_utxo(self):
         utxo_input = self.input_14_0.text()
         if not ("#" in utxo_input):
@@ -309,12 +302,6 @@ class Transactions(QWidget):
             msg = "The specified amount in " + currency + " is not a valid input.\n" + \
                   "Amount in ADA can have max 6 decimal numbers.\n" + \
                   "Spaces and characters are not allowed." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
-
-        if self.era == "":
-            msg = "Please select an era." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None

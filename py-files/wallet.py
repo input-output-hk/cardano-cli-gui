@@ -195,7 +195,6 @@ class Wallet(QWidget):
                         common_functions.log_error_msg(output)
                         
                         msg = "Verification and signing key could not be generated.\n" + \
-                              "Check if cardano node is running and is synced.\n" + \
                               "Look at the error.log file for error output." 
                         QMessageBox.warning(self, "Notification:", msg,
                                             QMessageBox.Close)
@@ -268,7 +267,6 @@ class Wallet(QWidget):
                 common_functions.log_error_msg(output)
                 
                 msg = "Address could not be generated.\n" + \
-                      "Check if cardano node is running and is synced.\n" + \
                       "Look at the error.log file for error output."                    
                 QMessageBox.warning(self, "Notification:", msg,
                                     QMessageBox.Close)
@@ -326,7 +324,6 @@ class Wallet(QWidget):
                 common_functions.log_error_msg(output)
                 
                 msg = "Public key hash could not be generated.\n" + \
-                      "Check if cardano node is running and is synced.\n" + \
                       "Look at the error.log file for error output."                     
                 QMessageBox.warning(self, "Notification:", msg,
                                     QMessageBox.Close)

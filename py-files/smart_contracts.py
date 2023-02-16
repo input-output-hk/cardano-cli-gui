@@ -23,7 +23,7 @@ class Smart_contracts(QWidget):
 
         self.change_address = ""
         self.skey_name = ""
-        self.era = ""
+        self.era = settings.current_era
         self.utxo = ""
         self.datum_file_name = ""
 
@@ -68,8 +68,8 @@ class Smart_contracts(QWidget):
         self.input_14_0 = QLineEdit()
         self.radioButton_14_1 = QRadioButton("Ada")
         self.radioButton_14_2 = QRadioButton("Lovelace")
-        self.label_15_0 = QLabel("Select era:")
-        self.comboBox_16_0 = QComboBox()
+        self.label_15_0 = QLabel("Current era parameter set to:")
+        self.label_16_0 = QLabel(settings.current_era)
         self.label_17_0 = QLabel("Input UTxO address:")
         self.input_18_0 = QLineEdit()
         self.button_18_1 = QPushButton("Set")
@@ -82,10 +82,6 @@ class Smart_contracts(QWidget):
         # Widget actions for building script address section  
         self.button_10_1.clicked.connect(self.set_change_address)
         self.button_12_1.clicked.connect(self.set_skey_name)
-
-        self.comboBox_16_0.addItems(["", "byron-era", "shelley-era", "allegra-era", "mary-era", "alonzo-era", "babbage-era"])
-        self.comboBox_16_0.currentTextChanged.connect(self.update_era)
-
         self.button_18_1.clicked.connect(self.set_utxo)
         self.button_20_1.clicked.connect(self.set_datum)
         self.button_22_0.clicked.connect(self.send_funds)
@@ -95,8 +91,8 @@ class Smart_contracts(QWidget):
                   self.label_3_0, self.label_5_0, 
                   self.label_7_0, self.label_9_0, 
                   self.label_11_0, self.label_13_0, 
-                  self.label_15_0, self.label_17_0, 
-                  self.label_19_0] 
+                  self.label_15_0, self.label_16_0, 
+                  self.label_17_0, self.label_19_0] 
         for label in labels:
             font = label.font()
             font.setPointSize(12)
@@ -152,7 +148,7 @@ class Smart_contracts(QWidget):
         layout.addWidget(self.radioButton_14_1, 14, 1)
         layout.addWidget(self.radioButton_14_2, 14, 2)
         layout.addWidget(self.label_15_0, 15, 0)
-        layout.addWidget(self.comboBox_16_0, 16, 0)
+        layout.addWidget(self.label_16_0, 16, 0)
         layout.addWidget(self.label_17_0, 17, 0)
         layout.addWidget(self.input_18_0, 18, 0)
         layout.addWidget(self.button_18_1, 18, 1)
@@ -235,7 +231,6 @@ class Smart_contracts(QWidget):
                 common_functions.log_error_msg(output)
                 
                 msg = "Script address could not be generated.\n" + \
-                      "Check if cardano node is running and is synced.\n" + \
                       "Look at the error.log file for error output."                  
                 QMessageBox.warning(self, "Notification:", msg,
                                     QMessageBox.Close)
@@ -273,10 +268,6 @@ class Smart_contracts(QWidget):
                   "Please enter a valid file name."  
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close) 
-
-    def update_era(self, selected_era):
-        if selected_era != "":
-            self.era = selected_era
 
     def set_utxo(self):
         utxo_input = self.input_18_0.text()
@@ -363,12 +354,6 @@ class Smart_contracts(QWidget):
         if amount_in_lovelace == -1:
             msg = "The specified amount in " + currency + " is not a valid input.\n" + \
                   "Amount in ADA can have max 6 decimal numbers.\nSpaces and characters are not allowed." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
-
-        if self.era == "":
-            msg = "Please select an era." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
