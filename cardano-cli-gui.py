@@ -8,6 +8,7 @@ import settings
 from wallet import Wallet
 from transactions import Transactions
 from smart_contracts import Smart_contracts
+from developer import Developer
 
 from PyQt5.QtCore import QSize 
 from PyQt5.QtGui import QPixmap 
@@ -91,7 +92,8 @@ class MainWindow(QMainWindow):
     # Widgets for the start tab 
     def init_start_tab(self):
         # Initial message
-        label_1_0 = QLabel("To unlock other tabs set a valid folder path.\nAll files will be loaded or saved to this folder.")
+        label_1_0 = QLabel("To unlock other tabs set a valid folder path.\n" + \
+                           "All files will be loaded or saved to this folder.")
 
         # Cardano picture
         picture_1_1 = QLabel("")
@@ -108,9 +110,11 @@ class MainWindow(QMainWindow):
 
         # Widgets for notification section
         self.label_8_0 = QLabel("Debug mode: OFF")
-        label_9_0 = QLabel("If debug mode is ON, the programm prints the cardano-cli\ncommands to the terminal instead of executing them.")
+        label_9_0 = QLabel("If debug mode is ON, the programm prints the cardano-cli\n" + \
+                           "commands to the terminal instead of executing them.")
         label_11_0 = QLabel("IMPORTANT:")
-        label_12_0 = QLabel("A cardano node has to be synced and running\nfor the query and send command to work.")
+        label_12_0 = QLabel("A cardano node has to be synced and running\n" + \
+                            "for the query and send command to work.")
 
         # Widget actions
         button_4_1.clicked.connect(self.set_folder_path)
@@ -170,9 +174,11 @@ class MainWindow(QMainWindow):
             self.tabs.addTab(Wallet(),"Wallet")
             self.tabs.addTab(Transactions(),"Transactions")
             self.tabs.addTab(Smart_contracts(),"Smart contrancts")
+            self.tabs.addTab(Developer(),"Developer")
         else:
             self.input_4_0.setText(settings.folder_path)
-            msg = "This path is not a valid folder path."                    
+            msg = "This path is not a valid folder path.\n" + \
+                  "Spaces before or after the path are not allowed."                   
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
 
