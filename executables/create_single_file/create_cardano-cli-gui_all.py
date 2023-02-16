@@ -20,13 +20,13 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QTabWidget,
 with open(out_file_name,"w") as outFile:
     outFile.writelines(imports) 
 
-with open("../py-files/settings.py",'r') as inFile, open(out_file_name,"a") as outFile:
+with open("../../py-files/settings.py",'r') as inFile, open(out_file_name,"a") as outFile:
     outFile.writelines(line for line in inFile 
                        if not line.startswith("from"))
     outFile.writelines("\n\n")
 
 # Adding code from cardano-cli-gui.py
-with open("../cardano-cli-gui.py",'r') as inFile, open(out_file_name,"a") as outFile:
+with open("../../cardano-cli-gui.py",'r') as inFile, open(out_file_name,"a") as outFile:
     class_section = False
     for line in inFile:
         # Which lines to include and which to exclude
@@ -86,12 +86,12 @@ def proces_file(file_path):
 
         outFile.writelines("\n\n")
 
-proces_file("../py-files/wallet.py")
-proces_file("../py-files/transactions.py")
-proces_file("../py-files/smart_contracts.py")
+proces_file("../../py-files/wallet.py")
+proces_file("../../py-files/transactions.py")
+proces_file("../../py-files/smart_contracts.py")
 
 # Adding helper functions to end of file
-with open("../py-files/common_functions.py",'r') as inFile, open(out_file_name,"a") as outFile:
+with open("../../py-files/common_functions.py",'r') as inFile, open(out_file_name,"a") as outFile:
     for line in inFile:
         outFile.writelines(line)
     outFile.writelines("\n")
