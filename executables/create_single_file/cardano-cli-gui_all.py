@@ -16,6 +16,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QTabWidget,
 global debug_mode
 global folder_path
 global testnet_magic
+global current_era
 
 
 lightPallet = QPalette()
@@ -98,7 +99,8 @@ class MainWindow(QMainWindow):
         global folder_path, debug_mode, testnet_magic 
         folder_path = ""
         debug_mode = False
-        testnet_magic = "1097911063"
+        testnet_magic = "2"
+        current_era = "babbage-era"
 
     # Sets debug mode to ON
     def set_debug_on(self):
@@ -122,7 +124,8 @@ class MainWindow(QMainWindow):
     def init_start_tab(self):
         global folder_path, debug_mode, testnet_magic 
         # Initial message
-        label_1_0 = QLabel("To unlock other tabs set a valid folder path.\nAll files will be loaded or saved to this folder.")
+        label_1_0 = QLabel("To unlock other tabs set a valid folder path.\n" + \
+                           "All files will be loaded or saved to this folder.")
 
         # Cardano picture
         picture_1_1 = QLabel("")
@@ -139,9 +142,11 @@ class MainWindow(QMainWindow):
 
         # Widgets for notification section
         self.label_8_0 = QLabel("Debug mode: OFF")
-        label_9_0 = QLabel("If debug mode is ON, the programm prints the cardano-cli\ncommands to the terminal instead of executing them.")
+        label_9_0 = QLabel("If debug mode is ON, the programm prints the cardano-cli\n" + \
+                           "commands to the terminal instead of executing them.")
         label_11_0 = QLabel("IMPORTANT:")
-        label_12_0 = QLabel("A cardano node has to be synced and running.")
+        label_12_0 = QLabel("A cardano node has to be synced and running\n" + \
+                            "for the query and send command to work.")
 
         # Widget actions
         button_4_1.clicked.connect(self.set_folder_path)
@@ -202,9 +207,11 @@ class MainWindow(QMainWindow):
             self.tabs.addTab(Wallet(),"Wallet")
             self.tabs.addTab(Transactions(),"Transactions")
             self.tabs.addTab(Smart_contracts(),"Smart contrancts")
+            self.tabs.addTab(Developer(),"Developer")
         else:
             self.input_4_0.setText(folder_path)
-            msg = "This path is not a valid folder path."                    
+            msg = "This path is not a valid folder path.\n" + \
+                  "Spaces before or after the path are not allowed."                   
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
 
@@ -402,7 +409,6 @@ class Wallet(QWidget):
                         log_error_msg(output)
                         
                         msg = "Verification and signing key could not be generated.\n" + \
-                              "Check if cardano node is running and is synced.\n" + \
                               "Look at the error.log file for error output." 
                         QMessageBox.warning(self, "Notification:", msg,
                                             QMessageBox.Close)
@@ -464,7 +470,7 @@ class Wallet(QWidget):
                   "--out-file " + address_name
 
         if debug_mode:
-            print("Command below is defined in py-files/wallet.py line 252:")
+            print("Command below is defined in py-files/wallet.py line 251:")
             print(command + "\n")
         else:
             try:
@@ -477,7 +483,6 @@ class Wallet(QWidget):
                 log_error_msg(output)
                 
                 msg = "Address could not be generated.\n" + \
-                      "Check if cardano node is running and is synced.\n" + \
                       "Look at the error.log file for error output."                    
                 QMessageBox.warning(self, "Notification:", msg,
                                     QMessageBox.Close)
@@ -525,7 +530,7 @@ class Wallet(QWidget):
                   "--out-file " + pkh_name
         
         if debug_mode:
-            print("Command below is defined in py-files/wallet.py line 311:")
+            print("Command below is defined in py-files/wallet.py line 309:")
             print(command + "\n")
         else:
             try:
@@ -538,7 +543,6 @@ class Wallet(QWidget):
                 log_error_msg(output)
                 
                 msg = "Public key hash could not be generated.\n" + \
-                      "Check if cardano node is running and is synced.\n" + \
                       "Look at the error.log file for error output."                     
                 QMessageBox.warning(self, "Notification:", msg,
                                     QMessageBox.Close)
@@ -556,7 +560,7 @@ class Transactions(QWidget):
         self.address = ""
         self.skey_name = ""
         self.net = ""
-        self.era = ""
+        self.era = current_era
         self.utxo = ""
         self.receiving_address = ""
 
@@ -593,12 +597,12 @@ class Transactions(QWidget):
         self.radioButton_9_1 = QRadioButton("Ada")
         self.input_10_0 = QLineEdit()
         self.radioButton_10_1 = QRadioButton("Lovelace")
-        self.label_11_0 = QLabel("Select era:")
-        self.comboBox_12_0 = QComboBox()
+        self.label_11_0 = QLabel("Current era parameter set to:")
+        self.label_12_0 = QLabel(current_era)
         self.label_13_0 = QLabel("Input UTxO address:")
         self.input_14_0 = QLineEdit()
         self.button_14_1 = QPushButton("Set")
-        self.label_15_0 = QLabel("Input receiving address:")
+        self.label_15_0 = QLabel("Input receiving address name:")
         self.input_16_0 = QLineEdit()
         self.button_16_1 = QPushButton("Set")
         self.button_18_0 = QPushButton("Send")
@@ -608,15 +612,12 @@ class Transactions(QWidget):
         self.button_16_1.clicked.connect(self.set_receiving_address)
         self.button_18_0.clicked.connect(self.send_funds)
 
-        self.comboBox_12_0.addItems(["", "byron-era", "shelley-era", "allegra-era", "mary-era", "alonzo-era", "babbage-era"])
-        self.comboBox_12_0.currentTextChanged.connect(self.update_era)
-
         # Set label fonts 
         labels = [self.label_0_0, self.label_1_0, 
                   self.label_3_0, self.label_5_0,
                   self.label_7_0, self.label_9_0, 
-                  self.label_11_0, self.label_13_0, 
-                  self.label_15_0]
+                  self.label_11_0, self.label_12_0,
+                  self.label_13_0, self.label_15_0]
         for label in labels:
             font = label.font()
             font.setPointSize(12)
@@ -681,7 +682,7 @@ class Transactions(QWidget):
         layout.addWidget(self.input_10_0, 10, 0)
         layout.addWidget(self.radioButton_10_1, 10, 1)
         layout.addWidget(self.label_11_0, 11, 0)
-        layout.addWidget(self.comboBox_12_0, 12, 0)
+        layout.addWidget(self.label_12_0, 12, 0)
         layout.addWidget(self.label_13_0, 13, 0)
         layout.addWidget(self.input_14_0, 14, 0)
         layout.addWidget(self.button_14_1, 14, 1)
@@ -748,7 +749,7 @@ class Transactions(QWidget):
                   net_part 
         
         if debug_mode:
-            print("Command below is defined in py-files/transactions.py line 207:")
+            print("Command below is defined in py-files/transactions.py line 204:")
             print(command + "\n")
         else:
             try:
@@ -769,11 +770,6 @@ class Transactions(QWidget):
         global folder_path, debug_mode, testnet_magic 
         if selected_net != "":
             self.net = selected_net 
-
-    def update_era(self, selected_era):
-        global folder_path, debug_mode, testnet_magic 
-        if selected_era != "":
-            self.era = selected_era
 
     def set_utxo(self):
         global folder_path, debug_mode, testnet_magic 
@@ -857,12 +853,6 @@ class Transactions(QWidget):
                                 QMessageBox.Close)
             return None
 
-        if self.era == "":
-            msg = "Please select an era." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
-
         if self.utxo == "":
             msg = "Please set a valid UTxO transaction input." 
             QMessageBox.warning(self, "Notification:", msg,
@@ -917,9 +907,9 @@ class Transactions(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/transactions.py line 353:"
-        debug_msg_sign = "Command below is defined in py-files/transactions.py line 360:"
-        debug_msg_submit = "Command below is defined in py-files/transactions.py line 365:" 
+        debug_msg_build = "Command below is defined in py-files/transactions.py line 340:"
+        debug_msg_sign = "Command below is defined in py-files/transactions.py line 347:"
+        debug_msg_submit = "Command below is defined in py-files/transactions.py line 352:" 
                     
         manage_command(command_build, msg_build, debug_msg_build)
         if not self.command_failed:
@@ -943,7 +933,7 @@ class Smart_contracts(QWidget):
 
         self.change_address = ""
         self.skey_name = ""
-        self.era = ""
+        self.era = current_era
         self.utxo = ""
         self.datum_file_name = ""
 
@@ -978,7 +968,7 @@ class Smart_contracts(QWidget):
         self.button_8_1.clicked.connect(self.show_script_address)
 
         # Widgets for sending funds to script address section
-        self.label_9_0 = QLabel("Type in your change address:")
+        self.label_9_0 = QLabel("Type in your change address name:")
         self.input_10_0 = QLineEdit()
         self.button_10_1 = QPushButton("Set")
         self.label_11_0 = QLabel("Type in your signing key file name:")
@@ -988,8 +978,8 @@ class Smart_contracts(QWidget):
         self.input_14_0 = QLineEdit()
         self.radioButton_14_1 = QRadioButton("Ada")
         self.radioButton_14_2 = QRadioButton("Lovelace")
-        self.label_15_0 = QLabel("Select era:")
-        self.comboBox_16_0 = QComboBox()
+        self.label_15_0 = QLabel("Current era parameter set to:")
+        self.label_16_0 = QLabel(current_era)
         self.label_17_0 = QLabel("Input UTxO address:")
         self.input_18_0 = QLineEdit()
         self.button_18_1 = QPushButton("Set")
@@ -1002,10 +992,6 @@ class Smart_contracts(QWidget):
         # Widget actions for building script address section  
         self.button_10_1.clicked.connect(self.set_change_address)
         self.button_12_1.clicked.connect(self.set_skey_name)
-
-        self.comboBox_16_0.addItems(["", "byron-era", "shelley-era", "allegra-era", "mary-era", "alonzo-era", "babbage-era"])
-        self.comboBox_16_0.currentTextChanged.connect(self.update_era)
-
         self.button_18_1.clicked.connect(self.set_utxo)
         self.button_20_1.clicked.connect(self.set_datum)
         self.button_22_0.clicked.connect(self.send_funds)
@@ -1015,8 +1001,8 @@ class Smart_contracts(QWidget):
                   self.label_3_0, self.label_5_0, 
                   self.label_7_0, self.label_9_0, 
                   self.label_11_0, self.label_13_0, 
-                  self.label_15_0, self.label_17_0, 
-                  self.label_19_0] 
+                  self.label_15_0, self.label_16_0, 
+                  self.label_17_0, self.label_19_0] 
         for label in labels:
             font = label.font()
             font.setPointSize(12)
@@ -1072,7 +1058,7 @@ class Smart_contracts(QWidget):
         layout.addWidget(self.radioButton_14_1, 14, 1)
         layout.addWidget(self.radioButton_14_2, 14, 2)
         layout.addWidget(self.label_15_0, 15, 0)
-        layout.addWidget(self.comboBox_16_0, 16, 0)
+        layout.addWidget(self.label_16_0, 16, 0)
         layout.addWidget(self.label_17_0, 17, 0)
         layout.addWidget(self.input_18_0, 18, 0)
         layout.addWidget(self.button_18_1, 18, 1)
@@ -1147,7 +1133,7 @@ class Smart_contracts(QWidget):
                   "--out-file " + script_address_file
         
         if debug_mode:
-            print("Command below is defined in py-files/smart_contracts.py line 221:")
+            print("Command below is defined in py-files/smart_contracts.py line 217:")
             print(command + "\n") 
         else:
             try:
@@ -1158,7 +1144,6 @@ class Smart_contracts(QWidget):
                 log_error_msg(output)
                 
                 msg = "Script address could not be generated.\n" + \
-                      "Check if cardano node is running and is synced.\n" + \
                       "Look at the error.log file for error output."                  
                 QMessageBox.warning(self, "Notification:", msg,
                                     QMessageBox.Close)
@@ -1174,7 +1159,7 @@ class Smart_contracts(QWidget):
 
     def set_change_address(self): 
         global folder_path, debug_mode, testnet_magic 
-        change_address_name = self.input_2_0.text()
+        change_address_name = self.input_10_0.text()
         change_address_path = folder_path + "/" + change_address_name
         change_address_exists = os.path.isfile(change_address_path)
         
@@ -1200,11 +1185,6 @@ class Smart_contracts(QWidget):
                   "Please enter a valid file name."  
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close) 
-
-    def update_era(self, selected_era):
-        global folder_path, debug_mode, testnet_magic 
-        if selected_era != "":
-            self.era = selected_era
 
     def set_utxo(self):
         global folder_path, debug_mode, testnet_magic 
@@ -1298,12 +1278,6 @@ class Smart_contracts(QWidget):
                                 QMessageBox.Close)
             return None
 
-        if self.era == "":
-            msg = "Please select an era." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
-
         if self.utxo == "":
             msg = "Please set a valid UTxO transaction input." 
             QMessageBox.warning(self, "Notification:", msg,
@@ -1359,9 +1333,9 @@ class Smart_contracts(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/smart_contracts.py line 407:" 
-        debug_msg_sign = "Command below is defined in py-files/smart_contracts.py line 415:" 
-        debug_msg_submit = "Command below is defined in py-files/smart_contracts.py line 420:" 
+        debug_msg_build = "Command below is defined in py-files/smart_contracts.py line 392:" 
+        debug_msg_sign = "Command below is defined in py-files/smart_contracts.py line 400:" 
+        debug_msg_submit = "Command below is defined in py-files/smart_contracts.py line 405:" 
                     
         manage_command(command_build, msg_build, debug_msg_build)
         if not self.command_failed:
