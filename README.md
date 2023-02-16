@@ -2,7 +2,7 @@
 Simple GUI that cover some basic functionality of the Cardano CLI command line tool.<br>
 **IMPORTANT:** Project is under construction and may contain bugs. 
 
-To run the GUI you can use the executable files. You can also run it from the terminal.
+To run the GUI you can use the executable files. You can also run it from the terminal.<br>
 In that case you need to have `python 3` and `PyQt 5` installed:<br>
 `python cardano-cli-gui.py`
 
