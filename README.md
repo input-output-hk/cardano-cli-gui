@@ -28,7 +28,7 @@ funds to a receiving address.
 
 ![alt text](https://github.com/LukaKurnjek/cardano-cli-gui/blob/main/images/transactions.png)
 
-4. **Script address** tab, that handles building a script payment address for a script 
+4. **Smart contracts** tab, that handles building a script payment address for a script 
 file. You can also send funds to the generated script address and attach a datum to the 
 transaction. 
 
