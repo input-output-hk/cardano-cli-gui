@@ -58,7 +58,7 @@ class Smart_contracts(QWidget):
         self.button_8_1.clicked.connect(self.show_script_address)
 
         # Widgets for sending funds to script address section
-        self.label_9_0 = QLabel("Type in your change address:")
+        self.label_9_0 = QLabel("Type in your change address name:")
         self.input_10_0 = QLineEdit()
         self.button_10_1 = QPushButton("Set")
         self.label_11_0 = QLabel("Type in your signing key file name:")
@@ -243,7 +243,7 @@ class Smart_contracts(QWidget):
         self.input_8_0.setText(self.script_address)
 
     def set_change_address(self): 
-        change_address_name = self.input_2_0.text()
+        change_address_name = self.input_10_0.text()
         change_address_path = settings.folder_path + "/" + change_address_name
         change_address_exists = os.path.isfile(change_address_path)
         

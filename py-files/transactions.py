@@ -62,7 +62,7 @@ class Transactions(QWidget):
         self.label_13_0 = QLabel("Input UTxO address:")
         self.input_14_0 = QLineEdit()
         self.button_14_1 = QPushButton("Set")
-        self.label_15_0 = QLabel("Input receiving address:")
+        self.label_15_0 = QLabel("Input receiving address name:")
         self.input_16_0 = QLineEdit()
         self.button_16_1 = QPushButton("Set")
         self.button_18_0 = QPushButton("Send")
