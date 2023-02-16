@@ -254,7 +254,7 @@ class Wallet(QWidget):
                   "--out-file " + address_name
 
         if settings.debug_mode:
-            print("Command below is defined in py-files/wallet.py line 252:")
+            print("Command below is defined in py-files/wallet.py line 251:")
             print(command + "\n")
         else:
             try:
@@ -311,7 +311,7 @@ class Wallet(QWidget):
                   "--out-file " + pkh_name
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/wallet.py line 311:")
+            print("Command below is defined in py-files/wallet.py line 309:")
             print(command + "\n")
         else:
             try:

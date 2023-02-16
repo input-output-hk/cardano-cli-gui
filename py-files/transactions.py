@@ -206,7 +206,7 @@ class Transactions(QWidget):
                   net_part 
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/transactions.py line 207:")
+            print("Command below is defined in py-files/transactions.py line 204:")
             print(command + "\n")
         else:
             try:
@@ -359,9 +359,9 @@ class Transactions(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/transactions.py line 353:"
-        debug_msg_sign = "Command below is defined in py-files/transactions.py line 360:"
-        debug_msg_submit = "Command below is defined in py-files/transactions.py line 365:" 
+        debug_msg_build = "Command below is defined in py-files/transactions.py line 340:"
+        debug_msg_sign = "Command below is defined in py-files/transactions.py line 347:"
+        debug_msg_submit = "Command below is defined in py-files/transactions.py line 352:" 
                     
         manage_command(command_build, msg_build, debug_msg_build)
         if not self.command_failed:
