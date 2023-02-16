@@ -440,4 +440,3 @@ class Smart_contracts(QWidget):
             manage_command(command_submit, msg_submit, debug_msg_submit) 
             if not settings.debug_mode:                                              
                 os.remove(settings.folder_path + "/tx.signed")
-

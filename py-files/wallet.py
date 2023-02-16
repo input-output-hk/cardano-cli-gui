@@ -333,4 +333,3 @@ class Wallet(QWidget):
 
     def show_pkh(self): 
         self.input_15_0.setText(self.pkh)
-
