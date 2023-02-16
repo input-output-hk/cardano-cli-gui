@@ -1,5 +1,8 @@
-# Installer files for cardano-cli-gui
-Installer files are provided for Windows, Mac OS and Linux.
+# Executable files for cardano-cli-gui
+Executable files are provided for Windows, Mac OS and Linux.
+
+If you are using the debug option that prints commands to the terminal,
+start the executable from your terminal window.
 
 Executables were created with the `pyinstaller` tool with the command:<br>
 `pyinstaller --onefile cardano-cli-gui_all.py --noconsole`
