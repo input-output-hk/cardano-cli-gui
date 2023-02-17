@@ -10,7 +10,7 @@ In that case you need to have `python 3` and `PyQt 5` installed for the GUI to w
 **IMPORTANT:** To use the *query* and *send* command in the GUI a cardano node has to be 
 running and synced to the test or main network.
 
-The GUI functionality is seperated in 4 tabs and covers following things:
+The GUI functionality is seperated in 5 tabs and covers following things:
 
 1. **Start** tab, that notifies the user that he has to set a valid folder path to unlock
 other tabs. The folder path will be used to load and save key and address files. It also
@@ -33,3 +33,8 @@ file. You can also send funds to the generated script address and attach a datum
 transaction. 
 
 ![alt text](https://github.com/LukaKurnjek/cardano-cli-gui/blob/main/images/smart_contract.png)
+
+5. **Developer** tab, that lets more experienced users to set a different testnet 
+magic number or update the era parameter. 
+
+![alt text](https://github.com/LukaKurnjek/cardano-cli-gui/blob/main/images/developer.png=520x650)
