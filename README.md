@@ -37,4 +37,4 @@ transaction.
 5. **Developer** tab, that lets more experienced users to set a different testnet 
 magic number or update the era parameter. 
 
-![alt text](https://github.com/LukaKurnjek/cardano-cli-gui/blob/main/images/developer.png=520x650)
+![alt text](https://github.com/LukaKurnjek/cardano-cli-gui/blob/main/images/developer.png =520x650)
