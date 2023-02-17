@@ -259,7 +259,7 @@ class Wallet(QWidget):
         else:
             try:
                 subprocess.Popen(command.split(), cwd=settings.folder_path)
-                self.input_8_0.seText(address_name) 
+                self.input_8_0.setText(address_name) 
                 with open(address_path, "r") as file:
                     self.address = file.read() 
             except Exception:
