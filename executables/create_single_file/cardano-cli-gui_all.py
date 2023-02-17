@@ -46,7 +46,7 @@ darkPalette.setColor(QPalette.Disabled, QPalette.HighlightedText, QColor(127, 12
 
 class MainWindow(QMainWindow):
     def __init__(self):
-        global folder_path, debug_mode, testnet_magic 
+        global folder_path, debug_mode, testnet_magic, current_era 
         super().__init__()
 
         # Initiate global variables
@@ -96,7 +96,7 @@ class MainWindow(QMainWindow):
 
     # Sets initial values for global variables
     def init_global_variables(self):
-        global folder_path, debug_mode, testnet_magic 
+        global folder_path, debug_mode, testnet_magic, current_era 
         folder_path = ""
         debug_mode = False
         testnet_magic = "2"
@@ -104,7 +104,7 @@ class MainWindow(QMainWindow):
 
     # Sets debug mode to ON
     def set_debug_on(self):
-        global folder_path, debug_mode, testnet_magic 
+        global folder_path, debug_mode, testnet_magic, current_era 
         debug_mode = True
         
         self.label_8_0.setText("Debug mode: ON")
@@ -113,7 +113,7 @@ class MainWindow(QMainWindow):
 
     # Sets debug mode to OFF
     def set_debug_off(self):
-        global folder_path, debug_mode, testnet_magic 
+        global folder_path, debug_mode, testnet_magic, current_era 
         debug_mode = False
         
         self.label_8_0.setText("Debug mode: OFF")
@@ -122,7 +122,7 @@ class MainWindow(QMainWindow):
 
     # Widgets for the start tab 
     def init_start_tab(self):
-        global folder_path, debug_mode, testnet_magic 
+        global folder_path, debug_mode, testnet_magic, current_era 
         # Initial message
         label_1_0 = QLabel("To unlock other tabs set a valid folder path.\n" + \
                            "All files will be loaded or saved to this folder.")
@@ -194,7 +194,7 @@ class MainWindow(QMainWindow):
 
     # Function for setting the folder_path global variable
     def set_folder_path(self):
-        global folder_path, debug_mode, testnet_magic 
+        global folder_path, debug_mode, testnet_magic, current_era 
         folder_path_input = self.input_4_0.text()
         if folder_path_input[-1] == "/":
             folder_path_input = folder_path_input[0:-1]
@@ -216,11 +216,11 @@ class MainWindow(QMainWindow):
                                 QMessageBox.Close)
 
     def set_light_style(self):
-        global folder_path, debug_mode, testnet_magic 
+        global folder_path, debug_mode, testnet_magic, current_era 
         app.setPalette(lightPallet)
 
     def set_dark_style(self):
-        global folder_path, debug_mode, testnet_magic 
+        global folder_path, debug_mode, testnet_magic, current_era 
         app.setPalette(darkPalette)
 
 class Wallet(QWidget):
@@ -1346,6 +1346,122 @@ class Smart_contracts(QWidget):
             manage_command(command_submit, msg_submit, debug_msg_submit) 
             if not debug_mode:                                              
                 os.remove(folder_path + "/tx.signed")
+
+class Developer(QWidget):
+    def __init__(self):
+        global folder_path, debug_mode, testnet_magic 
+        super().__init__()
+
+        # Initial message
+        label_1_0 = QLabel("Manage advenced  Only for experienced developers.\n" + \
+                           "If you are not sure keep default parameter values.")
+
+        # Cardano picture
+        picture_1_1 = QLabel("")
+        picture_1_1.setPixmap(QPixmap("./images/cardano.png"))
+        picture_1_1.setFixedSize(80,80)
+        picture_1_1.setScaledContents(True)
+
+        # Widgets for testnet magic section 
+        label_3_0 = QLabel("Input testnet magic number:")
+        self.input_4_0 = QLineEdit()
+        button_4_1 = QPushButton("Set")
+        self.label_5_0 = QLabel("Current testnet magic set to: " + testnet_magic)
+
+        # Widgets for era section
+        label_8_0 = QLabel("Input era:")
+        self.input_9_0 = QLineEdit()
+        button_9_1 = QPushButton("Set")
+        self.label_10_0 = QLabel("Current era set to: " + current_era)
+
+        # Widgets for default value section
+        label_13_0 = QLabel("Reset parameters to default values:")
+        button_14_0 = QPushButton("Reset")
+
+        # Button functions
+        button_4_1.clicked.connect(self.set_magic)
+        button_9_1.clicked.connect(self.set_era)
+        button_14_0.clicked.connect(self.reset_values)
+
+        # Set label fonts 
+        labels = [label_1_0, label_3_0, 
+                  self.label_5_0, label_8_0, 
+                  self.label_10_0, label_13_0]
+        for label in labels:
+            font = label.font()
+            font.setPointSize(12)
+            label.setFont(font)
+
+        # Set lineEdit size 
+        self.input_4_0.setFixedSize(500,30)
+        self.input_9_0.setFixedSize(500,30)
+
+        # Set button size 
+        button_4_1.setFixedSize(80,30)
+        button_9_1.setFixedSize(80,30)
+        button_14_0.setFixedSize(160,30)
+
+        # Space between the sections
+        emptyLabel = QLabel()
+
+        # Layouts 
+        layout = QGridLayout()
+        layout.addWidget(emptyLabel, 0, 0)
+        layout.addWidget(label_1_0, 1, 0)
+        layout.addWidget(picture_1_1, 1, 1)
+        layout.addWidget(emptyLabel, 2, 0)
+        layout.addWidget(label_3_0, 3, 0)
+        layout.addWidget(self.input_4_0, 4, 0)
+        layout.addWidget(button_4_1, 4, 1)
+        layout.addWidget(self.label_5_0, 5, 0)
+        layout.addWidget(emptyLabel, 6, 0)
+        layout.addWidget(emptyLabel, 7, 0)
+        layout.addWidget(label_8_0, 8, 0)
+        layout.addWidget(self.input_9_0, 9, 0)
+        layout.addWidget(button_9_1, 9, 1)
+        layout.addWidget(self.label_10_0, 10, 0)
+        layout.addWidget(emptyLabel, 11, 0)
+        layout.addWidget(emptyLabel, 12, 0)
+        layout.addWidget(label_13_0, 13, 0)
+        layout.addWidget(button_14_0, 14, 0)
+        layout.addWidget(emptyLabel, 15, 0)
+        layout.addWidget(emptyLabel, 16, 0)
+
+        self.setLayout(layout)
+
+    # Functions for setting global variables
+    def set_magic(self):
+        global folder_path, debug_mode, testnet_magic 
+        input_magic = self.input_4_0.text()
+        if not input_magic.isdigit():
+            msg = "Testnet magic number should contain only digits."        
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+        else:
+            testnet_magic = input_magic
+            self.label_5_0.setText("Current testnet magic set to: " + testnet_magic)
+        
+
+    def set_era(self):
+        global folder_path, debug_mode, testnet_magic 
+        input_era = self.input_9_0.text()
+        if input_era == "":
+            msg = "Era can not be an empty string."        
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+        else:
+            current_era = input_era
+            self.label_10_0.setText("Current era set to: " + current_era) 
+
+    def reset_values(self):
+        global folder_path, debug_mode, testnet_magic 
+        testnet_magic = "2"
+        self.input_4_0.setText("")
+        self.label_5_0.setText("Current testnet magic set to: " + testnet_magic)
+        
+        current_era = "babbage-era"
+        self.input_9_0.setText("")
+        self.label_10_0.setText("Current era set to: " + current_era)     
 
 
 # Writes an error message to a log file 

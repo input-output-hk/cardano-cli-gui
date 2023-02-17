@@ -36,7 +36,7 @@ with open("../../cardano-cli-gui.py",'r') as inFile, open(out_file_name,"a") as 
             class_section = False
 
         # Add declaration of global variables after every function definition
-        global_statement = "global folder_path, debug_mode, testnet_magic \n"
+        global_statement = "global folder_path, debug_mode, testnet_magic, current_era \n"
         if line.startswith(" "*4 + "def "):
             line = line + " "*8 + global_statement
         if line.startswith(" "*8 + "def "):
@@ -89,6 +89,7 @@ def proces_file(file_path):
 proces_file("../../py-files/wallet.py")
 proces_file("../../py-files/transactions.py")
 proces_file("../../py-files/smart_contracts.py")
+proces_file("../../py-files/developer.py") 
 
 # Adding helper functions to end of file
 with open("../../py-files/common_functions.py",'r') as inFile, open(out_file_name,"a") as outFile:
