@@ -93,9 +93,18 @@ proces_file("../../py-files/developer.py")
 
 # Adding helper functions to end of file
 with open("../../py-files/common_functions.py",'r') as inFile, open(out_file_name,"a") as outFile:
+    code_section = False
+    outFile.writelines("# Writes an error message to a log file")
     for line in inFile:
-        outFile.writelines(line)
-    outFile.writelines("\n")
+        if not code_section:
+            code_section = line.startswith("# Writes an error message to a log file")
+
+        # Change access of global variable
+        if "settings." in line:
+            line = "".join(line.split("settings."))
+
+        if code_section:
+            outFile.writelines(line)
 
 # Adding content for main window of application
 main_window_creation = """

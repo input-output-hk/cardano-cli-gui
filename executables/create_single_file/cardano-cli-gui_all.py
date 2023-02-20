@@ -767,9 +767,9 @@ class Transactions(QWidget):
             print(command + "\n")
         else:
             try:
-                response = subprocess.Popen(command.split(), cwd=folder_path) 
-                output = response.communicate()[0]
-                self.input_6_0.setPlainText(output.decode("utf-8"))
+                response = subprocess.Popen(command.split(), stdout=subprocess.PIPE) 
+                output = response.communicate()[0].decode("utf-8")
+                self.input_6_0.setPlainText(output)
             except Exception:
                 output = traceback.format_exc()
                 log_error_msg(output)
@@ -1495,10 +1495,10 @@ class Developer(QWidget):
         self.input_9_0.setText("")
         self.label_10_0.setText("Current era set to: " + current_era)     
 
-
-# Writes an error message to a log file 
+# Writes an error message to a log file# Writes an error message to a log file 
 def log_error_msg(output):
-    with open("./error.log", "w") as file:
+    error_file_path = folder_path + "/error.log"
+    with open(error_file_path, "w") as file:
         file.write(output)
 
 # Parses the input string for the ADA or Lovelace amount
@@ -1536,7 +1536,6 @@ def parse_amount(input, currency):
         if input_check:
             input_lovelace = int(input)
         return input_lovelace
-
 app = QApplication(sys.argv)
 window = MainWindow()
 window.show()
