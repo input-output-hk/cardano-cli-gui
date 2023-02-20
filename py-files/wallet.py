@@ -236,11 +236,26 @@ class Wallet(QWidget):
         address_exists = os.path.isfile(address_path)
 
         if address_exists:
+            file_number_counter = 1
+            while(True):
+                if len(str(file_number_counter)) == 1:
+                    tmp_address_name = "0" + str(file_number_counter) + ".addr"
+                else:
+                    tmp_address_name = str(file_number_counter) + ".addr"
+                
+                tmp_address_path = settings.folder_path + "/" + tmp_address_name
+                tmp_address_exists = os.path.isfile(tmp_address_path)
+
+                if (not tmp_address_exists):
+                    address_name = tmp_address_name
+                    break
+
+            file_number_counter += 1
+
             msg = "Address file with same name as verification key already exists.\n" + \
-                  "To generate a new address file, delete or rename the existing file."   
+                  "The address file name " + address_name + " will be used." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
-            return None
 
         if is_testnet:
             net_part = "--testnet-magic " + settings.testnet_magic + " "
@@ -303,11 +318,26 @@ class Wallet(QWidget):
         pkh_exists = os.path.isfile(pkh_path)
 
         if pkh_exists:
-            msg = "Public key hash file with same name as verification key already exists.\n" + \
-                  "To generate a new verification key, delete or rename the existing file."      
+            file_number_counter = 1
+            while(True):
+                if len(str(file_number_counter)) == 1:
+                    tmp_pkh_name = "0" + str(file_number_counter) + ".pkh"
+                else:
+                    tmp_pkh_name = str(file_number_counter) + ".pkh"
+                
+                tmp_pkh_path = settings.folder_path + "/" + tmp_pkh_name
+                tmp_pkh_exists = os.path.isfile(tmp_pkh_path)
+
+                if (not tmp_pkh_exists):
+                    pkh_name = tmp_pkh_name
+                    break
+
+            file_number_counter += 1
+
+            msg = "Public key hash file with same name as verification key already exists." + \
+                  "The public key hash file name " + pkh_name + " will be used." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
-            return None
 
         command = "cardano-cli address key-hash " + \
                   "--payment-verification-key-file " + self.vkey_name + " " + \
