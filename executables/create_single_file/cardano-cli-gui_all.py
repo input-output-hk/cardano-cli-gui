@@ -230,8 +230,8 @@ class Wallet(QWidget):
 
         # Creating local variables
         self.vkey_name = ""
-        self.address = ""
-        self.pkh = ""
+        self.address_name = ""
+        self.pkh_name = ""
 
         # Starting text and Cardano picture
         self.label_0_0 = QLabel("Manage wallet address and its keys.")
@@ -423,8 +423,7 @@ class Wallet(QWidget):
         address_exists = os.path.isfile(address_path)
         
         if address_exists:
-            with open(address_path, "r") as file:
-                self.address = file.read()
+            self.address_name = address_name
         else:
             msg = "Address does not exists.\n" + \
                   "Please enter a valid file name."                      
@@ -475,9 +474,8 @@ class Wallet(QWidget):
         else:
             try:
                 subprocess.Popen(command.split(), cwd=folder_path)
-                self.input_8_0.seText(address_name) 
-                with open(address_path, "r") as file:
-                    self.address = file.read() 
+                self.input_8_0.setText(address_name) 
+                self.address_name = address_name
             except Exception:
                 output = traceback.format_exc()
                 log_error_msg(output)
@@ -489,7 +487,13 @@ class Wallet(QWidget):
 
     def show_address(self): 
         global folder_path, debug_mode, testnet_magic 
-        self.input_10_0.setText(self.address)
+        address_path = folder_path + "/" + self.address_name
+        address_exists = os.path.isfile(address_path)
+
+        if address_exists:
+            with open(address_path, "r") as file:
+                address = file.read()
+            self.input_10_0.setText(address)
 
     def set_pkh(self): 
         global folder_path, debug_mode, testnet_magic 
@@ -498,8 +502,7 @@ class Wallet(QWidget):
         pkh_exists = os.path.isfile(pkh_path)
         
         if pkh_exists:
-            with open(pkh_path, "r") as file:
-                self.pkh = file.read()
+            self.pkh_name = pkh_name
         else:
             msg = "Public key hash does not exists.\n" + \
                   "Please specify a valid file name."                        
@@ -536,8 +539,7 @@ class Wallet(QWidget):
             try:
                 subprocess.Popen(command.split(), cwd=folder_path)
                 self.input_13_0.setText(pkh_name)
-                with open(pkh_path, "r") as file:
-                    self.pkh = file.read()
+                self.pkh_name = pkh_name
             except Exception:
                 output = traceback.format_exc()
                 log_error_msg(output)
@@ -549,7 +551,19 @@ class Wallet(QWidget):
 
     def show_pkh(self): 
         global folder_path, debug_mode, testnet_magic 
-        self.input_15_0.setText(self.pkh)
+        pkh_path = folder_path + "/" + self.pkh_name
+        pkh_exists = os.path.isfile(pkh_path)
+
+        if pkh_exists:
+            with open(pkh_path, "r") as file:
+                pkh = file.read()
+            self.input_15_0.setText(pkh)
+        else:
+            msg = "Public key hash file does not exists.\n" + \
+                  "If you have generated it, wait a couple of\n" + \
+                  "seconds and try again to view the file."    
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
 
 class Transactions(QWidget):
     def __init__(self):
@@ -928,7 +942,7 @@ class Smart_contracts(QWidget):
 
         # Creating local variables
         self.script_file = ""
-        self.script_address = ""
+        self.script_address_file_name = ""
         self.net = ""
 
         self.change_address = ""
@@ -936,6 +950,7 @@ class Smart_contracts(QWidget):
         self.era = current_era
         self.utxo = ""
         self.datum_file_name = ""
+        self.command_failed = False
 
         # Cardano picture
         self.label_0_0 = QLabel("Generate cardano script address and send funds to it.")
@@ -1091,8 +1106,7 @@ class Smart_contracts(QWidget):
         script_address_file_exists = os.path.isfile(script_address_file_path)
         
         if script_address_file_exists:
-            with open(script_address_file_path, "r") as file:
-                self.script_address = file.read() 
+            self.script_address_file_name = script_address_file_name
         else:
             msg = "Script address file does not exists.\n" + \
                   "Please enter a valid file name." 
@@ -1139,6 +1153,7 @@ class Smart_contracts(QWidget):
             try:
                 subprocess.Popen(command.split(), cwd=folder_path) 
                 self.input_4_0.setText(script_address_file) 
+                self.script_address_file_name = script_address_file
             except Exception:
                 output = traceback.format_exc()
                 log_error_msg(output)
@@ -1155,7 +1170,19 @@ class Smart_contracts(QWidget):
 
     def show_script_address(self):
         global folder_path, debug_mode, testnet_magic 
-        self.input_8_0.setText(self.script_address)
+        script_address_file_path = folder_path + "/" + self.script_address_file_name
+        script_address_file_exists = os.path.isfile(script_address_file_path)
+        
+        if script_address_file_exists:
+            with open(script_address_file_path, "r") as file:
+                script_address = file.read()
+            self.input_8_0.setText(script_address)
+        else:
+            msg = "Script address file does not exists.\n" + \
+                  "If you have generated it, wait a couple of\n" + \
+                  "seconds and try again to view the file."    
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
 
     def set_change_address(self): 
         global folder_path, debug_mode, testnet_magic 
@@ -1197,7 +1224,7 @@ class Smart_contracts(QWidget):
             return None
 
         trans_hash = utxo_input.split("#")[0]
-        if not (len(trans_hash) == 64):
+        if len(trans_hash) != 64: 
             msg = "UTxO transaction hash has to be 64 characters long." + \
                   "Please enter a valid transaction hash." 
             QMessageBox.warning(self, "Notification:", msg,
@@ -1208,8 +1235,6 @@ class Smart_contracts(QWidget):
 
     def set_datum(self):
         global folder_path, debug_mode, testnet_magic 
-        self.command_failed = False
-
         datum_file_name = self.input_20_0.text() 
         if not (".json" in datum_file_name):
             msg = "Datum has to be a file in JSON fromat." + \
@@ -1231,11 +1256,17 @@ class Smart_contracts(QWidget):
 
     def send_funds(self): 
         global folder_path, debug_mode, testnet_magic 
-        if self.script_address == "":
-            msg = "Please set the receiving script address." 
+        if self.script_address_file_name == "":
+            msg = "Please set the receiving script address.\n" + \
+                  "If you have generated it, wait for couple of\n" + \
+                  "seconds and then try again to send the funds." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
+        else:
+            script_address_file_path = folder_path + "/" + self.script_address_file_name
+            with open(script_address_file_path, "r") as file:
+                self.script_address = file.read()
 
         if self.net == "":
             msg = "Select option mainnet or testnet."    
@@ -1346,6 +1377,7 @@ class Smart_contracts(QWidget):
             manage_command(command_submit, msg_submit, debug_msg_submit) 
             if not debug_mode:                                              
                 os.remove(folder_path + "/tx.signed")
+        self.command_failed = False
 
 class Developer(QWidget):
     def __init__(self):
