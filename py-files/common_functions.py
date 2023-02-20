@@ -1,7 +1,11 @@
 
+
+import settings
+
 # Writes an error message to a log file 
 def log_error_msg(output):
-    with open("./error.log", "w") as file:
+    error_file_path = settings.folder_path + "/error.log"
+    with open(error_file_path, "w") as file:
         file.write(output)
 
 # Parses the input string for the ADA or Lovelace amount
