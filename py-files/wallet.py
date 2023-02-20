@@ -18,8 +18,8 @@ class Wallet(QWidget):
 
         # Creating local variables
         self.vkey_name = ""
-        self.address = ""
-        self.pkh = ""
+        self.address_name = ""
+        self.pkh_name = ""
 
         # Starting text and Cardano picture
         self.label_0_0 = QLabel("Manage wallet address and its keys.")
@@ -208,8 +208,7 @@ class Wallet(QWidget):
         address_exists = os.path.isfile(address_path)
         
         if address_exists:
-            with open(address_path, "r") as file:
-                self.address = file.read()
+            self.address_name = address_name
         else:
             msg = "Address does not exists.\n" + \
                   "Please enter a valid file name."                      
@@ -260,8 +259,7 @@ class Wallet(QWidget):
             try:
                 subprocess.Popen(command.split(), cwd=settings.folder_path)
                 self.input_8_0.setText(address_name) 
-                with open(address_path, "r") as file:
-                    self.address = file.read() 
+                self.address_name = address_name
             except Exception:
                 output = traceback.format_exc()
                 common_functions.log_error_msg(output)
@@ -272,7 +270,13 @@ class Wallet(QWidget):
                                     QMessageBox.Close)
 
     def show_address(self): 
-        self.input_10_0.setText(self.address)
+        address_path = settings.folder_path + "/" + self.address_name
+        address_exists = os.path.isfile(address_path)
+
+        if address_exists:
+            with open(address_path, "r") as file:
+                address = file.read()
+            self.input_10_0.setText(address)
 
     def set_pkh(self): 
         pkh_name = self.input_13_0.text()
@@ -280,8 +284,7 @@ class Wallet(QWidget):
         pkh_exists = os.path.isfile(pkh_path)
         
         if pkh_exists:
-            with open(pkh_path, "r") as file:
-                self.pkh = file.read()
+            self.pkh_name = pkh_name
         else:
             msg = "Public key hash does not exists.\n" + \
                   "Please specify a valid file name."                        
@@ -317,8 +320,7 @@ class Wallet(QWidget):
             try:
                 subprocess.Popen(command.split(), cwd=settings.folder_path)
                 self.input_13_0.setText(pkh_name)
-                with open(pkh_path, "r") as file:
-                    self.pkh = file.read()
+                self.pkh_name = pkh_name
             except Exception:
                 output = traceback.format_exc()
                 common_functions.log_error_msg(output)
@@ -329,4 +331,16 @@ class Wallet(QWidget):
                                     QMessageBox.Close)
 
     def show_pkh(self): 
-        self.input_15_0.setText(self.pkh)
+        pkh_path = settings.folder_path + "/" + self.pkh_name
+        pkh_exists = os.path.isfile(pkh_path)
+
+        if pkh_exists:
+            with open(pkh_path, "r") as file:
+                pkh = file.read()
+            self.input_15_0.setText(pkh)
+        else:
+            msg = "Public key hash file does not exists.\n" + \
+                  "If you have generated it, wait a couple of\n" + \
+                  "seconds and try again to view the file."    
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)

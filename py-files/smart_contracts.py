@@ -18,7 +18,7 @@ class Smart_contracts(QWidget):
 
         # Creating local variables
         self.script_file = ""
-        self.script_address = ""
+        self.script_address_file_name = ""
         self.net = ""
 
         self.change_address = ""
@@ -26,6 +26,7 @@ class Smart_contracts(QWidget):
         self.era = settings.current_era
         self.utxo = ""
         self.datum_file_name = ""
+        self.command_failed = False
 
         # Cardano picture
         self.label_0_0 = QLabel("Generate cardano script address and send funds to it.")
@@ -179,8 +180,7 @@ class Smart_contracts(QWidget):
         script_address_file_exists = os.path.isfile(script_address_file_path)
         
         if script_address_file_exists:
-            with open(script_address_file_path, "r") as file:
-                self.script_address = file.read() 
+            self.script_address_file_name = script_address_file_name
         else:
             msg = "Script address file does not exists.\n" + \
                   "Please enter a valid file name." 
@@ -226,6 +226,7 @@ class Smart_contracts(QWidget):
             try:
                 subprocess.Popen(command.split(), cwd=settings.folder_path) 
                 self.input_4_0.setText(script_address_file) 
+                self.script_address_file_name = script_address_file
             except Exception:
                 output = traceback.format_exc()
                 common_functions.log_error_msg(output)
@@ -240,7 +241,19 @@ class Smart_contracts(QWidget):
             self.net = selected_net
 
     def show_script_address(self):
-        self.input_8_0.setText(self.script_address)
+        script_address_file_path = settings.folder_path + "/" + self.script_address_file_name
+        script_address_file_exists = os.path.isfile(script_address_file_path)
+        
+        if script_address_file_exists:
+            with open(script_address_file_path, "r") as file:
+                script_address = file.read()
+            self.input_8_0.setText(script_address)
+        else:
+            msg = "Script address file does not exists.\n" + \
+                  "If you have generated it, wait a couple of\n" + \
+                  "seconds and try again to view the file."    
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
 
     def set_change_address(self): 
         change_address_name = self.input_10_0.text()
@@ -279,7 +292,7 @@ class Smart_contracts(QWidget):
             return None
 
         trans_hash = utxo_input.split("#")[0]
-        if not (len(trans_hash) == 64):
+        if len(trans_hash) != 64: 
             msg = "UTxO transaction hash has to be 64 characters long." + \
                   "Please enter a valid transaction hash." 
             QMessageBox.warning(self, "Notification:", msg,
@@ -289,8 +302,6 @@ class Smart_contracts(QWidget):
         self.utxo = utxo_input 
 
     def set_datum(self):
-        self.command_failed = False
-
         datum_file_name = self.input_20_0.text() 
         if not (".json" in datum_file_name):
             msg = "Datum has to be a file in JSON fromat." + \
@@ -311,11 +322,17 @@ class Smart_contracts(QWidget):
         self.datum_file_name = datum_file_name 
 
     def send_funds(self): 
-        if self.script_address == "":
-            msg = "Please set the receiving script address." 
+        if self.script_address_file_name == "":
+            msg = "Please set the receiving script address.\n" + \
+                  "If you have generated it, wait for couple of\n" + \
+                  "seconds and then try again to send the funds." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
+        else:
+            script_address_file_path = settings.folder_path + "/" + self.script_address_file_name
+            with open(script_address_file_path, "r") as file:
+                self.script_address = file.read()
 
         if self.net == "":
             msg = "Select option mainnet or testnet."    
@@ -425,3 +442,4 @@ class Smart_contracts(QWidget):
             manage_command(command_submit, msg_submit, debug_msg_submit) 
             if not settings.debug_mode:                                              
                 os.remove(settings.folder_path + "/tx.signed")
+        self.command_failed = False
