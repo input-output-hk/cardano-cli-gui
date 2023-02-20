@@ -210,9 +210,9 @@ class Transactions(QWidget):
             print(command + "\n")
         else:
             try:
-                response = subprocess.Popen(command.split(), cwd=settings.folder_path) 
-                output = response.communicate()[0]
-                self.input_6_0.setPlainText(output.decode("utf-8"))
+                response = subprocess.Popen(command.split(), stdout=subprocess.PIPE) 
+                output = response.communicate()[0].decode("utf-8")
+                self.input_6_0.setPlainText(output)
             except Exception:
                 output = traceback.format_exc()
                 common_functions.log_error_msg(output)
