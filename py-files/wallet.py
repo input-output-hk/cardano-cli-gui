@@ -21,8 +21,10 @@ class Wallet(QWidget):
         self.address_name = ""
         self.pkh_name = ""
 
-        # Starting text and Cardano picture
+        # Header text 
         self.label_0_0 = QLabel("Manage wallet address and its keys.")
+
+        # Cardano picture
         picture_0_2 = QLabel("")
         picture_0_2.setPixmap(QPixmap("./images/cardano.png"))
         picture_0_2.setFixedSize(80,80)

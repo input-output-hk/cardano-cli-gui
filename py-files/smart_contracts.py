@@ -28,8 +28,10 @@ class Smart_contracts(QWidget):
         self.datum_file_name = ""
         self.command_failed = False
 
-        # Cardano picture
+        # Header text 
         self.label_0_0 = QLabel("Generate cardano script address and send funds to it.")
+
+        # Cardano picture
         picture_0_2 = QLabel("")
         picture_0_2.setPixmap(QPixmap("./images/cardano.png"))
         picture_0_2.setFixedSize(80,80)

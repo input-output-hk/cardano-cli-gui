@@ -24,8 +24,10 @@ class Transactions(QWidget):
         self.utxo = ""
         self.receiving_address = ""
 
-        # Intro text and cardano picture
+        # Header text 
         self.label_0_0 = QLabel("Send funds from your address to another one.")
+        
+        # Cardano picture
         picture_0_1 = QLabel("")
         picture_0_1.setPixmap(QPixmap("./images/cardano.png"))
         picture_0_1.setFixedSize(80,80)

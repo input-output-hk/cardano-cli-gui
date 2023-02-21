@@ -11,7 +11,7 @@ class Developer(QWidget):
     def __init__(self):
         super().__init__()
 
-        # Initial message
+        # Header text 
         label_1_0 = QLabel("Manage advenced settings. Only for experienced developers.\n" + \
                            "If you are not sure keep default parameter values.")
 
