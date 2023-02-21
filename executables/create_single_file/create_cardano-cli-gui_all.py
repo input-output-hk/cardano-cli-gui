@@ -9,6 +9,10 @@ import sys
 import subprocess
 import traceback
 
+import base64
+from io import BytesIO
+from PIL import Image, ImageQt
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtCore import QSize 
 from PyQt5.QtGui import QPixmap, QPalette, QColor, QFont
@@ -24,6 +28,26 @@ with open("../../py-files/settings.py",'r') as inFile, open(out_file_name,"a") a
     outFile.writelines(line for line in inFile 
                        if not line.startswith("from"))
     outFile.writelines("\n\n")
+
+# Adding bytestring for Cardano picture
+with open("../../py-files/picture.py",'r') as inFile, open(out_file_name,"a") as outFile:
+    outFile.writelines("\n")
+    for line in inFile:
+        outFile.writelines(line)
+    outFile.writelines("\n")
+
+code_for_picture = """
+        # Load byte data
+        byte_data = base64.b64decode(cardano_picture)
+        image_data = BytesIO(byte_data)
+        image = Image.open(image_data)
+
+        # PIL to QPixmap
+        qImage = ImageQt.ImageQt(image)
+        image = QPixmap.fromImage(qImage)
+
+        # QPixmap to QLabel        
+"""
 
 # Adding code from cardano-cli-gui.py
 with open("../../cardano-cli-gui.py",'r') as inFile, open(out_file_name,"a") as outFile:
@@ -49,6 +73,13 @@ with open("../../cardano-cli-gui.py",'r') as inFile, open(out_file_name,"a") as 
         # Change access of common functions
         if "common_functions." in line:
             line = "".join(line.split("common_functions."))
+
+        # Adding code for cardano picture
+        if "picture_1_1 = QLabel" in line:
+            line = code_for_picture + line
+
+        if "picture_1_1.setPixmap" in line:
+            line = "        picture_1_1.setPixmap(image)\n"
 
         # Write line to file
         if class_section:
@@ -80,6 +111,18 @@ def proces_file(file_path):
             if "common_functions." in line:
                 line = "".join(line.split("common_functions."))
 
+            # Adding code for cardano picture
+            if "picture" in line and "QLabel" in line:
+                line = code_for_picture + line
+
+            if ".setPixmap" in line:
+                if "picture_0_1" in line:
+                    line = "        picture_0_1.setPixmap(image)\n"
+                if "picture_0_2" in line:
+                    line = "        picture_0_2.setPixmap(image)\n"
+                if "picture_1_1" in line:
+                    line = "        picture_1_1.setPixmap(image)\n"
+
             # Write line to file
             if class_section:
                 outFile.writelines(line)
@@ -108,6 +151,7 @@ with open("../../py-files/common_functions.py",'r') as inFile, open(out_file_nam
 
 # Adding content for main window of application
 main_window_creation = """
+
 app = QApplication(sys.argv)
 window = MainWindow()
 window.show()
