@@ -350,7 +350,7 @@ class Transactions(QWidget):
                         "--" + self.era + " " + \
                         net_part + \
                         "--tx-in " + self.utxo + " " + \
-                        "--tx-out " + self.receiving_address + " " + str(amount_in_lovelace) + " lovelace " + \
+                        "--tx-out \"" + self.receiving_address + " " + str(amount_in_lovelace) + " lovelace \"" + \
                         "--change-address " + self.address + " " + \
                         "--out-file tx.body"
         command_sign = "cardano-cli transaction sign " + \
