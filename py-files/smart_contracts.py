@@ -226,7 +226,7 @@ class Smart_contracts(QWidget):
                   "--out-file " + script_address_file
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/smart_contracts.py line 219:")
+            print("Command below is defined in py-files/smart_contracts.py line 223:")
             print(command + "\n") 
         else:
             try:
@@ -443,9 +443,9 @@ class Smart_contracts(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/smart_contracts.py line 411:" 
-        debug_msg_sign = "Command below is defined in py-files/smart_contracts.py line 419:" 
-        debug_msg_submit = "Command below is defined in py-files/smart_contracts.py line 424:" 
+        debug_msg_build = "Command below is defined in py-files/smart_contracts.py line 423:" 
+        debug_msg_sign = "Command below is defined in py-files/smart_contracts.py line 431:" 
+        debug_msg_submit = "Command below is defined in py-files/smart_contracts.py line 436:" 
                     
         manage_command(command_build, msg_build, debug_msg_build)
         if not self.command_failed:
