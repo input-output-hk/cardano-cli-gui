@@ -395,8 +395,7 @@ class Wallet(QWidget):
         if vkey_exists:
             self.vkey_name = vkey_name
             msg = "Verification key file successfully set."  
-            QMessageBox.Ok(self, "Notification:", msg,
-                                QMessageBox.Close)
+            QMessageBox.information(self, "Notification:", msg)
             if skey_exists:
                 self.input_4_0.setText(skey_name)
         else:
@@ -459,8 +458,7 @@ class Wallet(QWidget):
         if address_exists:
             self.address_name = address_name
             msg = "Public address file successfully set."  
-            QMessageBox.Ok(self, "Notification:", msg,
-                                QMessageBox.Close)
+            QMessageBox.information(self, "Notification:", msg)
         else:
             msg = "Address does not exists.\n" + \
                   "Please enter a valid file name."                      
@@ -560,8 +558,7 @@ class Wallet(QWidget):
         if pkh_exists:
             self.pkh_name = pkh_name
             msg = "Public key hash file successfully set."  
-            QMessageBox.Ok(self, "Notification:", msg,
-                                QMessageBox.Close)
+            QMessageBox.information(self, "Notification:", msg)
         else:
             msg = "Public key hash does not exists.\n" + \
                   "Please specify a valid file name."                        
@@ -807,8 +804,7 @@ class Transactions(QWidget):
             with open(address_path, "r") as file:
                 self.address = file.read()
             msg = "Address file successfully set."  
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close)
+            QMessageBox.information(self, "Notification:", msg)
         else:
             msg = "Address file does not exists.\n" + \
                   "Please enter a valid file name." 
@@ -824,8 +820,7 @@ class Transactions(QWidget):
         if skey_exists:
             self.skey_name = skey_name
             msg = "Signing key file successfully set."  
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close)
+            QMessageBox.information(self, "Notification:", msg)
         else:
             msg = "Signing key file does not exists.\n" + \
                   "Please enter a valid file name."  
@@ -899,8 +894,7 @@ class Transactions(QWidget):
 
         self.utxo = utxo_input 
         msg = "UTxO address successfully set." 
-        QMessageBox.Ok(self, "Notification:", msg,
-                       QMessageBox.Close)
+        QMessageBox.information(self, "Notification:", msg)
 
     def set_receiving_address(self):
         global folder_path, debug_mode, testnet_magic 
@@ -912,8 +906,7 @@ class Transactions(QWidget):
             with open(receiving_address_path, "r") as file:
                 self.receiving_address = file.read()
             msg = "Receiving address file successfully set."  
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close)
+            QMessageBox.information(self, "Notification:", msg)
         else:
             msg = "Receiving address does not exists.\n" + \
                   "Please enter a valid file name."                       
@@ -1034,8 +1027,7 @@ class Transactions(QWidget):
                 os.remove(folder_path + "/tx.signed")
         if not self.command_failed:
             msg = "Send transaction successfully submitted."  
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close) 
+            QMessageBox.information(self, "Notification:", msg) 
         self.command_failed = False
 
 class Smart_contracts(QWidget):
@@ -1210,8 +1202,7 @@ class Smart_contracts(QWidget):
         if script_file_exists:
             self.script_file = script_file_name
             msg = "Script file successfully set." 
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close)
+            QMessageBox.information(self, "Notification:", msg)
         else:
             msg = "Script file does not exists.\n" + \
                   "Please enter a valid file name." 
@@ -1227,8 +1218,7 @@ class Smart_contracts(QWidget):
         if script_address_file_exists:
             self.script_address_file_name = script_address_file_name
             msg = "Script address file successfully set." 
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close)
+            QMessageBox.information(self, "Notification:", msg)
         else:
             msg = "Script address file does not exists.\n" + \
                   "Please enter a valid file name." 
@@ -1316,8 +1306,7 @@ class Smart_contracts(QWidget):
             with open(change_address_path, "r") as file:
                 self.change_address = file.read()
             msg = "Change address file successfully set." 
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close)
+            QMessageBox.information(self, "Notification:", msg)
         else:
             msg = "Address file does not exists.\n" + \
                   "Please enter a valid file name." 
@@ -1333,8 +1322,7 @@ class Smart_contracts(QWidget):
         if skey_exists:
             self.skey_name = skey_name
             msg = "Signing key file successfully set." 
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close)
+            QMessageBox.information(self, "Notification:", msg)
         else:
             msg = "Signing key file does not exists.\n" + \
                   "Please enter a valid file name."  
@@ -1361,8 +1349,7 @@ class Smart_contracts(QWidget):
 
         self.utxo = utxo_input 
         msg = "UTxO address successfully set." 
-        QMessageBox.Ok(self, "Notification:", msg,
-                       QMessageBox.Close)
+        QMessageBox.information(self, "Notification:", msg)
 
     def set_datum(self):
         global folder_path, debug_mode, testnet_magic 
@@ -1385,8 +1372,7 @@ class Smart_contracts(QWidget):
 
         self.datum_file_name = datum_file_name 
         msg = "Datum file successfully set." 
-        QMessageBox.Ok(self, "Notification:", msg,
-                       QMessageBox.Close)
+        QMessageBox.information(self, "Notification:", msg)
 
     def send_funds(self): 
         global folder_path, debug_mode, testnet_magic 
@@ -1514,8 +1500,7 @@ class Smart_contracts(QWidget):
 
         if not self.command_failed:
             msg = "Send transaction successfully submitted."  
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close) 
+            QMessageBox.information(self, "Notification:", msg) 
         self.command_failed = False
 
 class Developer(QWidget):
@@ -1623,8 +1608,7 @@ class Developer(QWidget):
             testnet_magic = input_magic
             self.label_5_0.setText("Current testnet magic set to: " + testnet_magic)
             msg = "Testnet magic number successfully set."  
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close) 
+            QMessageBox.information(self, "Notification:", msg) 
         
 
     def set_era(self):
@@ -1638,8 +1622,7 @@ class Developer(QWidget):
             current_era = input_era
             self.label_10_0.setText("Current era set to: " + current_era) 
             msg = "Era successfully set."  
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close) 
+            QMessageBox.information(self, "Notification:", msg) 
 
     def reset_values(self):
         global folder_path, debug_mode, testnet_magic 
@@ -1652,8 +1635,7 @@ class Developer(QWidget):
         self.label_10_0.setText("Current era set to: " + current_era)   
 
         msg = "Default values successfully restored."  
-        QMessageBox.Ok(self, "Notification:", msg,
-                        QMessageBox.Close)   
+        QMessageBox.information(self, "Notification:", msg)   
 
 # Writes an error message to a log file# Writes an error message to a log file 
 def log_error_msg(output):
