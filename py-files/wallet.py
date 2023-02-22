@@ -152,15 +152,15 @@ class Wallet(QWidget):
 
         if vkey_exists:
             self.vkey_name = vkey_name
+            if skey_exists:
+                self.input_4_0.setText(skey_name)
         else:
             msg = "Verification key does not exists.\n" + \
                   "Please enter a valid file name."                       
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
+            self.input_2_0.setText("")
             return None
-
-        if skey_exists:
-            self.input_4_0.setText(skey_name)
 
     def generate_skey_and_vkey(self):
         file_number_counter = 1
@@ -184,7 +184,7 @@ class Wallet(QWidget):
                           "--signing-key-file " + skey_name 
 
                 if settings.debug_mode:
-                    print("Command below is defined in py-files/wallet.py line 180:")
+                    print("Command below is defined in py-files/wallet.py line 182:")
                     print(command + "\n")
                 else:
                     try:
@@ -252,7 +252,7 @@ class Wallet(QWidget):
                     address_name = tmp_address_name
                     break
 
-            file_number_counter += 1
+                file_number_counter += 1
 
             msg = "Address file with same name as verification key already exists.\n" + \
                   "The address file name " + address_name + " will be used." 
@@ -270,7 +270,7 @@ class Wallet(QWidget):
                   "--out-file " + address_name
 
         if settings.debug_mode:
-            print("Command below is defined in py-files/wallet.py line 251:")
+            print("Command below is defined in py-files/wallet.py line 267:")
             print(command + "\n")
         else:
             try:
@@ -294,6 +294,10 @@ class Wallet(QWidget):
             with open(address_path, "r") as file:
                 address = file.read()
             self.input_10_0.setText(address)
+        else:
+            msg = "Please set or generate first an address file."                    
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
 
     def set_pkh(self): 
         pkh_name = self.input_13_0.text()
@@ -334,7 +338,7 @@ class Wallet(QWidget):
                     pkh_name = tmp_pkh_name
                     break
 
-            file_number_counter += 1
+                file_number_counter += 1
 
             msg = "Public key hash file with same name as verification key already exists." + \
                   "The public key hash file name " + pkh_name + " will be used." 
@@ -346,7 +350,7 @@ class Wallet(QWidget):
                   "--out-file " + pkh_name
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/wallet.py line 309:")
+            print("Command below is defined in py-files/wallet.py line 348:")
             print(command + "\n")
         else:
             try:
@@ -358,7 +362,7 @@ class Wallet(QWidget):
                 common_functions.log_error_msg(output)
                 
                 msg = "Public key hash could not be generated.\n" + \
-                      "Look at the error.log file for error output."                     
+                      "Look at the error.log file for error output."                 
                 QMessageBox.warning(self, "Notification:", msg,
                                     QMessageBox.Close)
 
@@ -373,6 +377,6 @@ class Wallet(QWidget):
         else:
             msg = "Public key hash file does not exists.\n" + \
                   "If you have generated it, wait a couple of\n" + \
-                  "seconds and try again to view the file."    
+                  "seconds and try again to view the file."  
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
