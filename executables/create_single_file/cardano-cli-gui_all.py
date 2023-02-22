@@ -394,15 +394,15 @@ class Wallet(QWidget):
 
         if vkey_exists:
             self.vkey_name = vkey_name
+            if skey_exists:
+                self.input_4_0.setText(skey_name)
         else:
             msg = "Verification key does not exists.\n" + \
                   "Please enter a valid file name."                       
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
+            self.input_2_0.setText("")
             return None
-
-        if skey_exists:
-            self.input_4_0.setText(skey_name)
 
     def generate_skey_and_vkey(self):
         global folder_path, debug_mode, testnet_magic 
@@ -427,7 +427,7 @@ class Wallet(QWidget):
                           "--signing-key-file " + skey_name 
 
                 if debug_mode:
-                    print("Command below is defined in py-files/wallet.py line 180:")
+                    print("Command below is defined in py-files/wallet.py line 182:")
                     print(command + "\n")
                 else:
                     try:
@@ -497,7 +497,7 @@ class Wallet(QWidget):
                     address_name = tmp_address_name
                     break
 
-            file_number_counter += 1
+                file_number_counter += 1
 
             msg = "Address file with same name as verification key already exists.\n" + \
                   "The address file name " + address_name + " will be used." 
@@ -515,7 +515,7 @@ class Wallet(QWidget):
                   "--out-file " + address_name
 
         if debug_mode:
-            print("Command below is defined in py-files/wallet.py line 251:")
+            print("Command below is defined in py-files/wallet.py line 267:")
             print(command + "\n")
         else:
             try:
@@ -540,6 +540,10 @@ class Wallet(QWidget):
             with open(address_path, "r") as file:
                 address = file.read()
             self.input_10_0.setText(address)
+        else:
+            msg = "Please set or generate first an address file."                    
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
 
     def set_pkh(self): 
         global folder_path, debug_mode, testnet_magic 
@@ -582,7 +586,7 @@ class Wallet(QWidget):
                     pkh_name = tmp_pkh_name
                     break
 
-            file_number_counter += 1
+                file_number_counter += 1
 
             msg = "Public key hash file with same name as verification key already exists." + \
                   "The public key hash file name " + pkh_name + " will be used." 
@@ -594,7 +598,7 @@ class Wallet(QWidget):
                   "--out-file " + pkh_name
         
         if debug_mode:
-            print("Command below is defined in py-files/wallet.py line 309:")
+            print("Command below is defined in py-files/wallet.py line 348:")
             print(command + "\n")
         else:
             try:
@@ -606,7 +610,7 @@ class Wallet(QWidget):
                 log_error_msg(output)
                 
                 msg = "Public key hash could not be generated.\n" + \
-                      "Look at the error.log file for error output."                     
+                      "Look at the error.log file for error output."                 
                 QMessageBox.warning(self, "Notification:", msg,
                                     QMessageBox.Close)
 
@@ -622,7 +626,7 @@ class Wallet(QWidget):
         else:
             msg = "Public key hash file does not exists.\n" + \
                   "If you have generated it, wait a couple of\n" + \
-                  "seconds and try again to view the file."    
+                  "seconds and try again to view the file."  
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
 
@@ -837,7 +841,7 @@ class Transactions(QWidget):
                   net_part 
         
         if debug_mode:
-            print("Command below is defined in py-files/transactions.py line 204:")
+            print("Command below is defined in py-files/transactions.py line 206:")
             print(command + "\n")
         else:
             try:
@@ -995,9 +999,9 @@ class Transactions(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/transactions.py line 340:"
-        debug_msg_sign = "Command below is defined in py-files/transactions.py line 347:"
-        debug_msg_submit = "Command below is defined in py-files/transactions.py line 352:" 
+        debug_msg_build = "Command below is defined in py-files/transactions.py line 342:"
+        debug_msg_sign = "Command below is defined in py-files/transactions.py line 349:"
+        debug_msg_submit = "Command below is defined in py-files/transactions.py line 354:" 
                     
         manage_command(command_build, msg_build, debug_msg_build)
         if not self.command_failed:
@@ -1234,7 +1238,7 @@ class Smart_contracts(QWidget):
                   "--out-file " + script_address_file
         
         if debug_mode:
-            print("Command below is defined in py-files/smart_contracts.py line 217:")
+            print("Command below is defined in py-files/smart_contracts.py line 219:")
             print(command + "\n") 
         else:
             try:
@@ -1451,9 +1455,9 @@ class Smart_contracts(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/smart_contracts.py line 392:" 
-        debug_msg_sign = "Command below is defined in py-files/smart_contracts.py line 400:" 
-        debug_msg_submit = "Command below is defined in py-files/smart_contracts.py line 405:" 
+        debug_msg_build = "Command below is defined in py-files/smart_contracts.py line 411:" 
+        debug_msg_sign = "Command below is defined in py-files/smart_contracts.py line 419:" 
+        debug_msg_submit = "Command below is defined in py-files/smart_contracts.py line 424:" 
                     
         manage_command(command_build, msg_build, debug_msg_build)
         if not self.command_failed:
