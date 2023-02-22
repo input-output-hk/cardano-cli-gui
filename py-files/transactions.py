@@ -167,8 +167,7 @@ class Transactions(QWidget):
             with open(address_path, "r") as file:
                 self.address = file.read()
             msg = "Address file successfully set."  
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close)
+            QMessageBox.information(self, "Notification:", msg)
         else:
             msg = "Address file does not exists.\n" + \
                   "Please enter a valid file name." 
@@ -183,8 +182,7 @@ class Transactions(QWidget):
         if skey_exists:
             self.skey_name = skey_name
             msg = "Signing key file successfully set."  
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close)
+            QMessageBox.information(self, "Notification:", msg)
         else:
             msg = "Signing key file does not exists.\n" + \
                   "Please enter a valid file name."  
@@ -255,8 +253,7 @@ class Transactions(QWidget):
 
         self.utxo = utxo_input 
         msg = "UTxO address successfully set." 
-        QMessageBox.Ok(self, "Notification:", msg,
-                       QMessageBox.Close)
+        QMessageBox.information(self, "Notification:", msg)
 
     def set_receiving_address(self):
         receiving_address_name = self.input_16_0.text()
@@ -267,8 +264,7 @@ class Transactions(QWidget):
             with open(receiving_address_path, "r") as file:
                 self.receiving_address = file.read()
             msg = "Receiving address file successfully set."  
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close)
+            QMessageBox.information(self, "Notification:", msg)
         else:
             msg = "Receiving address does not exists.\n" + \
                   "Please enter a valid file name."                       
@@ -387,6 +383,5 @@ class Transactions(QWidget):
                 os.remove(settings.folder_path + "/tx.signed")
         if not self.command_failed:
             msg = "Send transaction successfully submitted."  
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close) 
+            QMessageBox.information(self, "Notification:", msg) 
         self.command_failed = False

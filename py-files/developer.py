@@ -99,8 +99,7 @@ class Developer(QWidget):
             settings.testnet_magic = input_magic
             self.label_5_0.setText("Current testnet magic set to: " + settings.testnet_magic)
             msg = "Testnet magic number successfully set."  
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close) 
+            QMessageBox.information(self, "Notification:", msg) 
         
 
     def set_era(self):
@@ -113,8 +112,7 @@ class Developer(QWidget):
             settings.current_era = input_era
             self.label_10_0.setText("Current era set to: " + settings.current_era) 
             msg = "Era successfully set."  
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close) 
+            QMessageBox.information(self, "Notification:", msg) 
 
     def reset_values(self):
         settings.testnet_magic = "2"
@@ -126,5 +124,4 @@ class Developer(QWidget):
         self.label_10_0.setText("Current era set to: " + settings.current_era)   
 
         msg = "Default values successfully restored."  
-        QMessageBox.Ok(self, "Notification:", msg,
-                        QMessageBox.Close)   
+        QMessageBox.information(self, "Notification:", msg)   

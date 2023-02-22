@@ -171,8 +171,7 @@ class Smart_contracts(QWidget):
         if script_file_exists:
             self.script_file = script_file_name
             msg = "Script file successfully set." 
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close)
+            QMessageBox.information(self, "Notification:", msg)
         else:
             msg = "Script file does not exists.\n" + \
                   "Please enter a valid file name." 
@@ -187,8 +186,7 @@ class Smart_contracts(QWidget):
         if script_address_file_exists:
             self.script_address_file_name = script_address_file_name
             msg = "Script address file successfully set." 
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close)
+            QMessageBox.information(self, "Notification:", msg)
         else:
             msg = "Script address file does not exists.\n" + \
                   "Please enter a valid file name." 
@@ -272,8 +270,7 @@ class Smart_contracts(QWidget):
             with open(change_address_path, "r") as file:
                 self.change_address = file.read()
             msg = "Change address file successfully set." 
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close)
+            QMessageBox.information(self, "Notification:", msg)
         else:
             msg = "Address file does not exists.\n" + \
                   "Please enter a valid file name." 
@@ -288,8 +285,7 @@ class Smart_contracts(QWidget):
         if skey_exists:
             self.skey_name = skey_name
             msg = "Signing key file successfully set." 
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close)
+            QMessageBox.information(self, "Notification:", msg)
         else:
             msg = "Signing key file does not exists.\n" + \
                   "Please enter a valid file name."  
@@ -315,8 +311,7 @@ class Smart_contracts(QWidget):
 
         self.utxo = utxo_input 
         msg = "UTxO address successfully set." 
-        QMessageBox.Ok(self, "Notification:", msg,
-                       QMessageBox.Close)
+        QMessageBox.information(self, "Notification:", msg)
 
     def set_datum(self):
         datum_file_name = self.input_20_0.text() 
@@ -338,8 +333,7 @@ class Smart_contracts(QWidget):
 
         self.datum_file_name = datum_file_name 
         msg = "Datum file successfully set." 
-        QMessageBox.Ok(self, "Notification:", msg,
-                       QMessageBox.Close)
+        QMessageBox.information(self, "Notification:", msg)
 
     def send_funds(self): 
         if self.script_address_file_name == "":
@@ -465,6 +459,5 @@ class Smart_contracts(QWidget):
 
         if not self.command_failed:
             msg = "Send transaction successfully submitted."  
-            QMessageBox.Ok(self, "Notification:", msg,
-                           QMessageBox.Close) 
+            QMessageBox.information(self, "Notification:", msg) 
         self.command_failed = False
