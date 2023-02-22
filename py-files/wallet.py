@@ -152,6 +152,9 @@ class Wallet(QWidget):
 
         if vkey_exists:
             self.vkey_name = vkey_name
+            msg = "Verification key file successfully set."  
+            QMessageBox.Ok(self, "Notification:", msg,
+                                QMessageBox.Close)
             if skey_exists:
                 self.input_4_0.setText(skey_name)
         else:
@@ -184,7 +187,7 @@ class Wallet(QWidget):
                           "--signing-key-file " + skey_name 
 
                 if settings.debug_mode:
-                    print("Command below is defined in py-files/wallet.py line 182:")
+                    print("Command below is defined in py-files/wallet.py line 185:")
                     print(command + "\n")
                 else:
                     try:
@@ -211,6 +214,9 @@ class Wallet(QWidget):
         
         if address_exists:
             self.address_name = address_name
+            msg = "Public address file successfully set."  
+            QMessageBox.Ok(self, "Notification:", msg,
+                                QMessageBox.Close)
         else:
             msg = "Address does not exists.\n" + \
                   "Please enter a valid file name."                      
@@ -270,7 +276,7 @@ class Wallet(QWidget):
                   "--out-file " + address_name
 
         if settings.debug_mode:
-            print("Command below is defined in py-files/wallet.py line 267:")
+            print("Command below is defined in py-files/wallet.py line 273:")
             print(command + "\n")
         else:
             try:
@@ -306,6 +312,9 @@ class Wallet(QWidget):
         
         if pkh_exists:
             self.pkh_name = pkh_name
+            msg = "Public key hash file successfully set."  
+            QMessageBox.Ok(self, "Notification:", msg,
+                                QMessageBox.Close)
         else:
             msg = "Public key hash does not exists.\n" + \
                   "Please specify a valid file name."                        
@@ -350,7 +359,7 @@ class Wallet(QWidget):
                   "--out-file " + pkh_name
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/wallet.py line 348:")
+            print("Command below is defined in py-files/wallet.py line 357:")
             print(command + "\n")
         else:
             try:

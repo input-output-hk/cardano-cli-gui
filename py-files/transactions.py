@@ -23,6 +23,7 @@ class Transactions(QWidget):
         self.era = settings.current_era
         self.utxo = ""
         self.receiving_address = ""
+        self.command_failed = False
 
         # Header text 
         self.label_0_0 = QLabel("Send funds from your address to another one.")
@@ -165,6 +166,9 @@ class Transactions(QWidget):
         if address_exists:
             with open(address_path, "r") as file:
                 self.address = file.read()
+            msg = "Address file successfully set."  
+            QMessageBox.Ok(self, "Notification:", msg,
+                           QMessageBox.Close)
         else:
             msg = "Address file does not exists.\n" + \
                   "Please enter a valid file name." 
@@ -178,6 +182,9 @@ class Transactions(QWidget):
         
         if skey_exists:
             self.skey_name = skey_name
+            msg = "Signing key file successfully set."  
+            QMessageBox.Ok(self, "Notification:", msg,
+                           QMessageBox.Close)
         else:
             msg = "Signing key file does not exists.\n" + \
                   "Please enter a valid file name."  
@@ -208,7 +215,7 @@ class Transactions(QWidget):
                   net_part 
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/transactions.py line 206:")
+            print("Command below is defined in py-files/transactions.py line 212:")
             print(command + "\n")
         else:
             try:
@@ -247,6 +254,9 @@ class Transactions(QWidget):
             return None
 
         self.utxo = utxo_input 
+        msg = "UTxO address successfully set." 
+        QMessageBox.Ok(self, "Notification:", msg,
+                       QMessageBox.Close)
 
     def set_receiving_address(self):
         receiving_address_name = self.input_16_0.text()
@@ -256,6 +266,9 @@ class Transactions(QWidget):
         if receiving_address_exists:
             with open(receiving_address_path, "r") as file:
                 self.receiving_address = file.read()
+            msg = "Receiving address file successfully set."  
+            QMessageBox.Ok(self, "Notification:", msg,
+                           QMessageBox.Close)
         else:
             msg = "Receiving address does not exists.\n" + \
                   "Please enter a valid file name."                       
@@ -263,8 +276,6 @@ class Transactions(QWidget):
                                 QMessageBox.Close)
 
     def send_funds(self): 
-        self.command_failed = False
-
         if self.address == "":
             msg = "Please set a valid change address." 
             QMessageBox.warning(self, "Notification:", msg,
@@ -361,9 +372,9 @@ class Transactions(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/transactions.py line 342:"
-        debug_msg_sign = "Command below is defined in py-files/transactions.py line 349:"
-        debug_msg_submit = "Command below is defined in py-files/transactions.py line 354:" 
+        debug_msg_build = "Command below is defined in py-files/transactions.py line 354:"
+        debug_msg_sign = "Command below is defined in py-files/transactions.py line 361:"
+        debug_msg_submit = "Command below is defined in py-files/transactions.py line 366:" 
                     
         manage_command(command_build, msg_build, debug_msg_build)
         if not self.command_failed:
@@ -374,3 +385,8 @@ class Transactions(QWidget):
             manage_command(command_submit, msg_submit, debug_msg_submit)
             if not settings.debug_mode:
                 os.remove(settings.folder_path + "/tx.signed")
+        if not self.command_failed:
+            msg = "Send transaction successfully submitted."  
+            QMessageBox.Ok(self, "Notification:", msg,
+                           QMessageBox.Close) 
+        self.command_failed = False

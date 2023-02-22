@@ -34,6 +34,13 @@ def parse_amount(input, currency):
                     else: 
                         lovelace_part = input_parts[1]
                     input_lovelace = int(input_parts[0])*1000000 + int(lovelace_part)
+        else:
+            for el in input:
+                if not el.isdigit():
+                    input_check = False
+                    break
+            if input_check:
+                input_lovelace = int(input) 
         return input_lovelace
     elif currency == "Lovelace":
         for el in input:
