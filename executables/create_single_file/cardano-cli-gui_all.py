@@ -394,6 +394,9 @@ class Wallet(QWidget):
 
         if vkey_exists:
             self.vkey_name = vkey_name
+            msg = "Verification key file successfully set."  
+            QMessageBox.Ok(self, "Notification:", msg,
+                                QMessageBox.Close)
             if skey_exists:
                 self.input_4_0.setText(skey_name)
         else:
@@ -427,7 +430,7 @@ class Wallet(QWidget):
                           "--signing-key-file " + skey_name 
 
                 if debug_mode:
-                    print("Command below is defined in py-files/wallet.py line 182:")
+                    print("Command below is defined in py-files/wallet.py line 185:")
                     print(command + "\n")
                 else:
                     try:
@@ -455,6 +458,9 @@ class Wallet(QWidget):
         
         if address_exists:
             self.address_name = address_name
+            msg = "Public address file successfully set."  
+            QMessageBox.Ok(self, "Notification:", msg,
+                                QMessageBox.Close)
         else:
             msg = "Address does not exists.\n" + \
                   "Please enter a valid file name."                      
@@ -515,7 +521,7 @@ class Wallet(QWidget):
                   "--out-file " + address_name
 
         if debug_mode:
-            print("Command below is defined in py-files/wallet.py line 267:")
+            print("Command below is defined in py-files/wallet.py line 273:")
             print(command + "\n")
         else:
             try:
@@ -553,6 +559,9 @@ class Wallet(QWidget):
         
         if pkh_exists:
             self.pkh_name = pkh_name
+            msg = "Public key hash file successfully set."  
+            QMessageBox.Ok(self, "Notification:", msg,
+                                QMessageBox.Close)
         else:
             msg = "Public key hash does not exists.\n" + \
                   "Please specify a valid file name."                        
@@ -598,7 +607,7 @@ class Wallet(QWidget):
                   "--out-file " + pkh_name
         
         if debug_mode:
-            print("Command below is defined in py-files/wallet.py line 348:")
+            print("Command below is defined in py-files/wallet.py line 357:")
             print(command + "\n")
         else:
             try:
@@ -642,6 +651,7 @@ class Transactions(QWidget):
         self.era = current_era
         self.utxo = ""
         self.receiving_address = ""
+        self.command_failed = False
 
         # Header text 
         self.label_0_0 = QLabel("Send funds from your address to another one.")
@@ -796,6 +806,9 @@ class Transactions(QWidget):
         if address_exists:
             with open(address_path, "r") as file:
                 self.address = file.read()
+            msg = "Address file successfully set."  
+            QMessageBox.Ok(self, "Notification:", msg,
+                           QMessageBox.Close)
         else:
             msg = "Address file does not exists.\n" + \
                   "Please enter a valid file name." 
@@ -810,6 +823,9 @@ class Transactions(QWidget):
         
         if skey_exists:
             self.skey_name = skey_name
+            msg = "Signing key file successfully set."  
+            QMessageBox.Ok(self, "Notification:", msg,
+                           QMessageBox.Close)
         else:
             msg = "Signing key file does not exists.\n" + \
                   "Please enter a valid file name."  
@@ -841,7 +857,7 @@ class Transactions(QWidget):
                   net_part 
         
         if debug_mode:
-            print("Command below is defined in py-files/transactions.py line 206:")
+            print("Command below is defined in py-files/transactions.py line 212:")
             print(command + "\n")
         else:
             try:
@@ -882,6 +898,9 @@ class Transactions(QWidget):
             return None
 
         self.utxo = utxo_input 
+        msg = "UTxO address successfully set." 
+        QMessageBox.Ok(self, "Notification:", msg,
+                       QMessageBox.Close)
 
     def set_receiving_address(self):
         global folder_path, debug_mode, testnet_magic 
@@ -892,6 +911,9 @@ class Transactions(QWidget):
         if receiving_address_exists:
             with open(receiving_address_path, "r") as file:
                 self.receiving_address = file.read()
+            msg = "Receiving address file successfully set."  
+            QMessageBox.Ok(self, "Notification:", msg,
+                           QMessageBox.Close)
         else:
             msg = "Receiving address does not exists.\n" + \
                   "Please enter a valid file name."                       
@@ -900,8 +922,6 @@ class Transactions(QWidget):
 
     def send_funds(self): 
         global folder_path, debug_mode, testnet_magic 
-        self.command_failed = False
-
         if self.address == "":
             msg = "Please set a valid change address." 
             QMessageBox.warning(self, "Notification:", msg,
@@ -999,9 +1019,9 @@ class Transactions(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/transactions.py line 342:"
-        debug_msg_sign = "Command below is defined in py-files/transactions.py line 349:"
-        debug_msg_submit = "Command below is defined in py-files/transactions.py line 354:" 
+        debug_msg_build = "Command below is defined in py-files/transactions.py line 354:"
+        debug_msg_sign = "Command below is defined in py-files/transactions.py line 361:"
+        debug_msg_submit = "Command below is defined in py-files/transactions.py line 366:" 
                     
         manage_command(command_build, msg_build, debug_msg_build)
         if not self.command_failed:
@@ -1012,6 +1032,11 @@ class Transactions(QWidget):
             manage_command(command_submit, msg_submit, debug_msg_submit)
             if not debug_mode:
                 os.remove(folder_path + "/tx.signed")
+        if not self.command_failed:
+            msg = "Send transaction successfully submitted."  
+            QMessageBox.Ok(self, "Notification:", msg,
+                           QMessageBox.Close) 
+        self.command_failed = False
 
 class Smart_contracts(QWidget):
     def __init__(self):
@@ -1184,6 +1209,9 @@ class Smart_contracts(QWidget):
         
         if script_file_exists:
             self.script_file = script_file_name
+            msg = "Script file successfully set." 
+            QMessageBox.Ok(self, "Notification:", msg,
+                           QMessageBox.Close)
         else:
             msg = "Script file does not exists.\n" + \
                   "Please enter a valid file name." 
@@ -1198,6 +1226,9 @@ class Smart_contracts(QWidget):
         
         if script_address_file_exists:
             self.script_address_file_name = script_address_file_name
+            msg = "Script address file successfully set." 
+            QMessageBox.Ok(self, "Notification:", msg,
+                           QMessageBox.Close)
         else:
             msg = "Script address file does not exists.\n" + \
                   "Please enter a valid file name." 
@@ -1284,6 +1315,9 @@ class Smart_contracts(QWidget):
         if change_address_exists:
             with open(change_address_path, "r") as file:
                 self.change_address = file.read()
+            msg = "Change address file successfully set." 
+            QMessageBox.Ok(self, "Notification:", msg,
+                           QMessageBox.Close)
         else:
             msg = "Address file does not exists.\n" + \
                   "Please enter a valid file name." 
@@ -1298,6 +1332,9 @@ class Smart_contracts(QWidget):
         
         if skey_exists:
             self.skey_name = skey_name
+            msg = "Signing key file successfully set." 
+            QMessageBox.Ok(self, "Notification:", msg,
+                           QMessageBox.Close)
         else:
             msg = "Signing key file does not exists.\n" + \
                   "Please enter a valid file name."  
@@ -1323,6 +1360,9 @@ class Smart_contracts(QWidget):
             return None
 
         self.utxo = utxo_input 
+        msg = "UTxO address successfully set." 
+        QMessageBox.Ok(self, "Notification:", msg,
+                       QMessageBox.Close)
 
     def set_datum(self):
         global folder_path, debug_mode, testnet_magic 
@@ -1344,6 +1384,9 @@ class Smart_contracts(QWidget):
             return None
 
         self.datum_file_name = datum_file_name 
+        msg = "Datum file successfully set." 
+        QMessageBox.Ok(self, "Notification:", msg,
+                       QMessageBox.Close)
 
     def send_funds(self): 
         global folder_path, debug_mode, testnet_magic 
@@ -1468,6 +1511,11 @@ class Smart_contracts(QWidget):
             manage_command(command_submit, msg_submit, debug_msg_submit) 
             if not debug_mode:                                              
                 os.remove(folder_path + "/tx.signed")
+
+        if not self.command_failed:
+            msg = "Send transaction successfully submitted."  
+            QMessageBox.Ok(self, "Notification:", msg,
+                           QMessageBox.Close) 
         self.command_failed = False
 
 class Developer(QWidget):
@@ -1574,6 +1622,9 @@ class Developer(QWidget):
         else:
             testnet_magic = input_magic
             self.label_5_0.setText("Current testnet magic set to: " + testnet_magic)
+            msg = "Testnet magic number successfully set."  
+            QMessageBox.Ok(self, "Notification:", msg,
+                           QMessageBox.Close) 
         
 
     def set_era(self):
@@ -1586,6 +1637,9 @@ class Developer(QWidget):
         else:
             current_era = input_era
             self.label_10_0.setText("Current era set to: " + current_era) 
+            msg = "Era successfully set."  
+            QMessageBox.Ok(self, "Notification:", msg,
+                           QMessageBox.Close) 
 
     def reset_values(self):
         global folder_path, debug_mode, testnet_magic 
@@ -1595,7 +1649,11 @@ class Developer(QWidget):
         
         current_era = "babbage-era"
         self.input_9_0.setText("")
-        self.label_10_0.setText("Current era set to: " + current_era)     
+        self.label_10_0.setText("Current era set to: " + current_era)   
+
+        msg = "Default values successfully restored."  
+        QMessageBox.Ok(self, "Notification:", msg,
+                        QMessageBox.Close)   
 
 # Writes an error message to a log file# Writes an error message to a log file 
 def log_error_msg(output):
@@ -1629,6 +1687,13 @@ def parse_amount(input, currency):
                     else: 
                         lovelace_part = input_parts[1]
                     input_lovelace = int(input_parts[0])*1000000 + int(lovelace_part)
+        else:
+            for el in input:
+                if not el.isdigit():
+                    input_check = False
+                    break
+            if input_check:
+                input_lovelace = int(input) 
         return input_lovelace
     elif currency == "Lovelace":
         for el in input:
