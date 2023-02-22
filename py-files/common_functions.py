@@ -40,7 +40,7 @@ def parse_amount(input, currency):
                     input_check = False
                     break
             if input_check:
-                input_lovelace = int(input) 
+                input_lovelace = int(input)*1000000  
         return input_lovelace
     elif currency == "Lovelace":
         for el in input:
