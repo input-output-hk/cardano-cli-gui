@@ -1,6 +1,7 @@
 
 
 import os
+import time
 import settings
 import subprocess
 import traceback
@@ -407,7 +408,7 @@ class Smart_contracts(QWidget):
                 print(command + "\n")
             else:
                 try:
-                    subprocess.Popen(command.split(), cwd=settings.folder_path)
+                    subprocess.Popen(command, cwd=settings.folder_path)
                 except Exception:
                     output = traceback.format_exc()
                     common_functions.log_error_msg(output)                   
@@ -417,8 +418,10 @@ class Smart_contracts(QWidget):
 
         if self.net == "mainnet":
             net_part = "--mainnet "
+            split_number = 8
         elif self.net == "testnet": 
             net_part = "--testnet-magic " + settings.testnet_magic + " "
+            split_number = 9
 
         command_build = "cardano-cli transaction build " + \
                         "--" + self.era + " " + \
@@ -428,6 +431,12 @@ class Smart_contracts(QWidget):
                         "--tx-out-datum-hash-file " + self.datum_file_name + " " + \
                         "--change-address " + self.change_address + " " + \
                         "--out-file tx.body"
+        command_build_parts = command_build.split()
+        # The receiving address, lovelace amount and lovelace string have to be passed as one string parameter
+        command_build_processed = command_build_parts[0:split_number] + \
+                                  [" ".join(command_build_parts[split_number:(split_number + 3)])] + \
+                                  command_build_parts[(split_number + 3):]
+
         command_sign = "cardano-cli transaction sign " + \
                         "--tx-body-file tx.body " + \
                         "--signing-key-file " + self.skey_name + " " + \
@@ -443,20 +452,17 @@ class Smart_contracts(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/smart_contracts.py line 423:" 
-        debug_msg_sign = "Command below is defined in py-files/smart_contracts.py line 431:" 
-        debug_msg_submit = "Command below is defined in py-files/smart_contracts.py line 436:" 
+        debug_msg_build = "Command below is defined in py-files/smart_contracts.py line 426:" 
+        debug_msg_sign = "Command below is defined in py-files/smart_contracts.py line 440:" 
+        debug_msg_submit = "Command below is defined in py-files/smart_contracts.py line 445:" 
                     
-        manage_command(command_build, msg_build, debug_msg_build)
+        manage_command(command_build_processed, msg_build, debug_msg_build)
+        time.sleep(1)
         if not self.command_failed:
-            manage_command(command_sign, msg_sign, debug_msg_sign)
-            if not settings.debug_mode:
-                os.remove(settings.folder_path + "/tx.body")
+            manage_command(command_sign.split(), msg_sign, debug_msg_sign)
+            time.sleep(1)
         if not self.command_failed:
-            manage_command(command_submit, msg_submit, debug_msg_submit) 
-            if not settings.debug_mode:                                              
-                os.remove(settings.folder_path + "/tx.signed")
-
+            manage_command(command_submit.split(), msg_submit, debug_msg_submit) 
         if not self.command_failed:
             msg = "Send transaction successfully submitted."  
             QMessageBox.information(self, "Notification:", msg) 
