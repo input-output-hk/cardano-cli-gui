@@ -1,5 +1,7 @@
 # cardano-cli-gui
-Simple GUI that cover some basic functionality of the Cardano CLI command line tool.<br>
+Simple GUI that cover some basic functionality of the 
+[Cardano CLI](https://github.com/input-output-hk/cardano-node/tree/master/cardano-cli) 
+command line tool.
 
 To run the GUI you can use the executable files in the `executables/` folder. Download 
 the executable for your OS. If you want to use the GUI also in debug mode you should run 
@@ -9,7 +11,9 @@ commands to the terminal window instead of acctually executing them.
 You can also run the GUI from source. In that case you need to have `python 3` and `PyQt 5` 
 installed for the GUI to work. Simply download this repository, open a terminal in the 
 downloaded folder and run:<br><br>
-`python cardano-cli-gui.py`
+```console
+python cardano-cli-gui.py
+```
 
 **IMPORTANT:** To use the *query* and *send* command in the GUI a cardano node has to be 
 running and synced to the test or main network. 
@@ -32,7 +36,9 @@ cardano-node run \
 The `node.socket` file will be created in the folder from where you ran the above command. 
 Before you use the GUI create the environment variable `CARDANO_NODE_SOCKET_PATH`. If you 
 are using bash add the following line to the end of your `.bashrc` file and source it:<br><br>
-`export CARDANO_NODE_SOCKET_PATH="$HOME/path/to/node.socket"`
+```console
+export CARDANO_NODE_SOCKET_PATH="$HOME/path/to/node.socket"
+```
 
 The GUI functionality is seperated in 5 tabs and covers following things:
 
