@@ -6,6 +6,7 @@ out_file_name = "cardano-cli-gui_all.py"
 imports = """\n
 import os
 import sys
+import time
 import subprocess
 import traceback
 
