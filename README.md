@@ -8,7 +8,7 @@ commands to the terminal window instead of acctually executing them.
 
 You can also run the GUI from source. In that case you need to have `python 3` and `PyQt 5` 
 installed for the GUI to work. Simply download this repository, open a terminal in the 
-downloaded folder and run:<br>
+downloaded folder and run:<br><br>
 `python cardano-cli-gui.py`
 
 **IMPORTANT:** To use the *query* and *send* command in the GUI a cardano node has to be 
@@ -19,7 +19,7 @@ and install it. Then download the configurations files for the Preview testnet f
 [here](https://book.world.dev.cardano.org/environments.html#preview-testnet) or for the Production 
 mainnet from [here](https://book.world.dev.cardano.org/environments.html#production-mainnet). 
 From the folder that contains your configuration files run: 
-```s
+```console
 cardano-node run \
  --topology topology.json \
  --database-path db \
@@ -31,7 +31,7 @@ cardano-node run \
 
 The `node.socket` file will be created in the folder from where you ran the above command. 
 Before you use the GUI create the environment variable `CARDANO_NODE_SOCKET_PATH`. If you 
-are using bash add the following line to the end of your `.bashrc` file and source it:<br>
+are using bash add the following line to the end of your `.bashrc` file and source it:<br><br>
 `export CARDANO_NODE_SOCKET_PATH="$HOME/path/to/node.socket"`
 
 The GUI functionality is seperated in 5 tabs and covers following things:
