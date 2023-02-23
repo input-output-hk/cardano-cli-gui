@@ -192,7 +192,7 @@ class Wallet(QWidget):
                           "--signing-key-file " + skey_name 
 
                 if settings.debug_mode:
-                    print("Command below is defined in py-files/wallet.py line 184:")
+                    print("Command below is defined in py-files/wallet.py line 190:")
                     print(command + "\n")
                 else:
                     try:
@@ -288,7 +288,7 @@ class Wallet(QWidget):
                   "--out-file " + address_name
 
         if settings.debug_mode:
-            print("Command below is defined in py-files/wallet.py line 271:")
+            print("Command below is defined in py-files/wallet.py line 285:")
             print(command + "\n")
         else:
             try:
@@ -378,7 +378,7 @@ class Wallet(QWidget):
                   "--out-file " + pkh_name
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/wallet.py line 354:")
+            print("Command below is defined in py-files/wallet.py line 376:")
             print(command + "\n")
         else:
             try:

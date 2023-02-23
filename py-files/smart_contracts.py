@@ -244,7 +244,7 @@ class Smart_contracts(QWidget):
                   "--out-file " + script_address_file
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/smart_contracts.py line 223:")
+            print("Command below is defined in py-files/smart_contracts.py line 241:")
             print(command + "\n") 
         else:
             try:
@@ -476,6 +476,7 @@ class Smart_contracts(QWidget):
                         "--signing-key-file " + self.skey_name + " " + \
                         net_part + \
                         "--out-file tx.signed" 
+        
         command_submit = "cardano-cli transaction submit " + \
                          net_part + \
                          "--tx-file tx.signed"
@@ -486,9 +487,9 @@ class Smart_contracts(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/smart_contracts.py line 426:" 
-        debug_msg_sign = "Command below is defined in py-files/smart_contracts.py line 440:" 
-        debug_msg_submit = "Command below is defined in py-files/smart_contracts.py line 445:" 
+        debug_msg_build = "Command below is defined in py-files/smart_contracts.py line 460:" 
+        debug_msg_sign = "Command below is defined in py-files/smart_contracts.py line 474:" 
+        debug_msg_submit = "Command below is defined in py-files/smart_contracts.py line 480:" 
                     
         manage_command(command_build_processed, msg_build, debug_msg_build)
         time.sleep(1)
