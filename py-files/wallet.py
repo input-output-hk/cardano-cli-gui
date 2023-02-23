@@ -150,19 +150,25 @@ class Wallet(QWidget):
         skey_path = settings.folder_path + "/" + skey_name
         skey_exists = os.path.isfile(skey_path) 
 
-        if vkey_exists:
-            self.vkey_name = vkey_name
-            msg = "Verification key file successfully set."  
-            QMessageBox.information(self, "Notification:", msg)
-            if skey_exists:
-                self.input_4_0.setText(skey_name)
-        else:
+        if not vkey_exists:
             msg = "Verification key does not exists.\n" + \
                   "Please enter a valid file name."                       
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
-            self.input_2_0.setText("")
             return None
+
+        if not (".vkey" in vkey_name):
+            msg = "Verification key has to have a .vkey file extension name.\n" + \
+                  "Please type in a file name with a .vkey extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        self.vkey_name = vkey_name
+        msg = "Verification key file successfully set."  
+        QMessageBox.information(self, "Notification:", msg)
+        if skey_exists:
+            self.input_4_0.setText(skey_name)
 
     def generate_skey_and_vkey(self):
         file_number_counter = 1
@@ -211,15 +217,23 @@ class Wallet(QWidget):
         address_path = settings.folder_path + "/" + address_name
         address_exists = os.path.isfile(address_path)
         
-        if address_exists:
-            self.address_name = address_name
-            msg = "Public address file successfully set."  
-            QMessageBox.information(self, "Notification:", msg)
-        else:
+        if not address_exists:
             msg = "Address does not exists.\n" + \
                   "Please enter a valid file name."                      
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
+            return None
+
+        if not (".addr" in address_name):
+            msg = "Address file has to have a .addr file extension name.\n" + \
+                  "Please type in a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        self.address_name = address_name
+        msg = "Public address file successfully set."  
+        QMessageBox.information(self, "Notification:", msg)
 
     def generate_address(self):
         is_mainnet = self.radioButton_9_1.isChecked()
@@ -235,7 +249,7 @@ class Wallet(QWidget):
             msg = "Please set or generate first a verification key."     
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
-            return None
+            return None 
 
         address_name = self.vkey_name.split(".")[0] + ".addr"
         address_path = settings.folder_path + "/" + address_name
@@ -308,15 +322,23 @@ class Wallet(QWidget):
         pkh_path = settings.folder_path + "/" + pkh_name
         pkh_exists = os.path.isfile(pkh_path)
         
-        if pkh_exists:
-            self.pkh_name = pkh_name
-            msg = "Public key hash file successfully set."  
-            QMessageBox.information(self, "Notification:", msg)
-        else:
+        if not pkh_exists:
             msg = "Public key hash does not exists.\n" + \
                   "Please specify a valid file name."                        
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
+            return None
+
+        if not (".pkh" in pkh_name):
+            msg = "Public key hash has to have a .pkh file extension name.\n" + \
+                  "Please type in a file name with a .pkh extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        self.pkh_name = pkh_name
+        msg = "Public key hash file successfully set."  
+        QMessageBox.information(self, "Notification:", msg)
 
     def generate_pkh(self):
         if self.vkey_name == "":

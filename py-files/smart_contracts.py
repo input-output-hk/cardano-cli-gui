@@ -169,30 +169,47 @@ class Smart_contracts(QWidget):
         script_file_path = settings.folder_path + "/" + script_file_name
         script_file_exists = os.path.isfile(script_file_path)
         
-        if script_file_exists:
-            self.script_file = script_file_name
-            msg = "Script file successfully set." 
-            QMessageBox.information(self, "Notification:", msg)
-        else:
+        if not script_file_exists:
             msg = "Script file does not exists.\n" + \
                   "Please enter a valid file name." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close) 
+            return None
+
+        if not (".plutus" in script_file_name):
+            msg = "Script file has to have a .plutus file extension name.\n" + \
+                  "Please type in a file name with a .plutus extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        self.script_file = script_file_name
+        msg = "Script file successfully set." 
+        QMessageBox.information(self, "Notification:", msg)
+
 
     def set_script_address_file(self):
         script_address_file_name = self.input_4_0.text()
         script_address_file_path = settings.folder_path + "/" + script_address_file_name
         script_address_file_exists = os.path.isfile(script_address_file_path)
         
-        if script_address_file_exists:
-            self.script_address_file_name = script_address_file_name
-            msg = "Script address file successfully set." 
-            QMessageBox.information(self, "Notification:", msg)
-        else:
+        if not script_address_file_exists:
             msg = "Script address file does not exists.\n" + \
                   "Please enter a valid file name." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
+            return None
+
+        if not (".addr" in script_address_file_name):
+            msg = "Address file has to have a .addr file extension name.\n" + \
+                  "Please type in a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        self.script_address_file_name = script_address_file_name
+        msg = "Script address file successfully set." 
+        QMessageBox.information(self, "Notification:", msg)
 
     def generate_script_address_file(self):
         if self.script_file == "":
@@ -267,31 +284,47 @@ class Smart_contracts(QWidget):
         change_address_path = settings.folder_path + "/" + change_address_name
         change_address_exists = os.path.isfile(change_address_path)
         
-        if change_address_exists:
-            with open(change_address_path, "r") as file:
-                self.change_address = file.read()
-            msg = "Change address file successfully set." 
-            QMessageBox.information(self, "Notification:", msg)
-        else:
+        if not change_address_exists:
             msg = "Address file does not exists.\n" + \
                   "Please enter a valid file name." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
+            return None
+
+        if not (".addr" in change_address_name):
+            msg = "Change address file has to have a .addr file extension name.\n" + \
+                  "Please type in a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        with open(change_address_path, "r") as file:
+            self.change_address = file.read()
+        msg = "Change address file successfully set." 
+        QMessageBox.information(self, "Notification:", msg)
 
     def set_skey_name(self):
         skey_name = self.input_12_0.text()
         skey_path = settings.folder_path + "/" + skey_name
         skey_exists = os.path.isfile(skey_path)
         
-        if skey_exists:
-            self.skey_name = skey_name
-            msg = "Signing key file successfully set." 
-            QMessageBox.information(self, "Notification:", msg)
-        else:
+        if not skey_exists:
             msg = "Signing key file does not exists.\n" + \
                   "Please enter a valid file name."  
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close) 
+            return None
+
+        if not (".skey" in skey_name):
+            msg = "Signing key has to have a .skey file extension name.\n" + \
+                  "Please type in a file name with a .skey extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        self.skey_name = skey_name
+        msg = "Signing key file successfully set." 
+        QMessageBox.information(self, "Notification:", msg)
 
     def set_utxo(self):
         utxo_input = self.input_18_0.text()
@@ -316,20 +349,21 @@ class Smart_contracts(QWidget):
 
     def set_datum(self):
         datum_file_name = self.input_20_0.text() 
-        if not (".json" in datum_file_name):
-            msg = "Datum has to be a file in JSON fromat." + \
-                  "Please type in a name with a .json extension." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
-
         datum_file_path = settings.folder_path + "/" + datum_file_name
         datum_file_exists = os.path.isfile(datum_file_path)
+
         if not datum_file_exists:
             msg = "Datum file does not exists.\n" + \
                   "Please enter a valid file name." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close) 
+            return None
+
+        if not (".json" in datum_file_name):
+            msg = "Datum has to be a file in JSON fromat.\n" + \
+                  "Please type in a name with a .json extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
             return None
 
         self.datum_file_name = datum_file_name 

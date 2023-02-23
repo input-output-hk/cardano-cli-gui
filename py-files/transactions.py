@@ -164,31 +164,47 @@ class Transactions(QWidget):
         address_path = settings.folder_path + "/" + address_name
         address_exists = os.path.isfile(address_path)
         
-        if address_exists:
-            with open(address_path, "r") as file:
-                self.address = file.read()
-            msg = "Address file successfully set."  
-            QMessageBox.information(self, "Notification:", msg)
-        else:
+        if not address_exists:
             msg = "Address file does not exists.\n" + \
                   "Please enter a valid file name." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
+            return None
+
+        if not (".addr" in address_name):
+            msg = "Address file has to have a .addr file extension name.\n" + \
+                  "Please type in a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        with open(address_path, "r") as file:
+            self.address = file.read()
+        msg = "Address file successfully set."  
+        QMessageBox.information(self, "Notification:", msg)
 
     def set_skey_name(self):
         skey_name = self.input_4_0.text()
         skey_path = settings.folder_path + "/" + skey_name
         skey_exists = os.path.isfile(skey_path)
         
-        if skey_exists:
-            self.skey_name = skey_name
-            msg = "Signing key file successfully set."  
-            QMessageBox.information(self, "Notification:", msg)
-        else:
+        if not skey_exists:
             msg = "Signing key file does not exists.\n" + \
                   "Please enter a valid file name."  
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close) 
+            return None
+
+        if not (".skey" in skey_name):
+            msg = "Signing key has to have a .skey file extension name.\n" + \
+                  "Please type in a file name with a .skey extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        self.skey_name = skey_name
+        msg = "Signing key file successfully set."  
+        QMessageBox.information(self, "Notification:", msg)
 
     def querry_address_funds(self):
         if self.address == "":
@@ -261,16 +277,24 @@ class Transactions(QWidget):
         receiving_address_path = settings.folder_path + "/" + receiving_address_name
         receiving_address_exists = os.path.isfile(receiving_address_path)
         
-        if receiving_address_exists:
-            with open(receiving_address_path, "r") as file:
-                self.receiving_address = file.read()
-            msg = "Receiving address file successfully set."  
-            QMessageBox.information(self, "Notification:", msg)
-        else:
+        if not receiving_address_exists:
             msg = "Receiving address does not exists.\n" + \
                   "Please enter a valid file name."                       
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
+            return None
+
+        if not (".addr" in receiving_address_name):
+            msg = "Address file has to have a .addr file extension name.\n" + \
+                  "Please type in a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        with open(receiving_address_path, "r") as file:
+            self.receiving_address = file.read()
+        msg = "Receiving address file successfully set."  
+        QMessageBox.information(self, "Notification:", msg)
 
     def send_funds(self): 
         if self.address == "":
