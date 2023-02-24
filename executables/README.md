@@ -5,10 +5,14 @@ If you are using the debug option that prints commands to the terminal,
 start the executable from your terminal window.
 
 Executables were created with the `pyinstaller` tool with the command:<br>
-`pyinstaller --onefile cardano-cli-gui_all.py --noconsole`
+```console
+pyinstaller --onefile cardano-cli-gui_all.py
+```
 
-The folder `create_single_file` contains the python script:<br>
-`create_cardano-cli-gui_all.py` 
+The folder `create_single_file/` contains the python script:<br>
+```console
+create_cardano-cli-gui_all.py
+``` 
 
 This script creates a single python file `cardano-cli-gui_all.py`
 that contains code from: 
