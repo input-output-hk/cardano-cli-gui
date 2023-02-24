@@ -164,7 +164,7 @@ class MainWindow(QMainWindow):
     def set_folder_path(self):
         folder_path_input = self.input_4_0.text()
         if folder_path_input != "":
-            if folder_path_input[-1] == "/":
+            if folder_path_input[-1] == "/" or folder_path_input[-1] == "\\":
                 folder_path_input = folder_path_input[0:-1]
         folder_exists = os.path.isdir(folder_path_input)
         
