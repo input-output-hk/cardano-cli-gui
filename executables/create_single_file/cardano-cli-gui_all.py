@@ -62,7 +62,7 @@ class MainWindow(QMainWindow):
 
         # Set window properties
         self.setMinimumSize(QSize(740, 900)) 
-        self.setWindowTitle("Cardano client GUI 1.0")
+        self.setWindowTitle("Cardano CLI GUI 1.0")
 
         # Create the applications menu 
         self.app_menu = self.menuBar()
@@ -215,14 +215,23 @@ class MainWindow(QMainWindow):
     def set_folder_path(self):
         global folder_path, debug_mode, testnet_magic, current_era 
         folder_path_input = self.input_4_0.text()
-        if folder_path_input[-1] == "/":
-            folder_path_input = folder_path_input[0:-1]
+        if folder_path_input != "":
+            if folder_path_input[-1] == "/":
+                folder_path_input = folder_path_input[0:-1]
         folder_exists = os.path.isdir(folder_path_input)
         
         if folder_exists:
             folder_path = folder_path_input
             self.label_6_0.setText(folder_path_input)
- 
+
+            try:
+                self.tabs.removeTab(1)
+                self.tabs.removeTab(1)
+                self.tabs.removeTab(1)
+                self.tabs.removeTab(1)
+            except:
+                pass
+
             self.tabs.addTab(Wallet(),"Wallet")
             self.tabs.addTab(Transactions(),"Transactions")
             self.tabs.addTab(Smart_contracts(),"Smart contrancts")
@@ -1324,8 +1333,8 @@ class Smart_contracts(QWidget):
         elif self.net == "testnet":
             net_part = "--testnet-magic " + testnet_magic + " "
         
-        command = "cardano-cli address build-script " + \
-                  "--script-file " + self.script_file + " " + \
+        command = "cardano-cli address build " + \
+                  "--payment-script-file " + self.script_file + " " + \
                   net_part + \
                   "--out-file " + script_address_file
         
