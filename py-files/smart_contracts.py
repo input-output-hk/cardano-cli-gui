@@ -238,8 +238,8 @@ class Smart_contracts(QWidget):
         elif self.net == "testnet":
             net_part = "--testnet-magic " + settings.testnet_magic + " "
         
-        command = "cardano-cli address build-script " + \
-                  "--script-file " + self.script_file + " " + \
+        command = "cardano-cli address build " + \
+                  "--payment-script-file " + self.script_file + " " + \
                   net_part + \
                   "--out-file " + script_address_file
         
