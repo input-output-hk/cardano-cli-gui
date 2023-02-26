@@ -370,12 +370,18 @@ class Smart_contracts(QWidget):
         datum_file_path = settings.folder_path + "/" + datum_file_name
         datum_file_exists = os.path.isfile(datum_file_path)
 
-        if not datum_file_exists:
-            msg = "Datum file does not exists.\n" + \
-                  "Please enter a valid file name." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close) 
+        if datum_file_name == "":
+            self.datum_file_name = datum_file_name
+            msg = "Datum file successfully unset."
+            QMessageBox.information(self, "Notification:", msg)
             return None
+        else:
+            if not datum_file_exists:
+                msg = "Datum file does not exists.\n" + \
+                      "Please enter a valid file name." 
+                QMessageBox.warning(self, "Notification:", msg,
+                                    QMessageBox.Close) 
+                return None
 
         if not (".json" in datum_file_name):
             msg = "Datum has to be a file in JSON fromat.\n" + \
