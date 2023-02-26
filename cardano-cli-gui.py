@@ -78,7 +78,8 @@ class MainWindow(QMainWindow):
     # Sets debug mode to ON
     def set_debug_on(self):
         settings.debug_mode = True
-        
+        msg = "Debug mode set to ON." 
+        QMessageBox.information(self, "Notification:", msg)
         self.label_8_0.setText("Debug mode: ON")
         # When start window was in a separated class
         # self.tabs.widget(0).label_8_0.setText("Debug mode: OFF")
@@ -86,7 +87,8 @@ class MainWindow(QMainWindow):
     # Sets debug mode to OFF
     def set_debug_off(self):
         settings.debug_mode = False
-        
+        msg = "Debug mode set to OFF." 
+        QMessageBox.information(self, "Notification:", msg)
         self.label_8_0.setText("Debug mode: OFF")
         # When start window was in a separated class
         # self.tabs.widget(0).label_8_0.setText("Debug mode: OFF")
