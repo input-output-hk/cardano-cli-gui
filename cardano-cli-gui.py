@@ -7,7 +7,8 @@ sys.path.insert(1, './py-files')
 import settings
 from wallet import Wallet
 from transactions import Transactions
-from smart_contracts import Smart_contracts
+from smart_contracts_send import Smart_contracts_send
+from smart_contracts_receive import Smart_contracts_receive
 from developer import Developer
 
 from PyQt5.QtCore import QSize 
@@ -177,12 +178,14 @@ class MainWindow(QMainWindow):
                 self.tabs.removeTab(1)
                 self.tabs.removeTab(1)
                 self.tabs.removeTab(1)
+                self.tabs.removeTab(1)
             except:
                 pass
 
             self.tabs.addTab(Wallet(),"Wallet")
             self.tabs.addTab(Transactions(),"Transactions")
-            self.tabs.addTab(Smart_contracts(),"Smart contrancts")
+            self.tabs.addTab(Smart_contracts_send(),"Smart contrancts - send")
+            self.tabs.addTab(Smart_contracts_receive(),"Smart contrancts - receive")
             self.tabs.addTab(Developer(),"Developer")
         else:
             self.input_4_0.setText(settings.folder_path)

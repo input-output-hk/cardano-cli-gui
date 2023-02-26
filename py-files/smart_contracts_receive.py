@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import (QPushButton, QLabel, QLineEdit,
                              QComboBox, QMessageBox, QHBoxLayout)
 
 # Widgets and functions for the smart contracts tab
-class Smart_contracts(QWidget):
+class Smart_contracts_receive(QWidget):
     def __init__(self):
         super().__init__()
 
@@ -31,7 +31,7 @@ class Smart_contracts(QWidget):
         self.command_failed = False
 
         # Header text 
-        self.label_0_0 = QLabel("Generate cardano script address and send funds to it.")
+        self.label_0_0 = QLabel("Receive funds from a cardano script address.")
 
         # Cardano picture
         picture_0_2 = QLabel("")

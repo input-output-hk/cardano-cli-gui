@@ -133,7 +133,8 @@ def proces_file(file_path):
 
 proces_file("../../py-files/wallet.py")
 proces_file("../../py-files/transactions.py")
-proces_file("../../py-files/smart_contracts.py")
+proces_file("../../py-files/smart_contracts_send.py")
+proces_file("../../py-files/smart_contracts_receive.py")
 proces_file("../../py-files/developer.py") 
 
 # Adding helper functions to end of file
