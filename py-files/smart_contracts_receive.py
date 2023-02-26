@@ -18,117 +18,144 @@ class Smart_contracts_receive(QWidget):
         super().__init__()
 
         # Creating local variables
-        self.script_file = ""
-        self.script_address_file_name = ""
         self.net = ""
-
         self.change_address = ""
+        self.script_utxo = ""
+        self.script_file_name = ""
+        self.datum_file_type = ""
+        self.datum_file_name = ""
+        self.redeemer = ""
+        self.collateral_utxo = ""
+        self.signer_pkh = ""
+        self.validity_type = ""
+        self.validity_slot = ""
+        self.protocol_parameter_file_name = ""
         self.skey_name = ""
         self.era = settings.current_era
-        self.utxo = ""
-        self.datum_file_name = ""
-        self.datum_file_type = ""
-        self.command_failed = False
+        self.command_failed = False 
 
         # Header text 
         self.label_0_0 = QLabel("Receive funds from a cardano script address.")
 
         # Cardano picture
-        picture_0_2 = QLabel("")
-        picture_0_2.setPixmap(QPixmap("./images/cardano.png"))
-        picture_0_2.setFixedSize(80,80)
-        picture_0_2.setScaledContents(True)
+        picture_0_1 = QLabel("")
+        picture_0_1.setPixmap(QPixmap("./images/cardano.png"))
+        picture_0_1.setFixedSize(80,80)
+        picture_0_1.setScaledContents(True)
 
-        # Widgets for building script address section 
-        self.label_1_0 = QLabel("Type in script file name:")
-        self.input_2_0 = QLineEdit()
-        self.button_2_1 = QPushButton("Set")
-        self.label_3_0 = QLabel("Script address file name:")
-        self.input_4_0 = QLineEdit()
-        self.button_4_1 = QPushButton("Set")
-        self.button_4_2 = QPushButton("Generate")
-        self.label_5_0 = QLabel("Select mainnet or testnet:")
-        self.comboBox_6_0 = QComboBox()
-        self.label_7_0 = QLabel("Script address:")
-        self.input_8_0 = QLineEdit() 
-        self.button_8_1 = QPushButton("Show")
-
-        # Widget actions for building script address section  
-        self.button_2_1.clicked.connect(self.set_script_file)
-        self.button_4_1.clicked.connect(self.set_script_address_file)
-        self.button_4_2.clicked.connect(self.generate_script_address_file)
-        self.comboBox_6_0.addItems(["", "mainnet", "testnet"])
-        self.comboBox_6_0.currentTextChanged.connect(self.set_net)
-        self.button_8_1.clicked.connect(self.show_script_address)
-
-        # Widgets for sending funds to script address section
-        self.label_9_0 = QLabel("Type in your change address name:")
-        self.input_10_0 = QLineEdit()
-        self.button_10_1 = QPushButton("Set")
-        self.label_11_0 = QLabel("Type in your signing key file name:")
-        self.input_12_0 = QLineEdit()
-        self.button_12_1 = QPushButton("Set")
-        self.label_13_0 = QLabel("Send amount (seperat decimal number with dot):")
-        self.input_14_0 = QLineEdit()
-        self.radioButton_14_1 = QRadioButton("Ada")
-        self.radioButton_14_2 = QRadioButton("Lovelace")
-        self.label_15_0 = QLabel("Current era parameter set to:")
-        self.label_16_0 = QLabel(settings.current_era)
-        self.label_17_0 = QLabel("Input UTxO address:")
-        self.input_18_0 = QLineEdit()
-        self.button_18_1 = QPushButton("Set")
-        self.label_19_0 = QLabel("(optional) Chosse datum file type and type in file name:")
-
+        # Widgets for receiving funds from script address section 
+        net_layout = QHBoxLayout()
+        self.label_1_0_1 = QLabel("Select mainnet or testnet:")
+        self.comboBox_1_0_2 = QComboBox()
+        net_layout.addWidget(self.label_1_0_1)
+        net_layout.addWidget(self.comboBox_1_0_2)
+        self.label_2_0 = QLabel("Type in your change address name:")
+        self.input_3_0 = QLineEdit()
+        self.button_3_1 = QPushButton("Set")
+        self.label_4_0 = QLabel("Transaction input UTxO from script address:")
+        self.input_5_0 = QLineEdit()
+        self.button_5_1 = QPushButton("Set")
+        self.label_6_0 = QLabel("Type in script file name:")
+        self.input_7_0 = QLineEdit()
+        self.button_7_1 = QPushButton("Set")
+        self.label_8_0 = QLabel("Chosse datum file type and type in file name:")
         datum_layout = QHBoxLayout()
-        self.comboBox_20_0_1 = QComboBox()
-        self.input_20_0_2 = QLineEdit()
-        datum_layout.addWidget(self.comboBox_20_0_1)
-        datum_layout.addWidget(self.input_20_0_2)
-        
-        self.button_20_1 = QPushButton("Set")
-        self.button_22_0 = QPushButton("Send")
+        self.comboBox_9_0_1 = QComboBox()
+        self.input_9_0_2 = QLineEdit()
+        datum_layout.addWidget(self.comboBox_9_0_1)
+        datum_layout.addWidget(self.input_9_0_2)
+        self.button_9_1 = QPushButton("Set")
+        self.label_10_0 = QLabel("Type in redeemer file name:")
+        self.input_11_0 = QLineEdit()
+        self.button_11_1 = QPushButton("Set")
+        self.label_12_0 = QLabel("Colleteral UTxO from your receiving address:")
+        self.input_13_0 = QLineEdit()
+        self.button_13_1 = QPushButton("Set")
+        self.label_14_0 = QLabel("Public key hash from receiving address:")
+        self.input_15_0 = QLineEdit()
+        self.button_15_1 = QPushButton("Set")
+        self.label_16_0 = QLabel("Chosse validity interval type and type in time slot:")
+        validity_layout = QHBoxLayout()
+        self.comboBox_17_0_1 = QComboBox()
+        self.input_17_0_2 = QLineEdit()
+        validity_layout.addWidget(self.comboBox_17_0_1)
+        validity_layout.addWidget(self.input_17_0_2)
+        self.button_17_1 = QPushButton("Set")
+        protocol_layout = QHBoxLayout()
+        self.label_18_0_1 = QLabel("Type in protocol param file name:")
+        self.input_18_0_2 = QLineEdit()
+        protocol_layout.addWidget(self.label_18_0_1)
+        protocol_layout.addWidget(self.input_18_0_2)
+        self.button_18_1 = QPushButton("Set")
+        signing_key_layout = QHBoxLayout()
+        self.label_19_0_1 = QLabel("Type in signing key file name:")
+        self.input_19_0_2 = QLineEdit()
+        signing_key_layout.addWidget(self.label_19_0_1)
+        signing_key_layout.addWidget(self.input_19_0_2)
+        self.button_19_1 = QPushButton("Set")
 
-        # Widget actions for building script address section  
-        self.button_10_1.clicked.connect(self.set_change_address)
-        self.button_12_1.clicked.connect(self.set_skey_name)
-        self.button_18_1.clicked.connect(self.set_utxo)
-        self.comboBox_20_0_1.addItems(["", "tx-out-datum-hash-file", 
+        self.button_22_0 = QPushButton("Submit")
+
+        # Widget actions for receiving funds from script address section 
+        self.comboBox_1_0_2.addItems(["", "mainnet", "testnet"]) 
+        self.comboBox_1_0_2.currentTextChanged.connect(self.set_net) 
+        self.comboBox_9_0_1.addItems(["", "tx-out-datum-hash-file", 
                                        "tx-out-datum-embed-file", "tx-out-inline-datum-file"])
-        self.comboBox_20_0_1.currentTextChanged.connect(self.set_datum_file_type)
-        self.button_20_1.clicked.connect(self.set_datum)
-        self.button_22_0.clicked.connect(self.send_funds)
+        self.comboBox_9_0_1.currentTextChanged.connect(self.set_datum_file_type)
+        self.comboBox_17_0_1.addItems(["", "invalid-before", "invalid-hereafter"])
+        self.comboBox_17_0_1.currentTextChanged.connect(self.set_validity_interval_type)
 
-        # Set label fonts 
-        labels = [self.label_0_0, self.label_1_0, 
-                  self.label_3_0, self.label_5_0, 
-                  self.label_7_0, self.label_9_0, 
-                  self.label_11_0, self.label_13_0, 
-                  self.label_15_0, self.label_16_0, 
-                  self.label_17_0, self.label_19_0] 
+        self.button_3_1.clicked.connect(self.set_change_address)
+        self.button_5_1.clicked.connect(self.set_script_utxo)
+        self.button_7_1.clicked.connect(self.set_script_file)
+        self.button_9_1.clicked.connect(self.set_datum)
+        self.button_11_1.clicked.connect(self.set_redeemer)
+        self.button_13_1.clicked.connect(self.set_colleteral_utxo)
+        self.button_15_1.clicked.connect(self.set_pkh)
+        self.button_17_1.clicked.connect(self.set_slot)
+        self.button_18_1.clicked.connect(self.set_protocol_parameter)
+        self.button_19_1.clicked.connect(self.set_skey_name)
+        self.button_22_0.clicked.connect(self.submit_transaction)
+
+        # Set label fonts and size 
+        labels = [self.label_0_0, self.label_1_0_1, 
+                  self.label_2_0, self.label_4_0, 
+                  self.label_6_0, self.label_8_0, 
+                  self.label_10_0, self.label_12_0, 
+                  self.label_14_0, self.label_16_0, 
+                  self.label_18_0_1, self.label_19_0_1] 
         for label in labels:
             font = label.font()
             font.setPointSize(12)
             label.setFont(font)
 
+        self.label_1_0_1.setFixedSize(290, 35)
+        self.label_18_0_1.setFixedSize(290, 35)
+        self.label_19_0_1.setFixedSize(290, 35)
+
         # Set lineEdit sizes 
-        inputs = [self.input_2_0, self.input_4_0, 
-                  self.input_8_0, self.input_10_0, 
-                  self.input_12_0, self.input_14_0,
-                  self.input_18_0]
+        inputs = [self.input_3_0, self.input_5_0, 
+                  self.input_7_0, self.input_11_0, 
+                  self.input_13_0, self.input_15_0]
         for input in inputs: 
             input.setFixedSize(500,30)
 
-        self.input_20_0_2.setFixedSize(290, 30)
+        self.input_9_0_2.setFixedSize(290, 30)
+        self.input_17_0_2.setFixedSize(290, 30)
+        self.input_18_0_2.setFixedSize(200, 30)
+        self.input_19_0_2.setFixedSize(200, 30)
 
         # Set comboBox size
-        self.comboBox_6_0.setFixedSize(500,30)
-        self.comboBox_20_0_1.setFixedSize(200,30)
+        self.comboBox_1_0_2.setFixedSize(200,30)
+        self.comboBox_9_0_1.setFixedSize(200,30)
+        self.comboBox_17_0_1.setFixedSize(200,30) 
 
         # Set button sizes 
-        buttons = [self.button_2_1, self.button_4_1,
-                   self.button_4_2, self.button_8_1, 
-                   self.button_10_1, self.button_12_1, 
-                   self.button_18_1, self.button_20_1] 
+        buttons = [self.button_3_1, self.button_5_1,
+                   self.button_7_1, self.button_9_1, 
+                   self.button_11_1, self.button_13_1, 
+                   self.button_15_1, self.button_17_1,
+                   self.button_18_1, self.button_19_1] 
         for button in buttons:
             button.setFixedSize(80,30)
 
@@ -140,43 +167,63 @@ class Smart_contracts_receive(QWidget):
         # Layouts 
         layout = QGridLayout()
         layout.addWidget(self.label_0_0 , 0, 0)
-        layout.addWidget(picture_0_2, 0, 2)
-        # Adding widgets building script address section 
-        layout.addWidget(self.label_1_0, 1, 0)
-        layout.addWidget(self.input_2_0, 2, 0)
-        layout.addWidget(self.button_2_1, 2, 1)
-        layout.addWidget(self.label_3_0, 3, 0)
-        layout.addWidget(self.input_4_0, 4, 0)
-        layout.addWidget(self.button_4_1, 4, 1)
-        layout.addWidget(self.button_4_2, 4, 2)
-        layout.addWidget(self.label_5_0, 5, 0)
-        layout.addWidget(self.comboBox_6_0, 6, 0)
-        layout.addWidget(self.label_7_0, 7, 0)
-        layout.addWidget(self.input_8_0, 8, 0) 
-        layout.addWidget(self.button_8_1, 8, 1) 
-        # Adding widgets for sending funds to script address section 
-        layout.addWidget(self.label_9_0, 9, 0) 
-        layout.addWidget(self.input_10_0, 10, 0) 
-        layout.addWidget(self.button_10_1, 10, 1)
-        layout.addWidget(self.label_11_0, 11, 0)
-        layout.addWidget(self.input_12_0, 12, 0)
-        layout.addWidget(self.button_12_1, 12, 1)
-        layout.addWidget(self.label_13_0, 13, 0)
-        layout.addWidget(self.input_14_0, 14, 0)
-        layout.addWidget(self.radioButton_14_1, 14, 1)
-        layout.addWidget(self.radioButton_14_2, 14, 2)
-        layout.addWidget(self.label_15_0, 15, 0)
+        layout.addWidget(picture_0_1, 0, 1)
+        # Adding widgets receiving funds from script address section 
+        layout.addLayout(net_layout, 1, 0)
+        layout.addWidget(self.label_2_0, 2, 0)
+        layout.addWidget(self.input_3_0, 3, 0)
+        layout.addWidget(self.button_3_1, 3, 1)
+        layout.addWidget(self.label_4_0, 4, 0)
+        layout.addWidget(self.input_5_0, 5, 0)
+        layout.addWidget(self.button_5_1, 5, 1)
+        layout.addWidget(self.label_6_0, 6, 0)
+        layout.addWidget(self.input_7_0, 7, 0)
+        layout.addWidget(self.button_7_1, 7, 1)
+        layout.addWidget(self.label_8_0, 8, 0) 
+        layout.addLayout(datum_layout, 9, 0) 
+        layout.addWidget(self.button_9_1, 9, 1) 
+        layout.addWidget(self.label_10_0, 10, 0) 
+        layout.addWidget(self.input_11_0, 11, 0)
+        layout.addWidget(self.button_11_1, 11, 1)
+        layout.addWidget(self.label_12_0, 12, 0)
+        layout.addWidget(self.input_13_0, 13, 0)
+        layout.addWidget(self.button_13_1, 13, 1)
+        layout.addWidget(self.label_14_0, 14, 0)
+        layout.addWidget(self.input_15_0, 15, 0)
+        layout.addWidget(self.button_15_1, 15, 1)
         layout.addWidget(self.label_16_0, 16, 0)
-        layout.addWidget(self.label_17_0, 17, 0)
-        layout.addWidget(self.input_18_0, 18, 0)
+        layout.addLayout(validity_layout, 17, 0)
+        layout.addWidget(self.button_17_1, 17, 1)
+        layout.addLayout(protocol_layout, 18, 0)
         layout.addWidget(self.button_18_1, 18, 1)
-        layout.addWidget(self.label_19_0, 19, 0)
-        layout.addLayout(datum_layout, 20, 0)
-        layout.addWidget(self.button_20_1, 20, 1)
-        layout.addWidget(self.emptyLabel, 21, 0)
+        layout.addLayout(signing_key_layout, 19, 0)
+        layout.addWidget(self.button_19_1, 19, 1)
+        layout.addWidget(self.emptyLabel, 21, 0) 
         layout.addWidget(self.button_22_0, 22, 0) 
 
         self.setLayout(layout) 
+
+    def set_validity_interval_type(self):
+        pass
+
+    def set_script_utxo(self):
+        pass
+
+    def set_redeemer(self):
+        pass
+
+    def set_colleteral_utxo(self):
+        pass
+
+    def set_pkh(self):
+        pass
+
+    def set_slot(self):
+        pass
+
+    def set_protocol_parameter(self):
+        pass
+
 
     def set_script_file(self):
         script_file_name = self.input_2_0.text()
@@ -206,17 +253,17 @@ class Smart_contracts_receive(QWidget):
         script_address_file_name = self.input_4_0.text()
         script_address_file_path = settings.folder_path + "/" + script_address_file_name
         script_address_file_exists = os.path.isfile(script_address_file_path)
-        
-        if not script_address_file_exists:
-            msg = "Script address file does not exists.\n" + \
-                  "Please enter a valid file name." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
 
         if not (".addr" in script_address_file_name):
             msg = "Address file has to have a .addr file extension name.\n" + \
                   "Please type in a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        if not script_address_file_exists:
+            msg = "Script address file does not exists.\n" + \
+                  "Please enter a valid file name." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -297,17 +344,17 @@ class Smart_contracts_receive(QWidget):
         change_address_name = self.input_10_0.text()
         change_address_path = settings.folder_path + "/" + change_address_name
         change_address_exists = os.path.isfile(change_address_path)
-        
-        if not change_address_exists:
-            msg = "Address file does not exists.\n" + \
-                  "Please enter a valid file name." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
 
         if not (".addr" in change_address_name):
             msg = "Change address file has to have a .addr file extension name.\n" + \
                   "Please type in a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        if not change_address_exists:
+            msg = "Address file does not exists.\n" + \
+                  "Please enter a valid file name." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -394,7 +441,7 @@ class Smart_contracts_receive(QWidget):
         msg = "Datum file successfully set." 
         QMessageBox.information(self, "Notification:", msg)
 
-    def send_funds(self): 
+    def submit_transaction(self): 
         if self.script_address_file_name == "":
             msg = "Please set the receiving script address.\n" + \
                   "If you have generated it, wait for couple of\n" + \
