@@ -9,6 +9,7 @@ from wallet import Wallet
 from transactions import Transactions
 from smart_contracts_send import Smart_contracts_send
 from smart_contracts_receive import Smart_contracts_receive
+from query import Query
 from developer import Developer
 
 from PyQt5.QtCore import QSize 
@@ -179,6 +180,7 @@ class MainWindow(QMainWindow):
                 self.tabs.removeTab(1)
                 self.tabs.removeTab(1)
                 self.tabs.removeTab(1)
+                self.tabs.removeTab(1)
             except:
                 pass
 
@@ -186,6 +188,7 @@ class MainWindow(QMainWindow):
             self.tabs.addTab(Transactions(),"Transactions")
             self.tabs.addTab(Smart_contracts_send(),"Smart contrancts - send")
             self.tabs.addTab(Smart_contracts_receive(),"Smart contrancts - receive")
+            self.tabs.addTab(Query(),"Query")
             self.tabs.addTab(Developer(),"Developer")
         else:
             self.input_4_0.setText(settings.folder_path)
