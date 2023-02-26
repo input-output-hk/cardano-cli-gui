@@ -531,6 +531,7 @@ class Smart_contracts_send(QWidget):
         if not self.command_failed:
             manage_command(command_submit.split(), msg_submit, debug_msg_submit) 
         if not self.command_failed and not settings.debug_mode:
-            msg = "Send transaction successfully submitted."  
+            msg = "Commads successfully executed.\n" + \
+                  "Look at console output for transaction info."   
             QMessageBox.information(self, "Notification:", msg) 
         self.command_failed = False
