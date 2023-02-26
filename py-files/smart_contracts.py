@@ -10,7 +10,7 @@ import common_functions
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QPushButton, QLabel, QLineEdit, 
                              QWidget, QGridLayout, QRadioButton,
-                             QComboBox, QMessageBox)
+                             QComboBox, QMessageBox, QHBoxLayout)
 
 # Widgets and functions for the smart contracts tab
 class Smart_contracts(QWidget):
@@ -27,6 +27,7 @@ class Smart_contracts(QWidget):
         self.era = settings.current_era
         self.utxo = ""
         self.datum_file_name = ""
+        self.datum_file_type = ""
         self.command_failed = False
 
         # Header text 
@@ -56,7 +57,6 @@ class Smart_contracts(QWidget):
         self.button_2_1.clicked.connect(self.set_script_file)
         self.button_4_1.clicked.connect(self.set_script_address_file)
         self.button_4_2.clicked.connect(self.generate_script_address_file)
-
         self.comboBox_6_0.addItems(["", "mainnet", "testnet"])
         self.comboBox_6_0.currentTextChanged.connect(self.set_net)
         self.button_8_1.clicked.connect(self.show_script_address)
@@ -77,16 +77,24 @@ class Smart_contracts(QWidget):
         self.label_17_0 = QLabel("Input UTxO address:")
         self.input_18_0 = QLineEdit()
         self.button_18_1 = QPushButton("Set")
-        self.label_19_0 = QLabel("Type in datum file name:")
-        self.input_20_0 = QLineEdit()
-        self.button_20_1 = QPushButton("Set")
+        self.label_19_0 = QLabel("(optional) Chosse datum file type and type in file name:")
 
+        datum_layout = QHBoxLayout()
+        self.comboBox_20_0_1 = QComboBox()
+        self.input_20_0_2 = QLineEdit()
+        datum_layout.addWidget(self.comboBox_20_0_1)
+        datum_layout.addWidget(self.input_20_0_2)
+        
+        self.button_20_1 = QPushButton("Set")
         self.button_22_0 = QPushButton("Send")
 
         # Widget actions for building script address section  
         self.button_10_1.clicked.connect(self.set_change_address)
         self.button_12_1.clicked.connect(self.set_skey_name)
         self.button_18_1.clicked.connect(self.set_utxo)
+        self.comboBox_20_0_1.addItems(["", "tx-out-datum-hash-file", 
+                                       "tx-out-datum-embed-file", "tx-out-inline-datum-file"])
+        self.comboBox_20_0_1.currentTextChanged.connect(self.set_datum_file_type)
         self.button_20_1.clicked.connect(self.set_datum)
         self.button_22_0.clicked.connect(self.send_funds)
 
@@ -106,9 +114,15 @@ class Smart_contracts(QWidget):
         inputs = [self.input_2_0, self.input_4_0, 
                   self.input_8_0, self.input_10_0, 
                   self.input_12_0, self.input_14_0,
-                  self.input_18_0, self.input_20_0]
+                  self.input_18_0]
         for input in inputs: 
             input.setFixedSize(500,30)
+
+        self.input_20_0_2.setFixedSize(290, 30)
+
+        # Set comboBox size
+        self.comboBox_6_0.setFixedSize(500,30)
+        self.comboBox_20_0_1.setFixedSize(200,30)
 
         # Set button sizes 
         buttons = [self.button_2_1, self.button_4_1,
@@ -157,7 +171,7 @@ class Smart_contracts(QWidget):
         layout.addWidget(self.input_18_0, 18, 0)
         layout.addWidget(self.button_18_1, 18, 1)
         layout.addWidget(self.label_19_0, 19, 0)
-        layout.addWidget(self.input_20_0, 20, 0)
+        layout.addLayout(datum_layout, 20, 0)
         layout.addWidget(self.button_20_1, 20, 1)
         layout.addWidget(self.emptyLabel, 21, 0)
         layout.addWidget(self.button_22_0, 22, 0) 
@@ -347,8 +361,12 @@ class Smart_contracts(QWidget):
         msg = "UTxO address successfully set." 
         QMessageBox.information(self, "Notification:", msg)
 
+    def set_datum_file_type(self, selected_datum_file_type):
+        if selected_datum_file_type != "":
+            self.datum_file_type = selected_datum_file_type
+
     def set_datum(self):
-        datum_file_name = self.input_20_0.text() 
+        datum_file_name = self.input_20_0_2.text()
         datum_file_path = settings.folder_path + "/" + datum_file_name
         datum_file_exists = os.path.isfile(datum_file_path)
 
@@ -430,6 +448,12 @@ class Smart_contracts(QWidget):
                                 QMessageBox.Close)
             return None
 
+        if self.datum_file_type == "":
+            msg = "Please set a valid datum file type." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close) 
+            return None
+
         if self.datum_file_name == "":
             msg = "Please set a valid datum file name." 
             QMessageBox.warning(self, "Notification:", msg,
@@ -457,12 +481,17 @@ class Smart_contracts(QWidget):
             net_part = "--testnet-magic " + settings.testnet_magic + " "
             split_number = 9
 
+        if self.datum_file_name == "":
+            datum_part = ""
+        else:
+            datum_part = "--" + self.datum_file_type + " " + self.datum_file_name + " "
+
         command_build = "cardano-cli transaction build " + \
                         "--" + self.era + " " + \
                         net_part + \
                         "--tx-in " + self.utxo + " " + \
                         "--tx-out " + self.script_address + " " + str(amount_in_lovelace) + " lovelace " + \
-                        "--tx-out-datum-hash-file " + self.datum_file_name + " " + \
+                        datum_part + \
                         "--change-address " + self.change_address + " " + \
                         "--out-file tx.body"
         command_build_parts = command_build.split()
@@ -487,9 +516,9 @@ class Smart_contracts(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/smart_contracts.py line 460:" 
-        debug_msg_sign = "Command below is defined in py-files/smart_contracts.py line 474:" 
-        debug_msg_submit = "Command below is defined in py-files/smart_contracts.py line 480:" 
+        debug_msg_build = "Command below is defined in py-files/smart_contracts.py line 489:" 
+        debug_msg_sign = "Command below is defined in py-files/smart_contracts.py line 503:" 
+        debug_msg_submit = "Command below is defined in py-files/smart_contracts.py line 509:" 
                     
         manage_command(command_build_processed, msg_build, debug_msg_build)
         time.sleep(1)
