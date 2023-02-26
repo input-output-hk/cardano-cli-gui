@@ -72,39 +72,37 @@ class Smart_contracts_send(QWidget):
         self.input_14_0 = QLineEdit()
         self.radioButton_14_1 = QRadioButton("Ada")
         self.radioButton_14_2 = QRadioButton("Lovelace")
-        self.label_15_0 = QLabel("Current era parameter set to:")
-        self.label_16_0 = QLabel(settings.current_era)
-        self.label_17_0 = QLabel("Input UTxO address:")
-        self.input_18_0 = QLineEdit()
-        self.button_18_1 = QPushButton("Set")
-        self.label_19_0 = QLabel("(optional) Chosse datum file type and type in file name:")
+        self.label_15_0 = QLabel("Input UTxO address:")
+        self.input_16_0 = QLineEdit()
+        self.button_16_1 = QPushButton("Set")
+        self.label_17_0 = QLabel("(optional) Chosse datum file type and type in file name:")
 
         datum_layout = QHBoxLayout()
-        self.comboBox_20_0_1 = QComboBox()
-        self.input_20_0_2 = QLineEdit()
-        datum_layout.addWidget(self.comboBox_20_0_1)
-        datum_layout.addWidget(self.input_20_0_2)
-        
-        self.button_20_1 = QPushButton("Set")
-        self.button_22_0 = QPushButton("Send")
+        self.comboBox_18_0_1 = QComboBox()
+        self.input_18_0_2 = QLineEdit()
+        datum_layout.addWidget(self.comboBox_18_0_1)
+        datum_layout.addWidget(self.input_18_0_2)
+        self.button_18_1 = QPushButton("Set")
+
+        self.button_20_0 = QPushButton("Send")
 
         # Widget actions for building script address section  
         self.button_10_1.clicked.connect(self.set_change_address)
         self.button_12_1.clicked.connect(self.set_skey_name)
         self.button_18_1.clicked.connect(self.set_utxo)
-        self.comboBox_20_0_1.addItems(["", "tx-out-datum-hash-file", 
+        self.comboBox_18_0_1.addItems(["", "tx-out-datum-hash-file", 
                                        "tx-out-datum-embed-file", "tx-out-inline-datum-file"])
-        self.comboBox_20_0_1.currentTextChanged.connect(self.set_datum_file_type)
-        self.button_20_1.clicked.connect(self.set_datum)
-        self.button_22_0.clicked.connect(self.send_funds)
+        self.comboBox_18_0_1.currentTextChanged.connect(self.set_datum_file_type)
+        self.button_18_1.clicked.connect(self.set_datum)
+        self.button_20_0.clicked.connect(self.send_funds)
 
         # Set label fonts 
         labels = [self.label_0_0, self.label_1_0, 
                   self.label_3_0, self.label_5_0, 
                   self.label_7_0, self.label_9_0, 
                   self.label_11_0, self.label_13_0, 
-                  self.label_15_0, self.label_16_0, 
-                  self.label_17_0, self.label_19_0] 
+                  self.label_15_0, self.label_1_0, 
+                  self.label_17_0] 
         for label in labels:
             font = label.font()
             font.setPointSize(12)
@@ -114,25 +112,25 @@ class Smart_contracts_send(QWidget):
         inputs = [self.input_2_0, self.input_4_0, 
                   self.input_8_0, self.input_10_0, 
                   self.input_12_0, self.input_14_0,
-                  self.input_18_0]
+                  self.input_16_0]
         for input in inputs: 
             input.setFixedSize(500,30)
 
-        self.input_20_0_2.setFixedSize(290, 30)
+        self.input_18_0_2.setFixedSize(290, 30)
 
         # Set comboBox size
         self.comboBox_6_0.setFixedSize(500,30)
-        self.comboBox_20_0_1.setFixedSize(200,30)
+        self.comboBox_18_0_1.setFixedSize(200,30)
 
         # Set button sizes 
         buttons = [self.button_2_1, self.button_4_1,
                    self.button_4_2, self.button_8_1, 
                    self.button_10_1, self.button_12_1, 
-                   self.button_18_1, self.button_20_1] 
+                   self.button_18_1, self.button_18_1] 
         for button in buttons:
             button.setFixedSize(80,30)
 
-        self.button_22_0.setFixedSize(160,30) 
+        self.button_20_0.setFixedSize(160,30) 
 
         # Space between the sections
         self.emptyLabel = QLabel()
@@ -166,15 +164,14 @@ class Smart_contracts_send(QWidget):
         layout.addWidget(self.radioButton_14_1, 14, 1)
         layout.addWidget(self.radioButton_14_2, 14, 2)
         layout.addWidget(self.label_15_0, 15, 0)
-        layout.addWidget(self.label_16_0, 16, 0)
+        layout.addWidget(self.input_16_0, 16, 0)
+        layout.addWidget(self.button_16_1, 16, 1)
         layout.addWidget(self.label_17_0, 17, 0)
-        layout.addWidget(self.input_18_0, 18, 0)
+        layout.addLayout(datum_layout, 18, 0)
         layout.addWidget(self.button_18_1, 18, 1)
-        layout.addWidget(self.label_19_0, 19, 0)
-        layout.addLayout(datum_layout, 20, 0)
-        layout.addWidget(self.button_20_1, 20, 1)
-        layout.addWidget(self.emptyLabel, 21, 0)
-        layout.addWidget(self.button_22_0, 22, 0) 
+        layout.addWidget(self.emptyLabel, 19, 0)
+        layout.addWidget(self.button_20_0, 20, 0)
+        layout.addWidget(self.emptyLabel, 21, 0) 
 
         self.setLayout(layout) 
 
@@ -258,7 +255,7 @@ class Smart_contracts_send(QWidget):
                   "--out-file " + script_address_file
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/smart_contracts.py line 255:")
+            print("Command below is defined in py-files/smart_contracts.py line 252:")
             print(command + "\n") 
         else:
             try:
@@ -522,9 +519,9 @@ class Smart_contracts_send(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/smart_contracts.py line 495:" 
-        debug_msg_sign = "Command below is defined in py-files/smart_contracts.py line 509:" 
-        debug_msg_submit = "Command below is defined in py-files/smart_contracts.py line 515:" 
+        debug_msg_build = "Command below is defined in py-files/smart_contracts_send.py line 492:" 
+        debug_msg_sign = "Command below is defined in py-files/smart_contracts_send.py line 506:" 
+        debug_msg_submit = "Command below is defined in py-files/smart_contracts_send.py line 512:" 
                     
         manage_command(command_build_processed, msg_build, debug_msg_build)
         time.sleep(1)
