@@ -2246,10 +2246,10 @@ class Smart_contracts_receive(QWidget):
         manage_command(command_build, msg_build, debug_msg_build)
         time.sleep(1)
         if not self.command_failed:
-            manage_command(command_sign.split(), msg_sign, debug_msg_sign)
+            manage_command(command_sign, msg_sign, debug_msg_sign)
             time.sleep(1)
         if not self.command_failed:
-            manage_command(command_submit.split(), msg_submit, debug_msg_submit) 
+            manage_command(command_submit, msg_submit, debug_msg_submit) 
         if not self.command_failed and not debug_mode:
             msg = "Transaction successfully submitted."  
             QMessageBox.information(self, "Notification:", msg) 
