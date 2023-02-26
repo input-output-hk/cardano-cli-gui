@@ -163,17 +163,17 @@ class Transactions(QWidget):
         address_name = self.input_2_0.text()
         address_path = settings.folder_path + "/" + address_name
         address_exists = os.path.isfile(address_path)
-        
-        if not address_exists:
-            msg = "Address file does not exists.\n" + \
-                  "Please enter a valid file name." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
 
         if not (".addr" in address_name):
             msg = "Address file has to have a .addr file extension name.\n" + \
                   "Please type in a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        if not address_exists:
+            msg = "Address file does not exists.\n" + \
+                  "Please enter a valid file name." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -277,16 +277,16 @@ class Transactions(QWidget):
         receiving_address_path = settings.folder_path + "/" + receiving_address_name
         receiving_address_exists = os.path.isfile(receiving_address_path)
         
-        if not receiving_address_exists:
-            msg = "Receiving address does not exists.\n" + \
-                  "Please enter a valid file name."                       
+        if not (".addr" in receiving_address_name):
+            msg = "Address file has to have a .addr file extension name.\n" + \
+                  "Please type in a file name with a .addr extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
 
-        if not (".addr" in receiving_address_name):
-            msg = "Address file has to have a .addr file extension name.\n" + \
-                  "Please type in a file name with a .addr extension." 
+        if not receiving_address_exists:
+            msg = "Receiving address does not exists.\n" + \
+                  "Please enter a valid file name."                       
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None

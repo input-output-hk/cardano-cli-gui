@@ -216,17 +216,17 @@ class Wallet(QWidget):
         address_name = self.input_8_0.text()
         address_path = settings.folder_path + "/" + address_name
         address_exists = os.path.isfile(address_path)
-        
-        if not address_exists:
-            msg = "Address does not exists.\n" + \
-                  "Please enter a valid file name."                      
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
 
         if not (".addr" in address_name):
             msg = "Address file has to have a .addr file extension name.\n" + \
                   "Please type in a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        if not address_exists:
+            msg = "Address does not exists.\n" + \
+                  "Please enter a valid file name."                      
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None

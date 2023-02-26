@@ -206,17 +206,17 @@ class Smart_contracts_send(QWidget):
         script_address_file_name = self.input_4_0.text()
         script_address_file_path = settings.folder_path + "/" + script_address_file_name
         script_address_file_exists = os.path.isfile(script_address_file_path)
-        
-        if not script_address_file_exists:
-            msg = "Script address file does not exists.\n" + \
-                  "Please enter a valid file name." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
 
         if not (".addr" in script_address_file_name):
             msg = "Address file has to have a .addr file extension name.\n" + \
                   "Please type in a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        if not script_address_file_exists:
+            msg = "Script address file does not exists.\n" + \
+                  "Please enter a valid file name." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -297,17 +297,17 @@ class Smart_contracts_send(QWidget):
         change_address_name = self.input_10_0.text()
         change_address_path = settings.folder_path + "/" + change_address_name
         change_address_exists = os.path.isfile(change_address_path)
-        
-        if not change_address_exists:
-            msg = "Address file does not exists.\n" + \
-                  "Please enter a valid file name." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
 
         if not (".addr" in change_address_name):
             msg = "Change address file has to have a .addr file extension name.\n" + \
                   "Please type in a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        if not change_address_exists:
+            msg = "Address file does not exists.\n" + \
+                  "Please enter a valid file name." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
