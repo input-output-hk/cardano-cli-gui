@@ -1642,7 +1642,8 @@ class Smart_contracts_send(QWidget):
         if not self.command_failed:
             manage_command(command_submit.split(), msg_submit, debug_msg_submit) 
         if not self.command_failed and not debug_mode:
-            msg = "Send transaction successfully submitted."  
+            msg = "Commads successfully executed.\n" + \
+                  "Look at console output for transaction info."   
             QMessageBox.information(self, "Notification:", msg) 
         self.command_failed = False
 
@@ -1697,7 +1698,7 @@ class Smart_contracts_receive(QWidget):
         self.label_2_0 = QLabel("Type in your change address name:")
         self.input_3_0 = QLineEdit()
         self.button_3_1 = QPushButton("Set")
-        self.label_4_0 = QLabel("Transaction input UTxO from script address:")
+        self.label_4_0 = QLabel("Type in transaction input UTxO from script address:")
         self.input_5_0 = QLineEdit()
         self.button_5_1 = QPushButton("Set")
         self.label_6_0 = QLabel("Type in script file name:")
@@ -1713,10 +1714,10 @@ class Smart_contracts_receive(QWidget):
         self.label_10_0 = QLabel("Type in redeemer file name:")
         self.input_11_0 = QLineEdit()
         self.button_11_1 = QPushButton("Set")
-        self.label_12_0 = QLabel("Colleteral UTxO from your receiving address:")
+        self.label_12_0 = QLabel("Type in colleteral UTxO from your receiving address:")
         self.input_13_0 = QLineEdit()
         self.button_13_1 = QPushButton("Set")
-        self.label_14_0 = QLabel("Public key hash from receiving address:")
+        self.label_14_0 = QLabel("Type in public key hash file name from receiving address:")
         self.input_15_0 = QLineEdit()
         self.button_15_1 = QPushButton("Set")
         self.label_16_0 = QLabel("Chosse validity interval type and type in time slot:")
@@ -1744,8 +1745,11 @@ class Smart_contracts_receive(QWidget):
         # Widget actions for receiving funds from script address section 
         self.comboBox_1_0_2.addItems(["", "mainnet", "testnet"]) 
         self.comboBox_1_0_2.currentTextChanged.connect(self.set_net) 
-        self.comboBox_9_0_1.addItems(["", "tx-out-datum-hash-file", 
-                                       "tx-out-datum-embed-file", "tx-out-inline-datum-file"])
+        self.comboBox_9_0_1.addItems(["", 
+                                      "tx-in-datum-cbor-file", 
+                                      "tx-in-datum-file", 
+                                      "tx-in-datum-value", 
+                                      "tx-in-inline-datum-present"])
         self.comboBox_9_0_1.currentTextChanged.connect(self.set_datum_file_type)
         self.comboBox_17_0_1.addItems(["", "invalid-before", "invalid-hereafter"])
         self.comboBox_17_0_1.currentTextChanged.connect(self.set_validity_interval_type)
@@ -1940,27 +1944,32 @@ class Smart_contracts_receive(QWidget):
         datum_file_path = folder_path + "/" + datum_file_name
         datum_file_exists = os.path.isfile(datum_file_path)
 
-        if datum_file_name == "":
-            self.datum_file_name = datum_file_name
-            msg = "Datum file successfully unset."
+        if self.datum_file_type == "":
+            msg = "Select first datum file type."
+            QMessageBox.warning(self, "Notification:", msg,
+                                        QMessageBox.Close)
+            return None
+        
+        if datum_file_name == "" and self.datum_file_type != "tx-in-inline-datum-present":
+            msg = "Specify a valid datum file."
+            QMessageBox.warning(self, "Notification:", msg,
+                                        QMessageBox.Close)
+            return None
+        
+        if datum_file_name == "" and self.datum_file_type == "tx-in-inline-datum-present":
+            self.datum_file_name = ""
+            msg = "Inline datum present option successfully set." 
             QMessageBox.information(self, "Notification:", msg)
             return None
-        else:
-            if not (".json" in datum_file_name):
-                msg = "Datum has to be a file in JSON fromat.\n" + \
-                    "Please type in a name with a .json extension." 
-                QMessageBox.warning(self, "Notification:", msg,
-                                    QMessageBox.Close)
-                return None
 
-            if not datum_file_exists:
-                msg = "Datum file does not exists.\n" + \
-                      "Please enter a valid file name." 
-                QMessageBox.warning(self, "Notification:", msg,
-                                    QMessageBox.Close) 
-                return None
+        if not datum_file_exists:
+            msg = "Datum file does not exists.\n" + \
+                  "Please enter a valid file name." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close) 
+            return None
 
-        self.datum_file_name = datum_file_name 
+        self.datum_file_name = datum_file_name + " "
         msg = "Datum file successfully set." 
         QMessageBox.information(self, "Notification:", msg)
 
@@ -2141,7 +2150,7 @@ class Smart_contracts_receive(QWidget):
                                 QMessageBox.Close)
             return None
 
-        if self.datum_file_name == "":
+        if self.datum_file_name == "" and self.datum_file_type != "tx-in-inline-datum-present":
             msg = "Please set datum file name." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
@@ -2214,7 +2223,7 @@ class Smart_contracts_receive(QWidget):
                         net_part + \
                         "--tx-in " + self.script_utxo + " " + \
                         "--tx-in-script-file " + self.script_file_name + " " + \
-                        "--" + self.datum_file_type + " " + self.datum_file_name + " " + \
+                        "--" + self.datum_file_type + " " + self.datum_file_name + \
                         "--tx-in-redeemer-file " + self.redeemer + " " + \
                         "--tx-in-collateral " + self.collateral_utxo + " " + \
                         "--required-signer-hash " + self.signer_pkh + " " + \
@@ -2251,7 +2260,8 @@ class Smart_contracts_receive(QWidget):
         if not self.command_failed:
             manage_command(command_submit, msg_submit, debug_msg_submit) 
         if not self.command_failed and not debug_mode:
-            msg = "Transaction successfully submitted."  
+            msg = "Commads successfully executed.\n" + \
+                  "Look at console output for transaction info."  
             QMessageBox.information(self, "Notification:", msg) 
         self.command_failed = False
 
