@@ -1,6 +1,10 @@
 
 
+import os
 import settings
+import subprocess
+import traceback
+import common_functions
 
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtWidgets import (QPushButton, QLabel, QLineEdit, 
@@ -11,6 +15,9 @@ from PyQt5.QtWidgets import (QPushButton, QLabel, QLineEdit,
 class Query(QWidget):
     def __init__(self):
         super().__init__()
+
+        self.net = ""
+        self.address = ""
 
         # Header text 
         self.label_0_0 = QLabel("Query the blockchain for parameters and funds.\n" + \
@@ -44,9 +51,12 @@ class Query(QWidget):
         self.input_10_0 = QLineEdit("")
         self.button_10_1 = QPushButton("Generate")
 
-        # Button functions
+        # Action functions
+        self.comboBox_2_0.addItems(["", "mainnet", "testnet"])
+        self.comboBox_2_0.currentTextChanged.connect(self.set_net)
+
         self.button_4_1.clicked.connect(self.set_address)
-        self.button_6_1.clicked.connect(self.query_address)
+        self.button_6_1.clicked.connect(self.query_address_funds)
         self.button_8_1.clicked.connect(self.query_net)
         self.button_10_1.clicked.connect(self.generate_protocol_params_file)
 
@@ -112,18 +122,156 @@ class Query(QWidget):
 
         self.setLayout(layout)
 
-    # Functions for 
+    def set_net(self, selected_net):
+        if selected_net != "":
+            self.net = selected_net 
+
     def set_address(self):
-        pass 
+        address_name = self.input_4_0.text()
+        address_path = settings.folder_path + "/" + address_name
+        address_exists = os.path.isfile(address_path)
+        
+        if not (".addr" in address_name):
+            msg = "Address file has to have a .addr file extension name.\n" + \
+                  "Please type in a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
 
-    # Functions for 
-    def query_address(self):
-        pass 
+        if not address_exists:
+            msg = "Address file does not exists.\n" + \
+                  "Please enter a valid file name." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
 
-    # Functions for 
+        with open(address_path, "r") as file:
+            self.address = file.read()
+        msg = "Address file successfully set."  
+        QMessageBox.information(self, "Notification:", msg)
+
+    def query_address_funds(self):
+        if self.address == "":
+            msg = "Address file not set.\n" + \
+                  "Please set a valid file name."                   
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        if self.net == "":
+            msg = "Select option mainnet or testnet."    
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        if self.net == "mainnet": 
+            net_part =  "--mainnet "
+        elif self.net == "testnet":
+            net_part = "--testnet-magic " + settings.testnet_magic + " "
+        
+        command = "cardano-cli query utxo " + \
+                  "--address " + self.address + " " + \
+                  net_part 
+        
+        if settings.debug_mode:
+            print("Command below is defined in py-files/query.py line 172:")
+            print(command + "\n")
+        else:
+            try:
+                response = subprocess.Popen(command.split(), stdout=subprocess.PIPE) 
+                output = response.communicate()[0].decode("utf-8")
+                self.input_6_0.setPlainText(output)
+            except Exception:
+                output = traceback.format_exc()
+                common_functions.log_error_msg(output)
+                
+                msg = "Address could not be querried.\n" + \
+                      "Check if cardano node is running and is synced.\n" + \
+                      "Look at the error.log file for error output."                    
+                QMessageBox.warning(self, "Notification:", msg,
+                                    QMessageBox.Close)
+
     def query_net(self):
-        pass 
+        if self.net == "":
+            msg = "Select option mainnet or testnet."    
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
 
-    # Functions for 
+        if self.net == "mainnet": 
+            net_part =  "--mainnet "
+        elif self.net == "testnet":
+            net_part = "--testnet-magic " + settings.testnet_magic + " "
+        
+        command = "cardano-cli query tip " + \
+                  net_part 
+        
+        if settings.debug_mode:
+            print("Command below is defined in py-files/query.py line 206:")
+            print(command + "\n")
+        else:
+            try:
+                response = subprocess.Popen(command.split(), stdout=subprocess.PIPE) 
+                output = response.communicate()[0].decode("utf-8")
+                self.input_8_0.setPlainText(output)
+            except Exception:
+                output = traceback.format_exc()
+                common_functions.log_error_msg(output)
+                
+                msg = "Tip of net could not be querried.\n" + \
+                      "Check if cardano node is running and is synced.\n" + \
+                      "Look at the error.log file for error output." 
+                QMessageBox.warning(self, "Notification:", msg,
+                                    QMessageBox.Close)
+
     def generate_protocol_params_file(self):
-        pass     
+        if self.net == "":
+            msg = "Select option mainnet or testnet."    
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        if self.net == "mainnet": 
+            net_part =  "--mainnet "
+        elif self.net == "testnet":
+            net_part = "--testnet-magic " + settings.testnet_magic + " "
+        
+        file_number_count = 0
+        while(True):
+            if file_number_count == 0:
+                prepend_num = ""
+            else:
+                prepend_num = str(file_number_count)
+            
+            pp_file_name = "protocol" + prepend_num + ".json"
+            pp_file_path = settings.folder_path + "/" + pp_file_name
+            pp_file_exists = os.path.isfile(pp_file_path)
+            
+            if not pp_file_exists:
+                self.pp_file_name = pp_file_name
+                break
+
+            file_number_count += 1
+
+        command = "cardano-cli query protocol-parameters " + \
+                  net_part + \
+                  "--out-file " + self.pp_file_name 
+
+        if settings.debug_mode:
+            print("Command below is defined in py-files/query.py line 256:")
+            print(command + "\n")
+        else:
+            try:
+                subprocess.Popen(command.split(), cwd=settings.folder_path) 
+                self.input_10_0.setText(self.pp_file_name)
+                msg = "Protocol parameters file successfully generated." 
+                QMessageBox.information(self, "Notification:", msg)
+            except Exception:
+                output = traceback.format_exc()
+                common_functions.log_error_msg(output)
+                
+                msg = "Address could not be querried.\n" + \
+                      "Check if cardano node is running and is synced.\n" + \
+                      "Look at the error.log file for error output."                    
+                QMessageBox.warning(self, "Notification:", msg,
+                                    QMessageBox.Close)   
