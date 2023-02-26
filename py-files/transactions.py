@@ -355,7 +355,7 @@ class Transactions(QWidget):
         def manage_command(command, msg, debug_msg):
             if settings.debug_mode:
                 print(debug_msg)
-                print(command + "\n")
+                print(" ".join(command) + "\n")
             else:
                 try:
                     subprocess.Popen(command, cwd=settings.folder_path)
