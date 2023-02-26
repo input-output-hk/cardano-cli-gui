@@ -20,7 +20,8 @@ from PyQt5.QtGui import QPixmap, QPalette, QColor, QFont
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QTabWidget, 
                              QAction, QPushButton, QLabel, QLineEdit, 
                              QWidget, QGridLayout, QMessageBox,
-                             QRadioButton, QPlainTextEdit, QComboBox)
+                             QRadioButton, QPlainTextEdit, QComboBox,
+                             QHBoxLayout)
 """
 with open(out_file_name,"w") as outFile:
     outFile.writelines(imports) 
