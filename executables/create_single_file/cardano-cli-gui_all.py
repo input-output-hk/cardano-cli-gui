@@ -864,18 +864,18 @@ class Transactions(QWidget):
         skey_path = folder_path + "/" + skey_name
         skey_exists = os.path.isfile(skey_path)
         
-        if not skey_exists:
-            msg = "Signing key file does not exists.\n" + \
-                  "Please enter a valid file name."  
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close) 
-            return None
-
         if not (".skey" in skey_name):
             msg = "Signing key has to have a .skey file extension name.\n" + \
                   "Please type in a file name with a .skey extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
+            return None
+
+        if not skey_exists:
+            msg = "Signing key file does not exists.\n" + \
+                  "Please enter a valid file name."  
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close) 
             return None
 
         self.skey_name = skey_name
@@ -926,8 +926,7 @@ class Transactions(QWidget):
 
     def set_net(self, selected_net):
         global folder_path, debug_mode, testnet_magic 
-        if selected_net != "":
-            self.net = selected_net 
+        self.net = selected_net 
 
     def set_utxo(self):
         global folder_path, debug_mode, testnet_magic 
@@ -1084,9 +1083,9 @@ class Transactions(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/transactions.py line 376:"
-        debug_msg_sign = "Command below is defined in py-files/transactions.py line 389:"
-        debug_msg_submit = "Command below is defined in py-files/transactions.py line 395:" 
+        debug_msg_build = "Command below is defined in py-files/transactions.py line 375:"
+        debug_msg_sign = "Command below is defined in py-files/transactions.py line 388:"
+        debug_msg_submit = "Command below is defined in py-files/transactions.py line 394:" 
                     
         manage_command(command_build_processed, msg_build, debug_msg_build)
         time.sleep(1)
@@ -1279,19 +1278,19 @@ class Smart_contracts_send(QWidget):
         script_file_name = self.input_2_0.text()
         script_file_path = folder_path + "/" + script_file_name
         script_file_exists = os.path.isfile(script_file_path)
-        
-        if not script_file_exists:
-            msg = "Script file does not exists.\n" + \
-                  "Please enter a valid file name." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close) 
-            return None
 
         if not (".plutus" in script_file_name):
             msg = "Script file has to have a .plutus file extension name.\n" + \
                   "Please type in a file name with a .plutus extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
+            return None
+
+        if not script_file_exists:
+            msg = "Script file does not exists.\n" + \
+                  "Please enter a valid file name." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close) 
             return None
 
         self.script_file = script_file_name
@@ -1424,18 +1423,18 @@ class Smart_contracts_send(QWidget):
         skey_path = folder_path + "/" + skey_name
         skey_exists = os.path.isfile(skey_path)
         
-        if not skey_exists:
-            msg = "Signing key file does not exists.\n" + \
-                  "Please enter a valid file name."  
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close) 
-            return None
-
         if not (".skey" in skey_name):
             msg = "Signing key has to have a .skey file extension name.\n" + \
                   "Please type in a file name with a .skey extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
+            return None
+
+        if not skey_exists:
+            msg = "Signing key file does not exists.\n" + \
+                  "Please enter a valid file name."  
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close) 
             return None
 
         self.skey_name = skey_name
@@ -2385,8 +2384,7 @@ class Query(QWidget):
 
     def set_net(self, selected_net):
         global folder_path, debug_mode, testnet_magic 
-        if selected_net != "":
-            self.net = selected_net 
+        self.net = selected_net 
 
     def set_address(self):
         global folder_path, debug_mode, testnet_magic 
@@ -2438,7 +2436,7 @@ class Query(QWidget):
                   net_part 
         
         if debug_mode:
-            print("Command below is defined in py-files/query.py line 172:")
+            print("Command below is defined in py-files/query.py line 171:")
             print(command + "\n")
         else:
             try:
@@ -2472,7 +2470,7 @@ class Query(QWidget):
                   net_part 
         
         if debug_mode:
-            print("Command below is defined in py-files/query.py line 206:")
+            print("Command below is defined in py-files/query.py line 205:")
             print(command + "\n")
         else:
             try:
@@ -2524,7 +2522,7 @@ class Query(QWidget):
                   "--out-file " + self.pp_file_name 
 
         if debug_mode:
-            print("Command below is defined in py-files/query.py line 256:")
+            print("Command below is defined in py-files/query.py line 255:")
             print(command + "\n")
         else:
             try:
