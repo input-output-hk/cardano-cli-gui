@@ -42,7 +42,7 @@ are using bash add the following line to the end of your `.bashrc` file and sour
 export CARDANO_NODE_SOCKET_PATH="$HOME/path/to/node.socket"
 ```
 
-The GUI functionality is seperated in 5 tabs and covers following things:
+The GUI functionality is seperated in 7 tabs and covers following things:
 
 1. **Start** tab, that notifies the user that he has to set a valid folder path to unlock
 other tabs. The folder path will be used to load and save key and address files. It also
