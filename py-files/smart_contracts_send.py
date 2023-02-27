@@ -85,6 +85,7 @@ class Smart_contracts_send(QWidget):
         self.button_18_1 = QPushButton("Set")
 
         self.button_20_0 = QPushButton("Send")
+        self.button_20_1 = QPushButton("Set all")
 
         # Widget actions for building script address section  
         self.button_10_1.clicked.connect(self.set_change_address)
@@ -95,6 +96,7 @@ class Smart_contracts_send(QWidget):
         self.comboBox_18_0_1.currentTextChanged.connect(self.set_datum_file_type)
         self.button_18_1.clicked.connect(self.set_datum)
         self.button_20_0.clicked.connect(self.send_funds)
+        self.button_20_1.clicked.connect(self.set_all)
 
         # Set label fonts 
         labels = [self.label_0_0, self.label_1_0, 
@@ -126,7 +128,8 @@ class Smart_contracts_send(QWidget):
         buttons = [self.button_2_1, self.button_4_1,
                    self.button_4_2, self.button_8_1, 
                    self.button_10_1, self.button_12_1, 
-                   self.button_16_1, self.button_18_1] 
+                   self.button_16_1, self.button_18_1,
+                   self.button_20_1] 
         for button in buttons:
             button.setFixedSize(80,30)
 
@@ -171,6 +174,7 @@ class Smart_contracts_send(QWidget):
         layout.addWidget(self.button_18_1, 18, 1)
         layout.addWidget(self.emptyLabel, 19, 0)
         layout.addWidget(self.button_20_0, 20, 0)
+        layout.addWidget(self.button_20_1, 20, 1)
         layout.addWidget(self.emptyLabel, 21, 0) 
 
         self.setLayout(layout) 
@@ -255,8 +259,8 @@ class Smart_contracts_send(QWidget):
                   "--out-file " + script_address_file
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/smart_contracts.py line 252:")
-            print(command + "\n") 
+            print("Command below is defined in py-files/smart_contracts.py line 256:")
+            print(common_functions.format_command(command) + "\n") 
         else:
             try:
                 subprocess.Popen(command.split(), cwd=settings.folder_path) 
@@ -389,6 +393,14 @@ class Smart_contracts_send(QWidget):
         msg = "Datum file successfully set." 
         QMessageBox.information(self, "Notification:", msg)
 
+    def set_all(self):
+        self.set_script_file()
+        self.set_script_address_file()
+        self.set_change_address()
+        self.set_skey_name()
+        self.set_utxo()
+        self.set_datum()
+
     def send_funds(self): 
         if self.script_address_file_name == "":
             msg = "Please set the receiving script address.\n" + \
@@ -464,7 +476,8 @@ class Smart_contracts_send(QWidget):
         def manage_command(command, msg, debug_msg):
             if settings.debug_mode:
                 print(debug_msg)
-                print(" ".join(command) + "\n")
+                commad_single_string = " ".join(command)
+                print(common_functions.format_command(commad_single_string) + "\n")
             else:
                 try:
                     subprocess.Popen(command, cwd=settings.folder_path)
@@ -517,9 +530,9 @@ class Smart_contracts_send(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/smart_contracts_send.py line 490:" 
-        debug_msg_sign = "Command below is defined in py-files/smart_contracts_send.py line 504:" 
-        debug_msg_submit = "Command below is defined in py-files/smart_contracts_send.py line 510:" 
+        debug_msg_build = "Command below is defined in py-files/smart_contracts_send.py line 503:" 
+        debug_msg_sign = "Command below is defined in py-files/smart_contracts_send.py line 517:" 
+        debug_msg_submit = "Command below is defined in py-files/smart_contracts_send.py line 523:" 
                     
         manage_command(command_build_processed, msg_build, debug_msg_build)
         time.sleep(1)

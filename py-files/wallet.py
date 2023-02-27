@@ -193,7 +193,7 @@ class Wallet(QWidget):
 
                 if settings.debug_mode:
                     print("Command below is defined in py-files/wallet.py line 190:")
-                    print(command + "\n")
+                    print(common_functions.format_command(command) + "\n")
                 else:
                     try:
                         subprocess.Popen(command.split(), cwd=settings.folder_path)
@@ -289,7 +289,7 @@ class Wallet(QWidget):
 
         if settings.debug_mode:
             print("Command below is defined in py-files/wallet.py line 285:")
-            print(command + "\n")
+            print(common_functions.format_command(command) + "\n")
         else:
             try:
                 subprocess.Popen(command.split(), cwd=settings.folder_path)
@@ -379,7 +379,7 @@ class Wallet(QWidget):
         
         if settings.debug_mode:
             print("Command below is defined in py-files/wallet.py line 376:")
-            print(command + "\n")
+            print(common_functions.format_command(command) + "\n")
         else:
             try:
                 subprocess.Popen(command.split(), cwd=settings.folder_path)

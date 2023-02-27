@@ -50,3 +50,13 @@ def parse_amount(input, currency):
         if input_check:
             input_lovelace = int(input)
         return input_lovelace
+
+# Format command for nicer print
+def format_command(cmd):
+    cmd_list = cmd.split("--")
+    cmd_list[0] = cmd_list[0] + " \\"
+    for elem in range(1,len(cmd_list) - 1):
+        cmd_list[elem] = "    --" + cmd_list[elem] + " \\"
+    cmd_list[-1] = "    --" + cmd_list[-1]
+    cmd = "\n".join(cmd_list)
+    return cmd        

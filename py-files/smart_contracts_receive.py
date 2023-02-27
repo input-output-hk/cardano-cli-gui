@@ -95,6 +95,7 @@ class Smart_contracts_receive(QWidget):
         self.button_19_1 = QPushButton("Set")
 
         self.button_22_0 = QPushButton("Submit")
+        self.button_22_1 = QPushButton("Set all")
 
         # Widget actions for receiving funds from script address section 
         self.comboBox_1_0_2.addItems(["", "mainnet", "testnet"]) 
@@ -119,6 +120,7 @@ class Smart_contracts_receive(QWidget):
         self.button_18_1.clicked.connect(self.set_protocol_parameter)
         self.button_19_1.clicked.connect(self.set_skey_name)
         self.button_22_0.clicked.connect(self.submit_transaction)
+        self.button_22_1.clicked.connect(self.set_all)
 
         # Set label fonts and size 
         labels = [self.label_0_0, self.label_1_0_1, 
@@ -158,7 +160,8 @@ class Smart_contracts_receive(QWidget):
                    self.button_7_1, self.button_9_1, 
                    self.button_11_1, self.button_13_1, 
                    self.button_15_1, self.button_17_1,
-                   self.button_18_1, self.button_19_1] 
+                   self.button_18_1, self.button_19_1,
+                   self.button_22_1] 
         for button in buttons:
             button.setFixedSize(80,30)
 
@@ -202,7 +205,8 @@ class Smart_contracts_receive(QWidget):
         layout.addLayout(signing_key_layout, 19, 0)
         layout.addWidget(self.button_19_1, 19, 1)
         layout.addWidget(self.emptyLabel, 21, 0) 
-        layout.addWidget(self.button_22_0, 22, 0) 
+        layout.addWidget(self.button_22_0, 22, 0)
+        layout.addWidget(self.button_22_1, 22, 1) 
 
         self.setLayout(layout) 
 
@@ -456,6 +460,18 @@ class Smart_contracts_receive(QWidget):
         msg = "Signing key file successfully set." 
         QMessageBox.information(self, "Notification:", msg)
 
+    def set_all(self):
+        self.set_change_address()
+        self.set_script_utxo()
+        self.set_script_file()
+        self.set_datum()
+        self.set_redeemer()
+        self.set_colleteral_utxo()
+        self.set_pkh()
+        self.set_slot()
+        self.set_protocol_parameter()
+        self.set_skey_name()
+
     def submit_transaction(self): 
         if self.net == "":
             msg = "Select option mainnet or testnet."    
@@ -538,7 +554,7 @@ class Smart_contracts_receive(QWidget):
         def manage_command(command, msg, debug_msg):
             if settings.debug_mode:
                 print(debug_msg)
-                print(command + "\n")
+                print(common_functions.format_command(command) + "\n")
             else:
                 try:
                     subprocess.Popen(command.split(), cwd=settings.folder_path)

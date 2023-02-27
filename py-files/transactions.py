@@ -70,11 +70,13 @@ class Transactions(QWidget):
         self.input_16_0 = QLineEdit()
         self.button_16_1 = QPushButton("Set")
         self.button_18_0 = QPushButton("Send")
+        self.button_18_1 = QPushButton("Set all")
 
         # Widget actions for sending funds section 
         self.button_14_1.clicked.connect(self.set_utxo)
         self.button_16_1.clicked.connect(self.set_receiving_address)
         self.button_18_0.clicked.connect(self.send_funds)
+        self.button_18_1.clicked.connect(self.set_all)
 
         # Set label fonts 
         labels = [self.label_0_0, self.label_1_0, 
@@ -117,6 +119,7 @@ class Transactions(QWidget):
         self.button_14_1.setFixedSize(80,30)
         self.button_16_1.setFixedSize(80,30)
         self.button_18_0.setFixedSize(160,30)
+        self.button_18_1.setFixedSize(80,30)
 
         # Space between the sections
         self.emptyLabel = QLabel()
@@ -155,6 +158,7 @@ class Transactions(QWidget):
         layout.addWidget(self.button_16_1, 16, 1)
         layout.addWidget(self.emptyLabel, 17, 0)
         layout.addWidget(self.button_18_0, 18, 0)
+        layout.addWidget(self.button_18_1, 18, 1)
         layout.addWidget(self.emptyLabel, 19, 0)
 
         self.setLayout(layout)
@@ -230,8 +234,8 @@ class Transactions(QWidget):
                   net_part 
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/transactions.py line 228:")
-            print(command + "\n")
+            print("Command below is defined in py-files/transactions.py line 232:")
+            print(common_functions.format_command(command) + "\n")
         else:
             try:
                 response = subprocess.Popen(command.split(), stdout=subprocess.PIPE) 
@@ -295,6 +299,12 @@ class Transactions(QWidget):
         msg = "Receiving address file successfully set."  
         QMessageBox.information(self, "Notification:", msg)
 
+    def set_all(self):
+        self.set_address_name()
+        self.set_skey_name()
+        self.set_utxo()
+        self.set_receiving_address()
+
     def send_funds(self): 
         if self.address == "":
             msg = "Please set a valid change address." 
@@ -354,7 +364,8 @@ class Transactions(QWidget):
         def manage_command(command, msg, debug_msg):
             if settings.debug_mode:
                 print(debug_msg)
-                print(" ".join(command) + "\n")
+                commad_single_string = " ".join(command)
+                print(common_functions.format_command(commad_single_string) + "\n")
             else:
                 try:
                     subprocess.Popen(command, cwd=settings.folder_path)
@@ -401,9 +412,9 @@ class Transactions(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/transactions.py line 375:"
-        debug_msg_sign = "Command below is defined in py-files/transactions.py line 388:"
-        debug_msg_submit = "Command below is defined in py-files/transactions.py line 394:" 
+        debug_msg_build = "Command below is defined in py-files/transactions.py line 386:"
+        debug_msg_sign = "Command below is defined in py-files/transactions.py line 399:"
+        debug_msg_submit = "Command below is defined in py-files/transactions.py line 405:" 
                     
         manage_command(command_build_processed, msg_build, debug_msg_build)
         time.sleep(1)

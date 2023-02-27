@@ -174,7 +174,7 @@ class Query(QWidget):
         
         if settings.debug_mode:
             print("Command below is defined in py-files/query.py line 171:")
-            print(command + "\n")
+            print(common_functions.format_command(command) + "\n")
         else:
             try:
                 response = subprocess.Popen(command.split(), stdout=subprocess.PIPE) 
@@ -207,7 +207,7 @@ class Query(QWidget):
         
         if settings.debug_mode:
             print("Command below is defined in py-files/query.py line 205:")
-            print(command + "\n")
+            print(common_functions.format_command(command) + "\n")
         else:
             try:
                 response = subprocess.Popen(command.split(), stdout=subprocess.PIPE) 
@@ -258,7 +258,7 @@ class Query(QWidget):
 
         if settings.debug_mode:
             print("Command below is defined in py-files/query.py line 255:")
-            print(command + "\n")
+            print(common_functions.format_command(command) + "\n")
         else:
             try:
                 subprocess.Popen(command.split(), cwd=settings.folder_path) 
