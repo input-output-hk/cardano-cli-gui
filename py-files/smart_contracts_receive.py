@@ -207,16 +207,13 @@ class Smart_contracts_receive(QWidget):
         self.setLayout(layout) 
 
     def set_net(self, selected_net):
-        if selected_net != "":
-            self.net = selected_net
+        self.net = selected_net
 
     def set_datum_file_type(self, selected_datum_file_type):
-        if selected_datum_file_type != "":
-            self.datum_file_type = selected_datum_file_type
+        self.datum_file_type = selected_datum_file_type
 
     def set_validity_interval_type(self, validity_int_type):
-        if validity_int_type != "":
-            self.validity_type = validity_int_type
+        self.validity_type = validity_int_type
 
     def set_change_address(self): 
         change_address_name = self.input_3_0.text()
@@ -587,9 +584,9 @@ class Smart_contracts_receive(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/smart_contracts_receive.py line 552:" 
-        debug_msg_sign = "Command below is defined in py-files/smart_contracts_receive.py line 566:" 
-        debug_msg_submit = "Command below is defined in py-files/smart_contracts_receive.py line 572:" 
+        debug_msg_build = "Command below is defined in py-files/smart_contracts_receive.py line 557:" 
+        debug_msg_sign = "Command below is defined in py-files/smart_contracts_receive.py line 571:" 
+        debug_msg_submit = "Command below is defined in py-files/smart_contracts_receive.py line 577:" 
                     
         manage_command(command_build, msg_build, debug_msg_build)
         time.sleep(1)
