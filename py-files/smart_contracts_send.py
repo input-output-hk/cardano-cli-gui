@@ -179,19 +179,19 @@ class Smart_contracts_send(QWidget):
         script_file_name = self.input_2_0.text()
         script_file_path = settings.folder_path + "/" + script_file_name
         script_file_exists = os.path.isfile(script_file_path)
-        
-        if not script_file_exists:
-            msg = "Script file does not exists.\n" + \
-                  "Please enter a valid file name." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close) 
-            return None
 
         if not (".plutus" in script_file_name):
             msg = "Script file has to have a .plutus file extension name.\n" + \
                   "Please type in a file name with a .plutus extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
+            return None
+
+        if not script_file_exists:
+            msg = "Script file does not exists.\n" + \
+                  "Please enter a valid file name." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close) 
             return None
 
         self.script_file = script_file_name
@@ -318,18 +318,18 @@ class Smart_contracts_send(QWidget):
         skey_path = settings.folder_path + "/" + skey_name
         skey_exists = os.path.isfile(skey_path)
         
-        if not skey_exists:
-            msg = "Signing key file does not exists.\n" + \
-                  "Please enter a valid file name."  
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close) 
-            return None
-
         if not (".skey" in skey_name):
             msg = "Signing key has to have a .skey file extension name.\n" + \
                   "Please type in a file name with a .skey extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
+            return None
+
+        if not skey_exists:
+            msg = "Signing key file does not exists.\n" + \
+                  "Please enter a valid file name."  
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close) 
             return None
 
         self.skey_name = skey_name

@@ -123,8 +123,7 @@ class Query(QWidget):
         self.setLayout(layout)
 
     def set_net(self, selected_net):
-        if selected_net != "":
-            self.net = selected_net 
+        self.net = selected_net 
 
     def set_address(self):
         address_name = self.input_4_0.text()
@@ -174,7 +173,7 @@ class Query(QWidget):
                   net_part 
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/query.py line 172:")
+            print("Command below is defined in py-files/query.py line 171:")
             print(command + "\n")
         else:
             try:
@@ -207,7 +206,7 @@ class Query(QWidget):
                   net_part 
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/query.py line 206:")
+            print("Command below is defined in py-files/query.py line 205:")
             print(command + "\n")
         else:
             try:
@@ -258,7 +257,7 @@ class Query(QWidget):
                   "--out-file " + self.pp_file_name 
 
         if settings.debug_mode:
-            print("Command below is defined in py-files/query.py line 256:")
+            print("Command below is defined in py-files/query.py line 255:")
             print(command + "\n")
         else:
             try:

@@ -188,18 +188,18 @@ class Transactions(QWidget):
         skey_path = settings.folder_path + "/" + skey_name
         skey_exists = os.path.isfile(skey_path)
         
-        if not skey_exists:
-            msg = "Signing key file does not exists.\n" + \
-                  "Please enter a valid file name."  
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close) 
-            return None
-
         if not (".skey" in skey_name):
             msg = "Signing key has to have a .skey file extension name.\n" + \
                   "Please type in a file name with a .skey extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
+            return None
+
+        if not skey_exists:
+            msg = "Signing key file does not exists.\n" + \
+                  "Please enter a valid file name."  
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close) 
             return None
 
         self.skey_name = skey_name
@@ -248,8 +248,7 @@ class Transactions(QWidget):
                                     QMessageBox.Close)
 
     def set_net(self, selected_net):
-        if selected_net != "":
-            self.net = selected_net 
+        self.net = selected_net 
 
     def set_utxo(self):
         utxo_input = self.input_14_0.text()
@@ -402,9 +401,9 @@ class Transactions(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/transactions.py line 376:"
-        debug_msg_sign = "Command below is defined in py-files/transactions.py line 389:"
-        debug_msg_submit = "Command below is defined in py-files/transactions.py line 395:" 
+        debug_msg_build = "Command below is defined in py-files/transactions.py line 375:"
+        debug_msg_sign = "Command below is defined in py-files/transactions.py line 388:"
+        debug_msg_submit = "Command below is defined in py-files/transactions.py line 394:" 
                     
         manage_command(command_build_processed, msg_build, debug_msg_build)
         time.sleep(1)
