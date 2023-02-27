@@ -60,13 +60,22 @@ funds to a receiving address.
 
 ![alt text](https://github.com/LukaKurnjek/cardano-cli-gui/blob/main/images/transactions.png)
 
-4. **Smart contracts** tab, that handles building a script payment address for a script 
-file. You can also send funds to the generated script address and attach a datum to the 
-transaction. 
+4. **Smart contracts - send** tab, that handles building a script payment address for a script 
+file. You can also send funds to the generated script address and attach a datum to the transaction. 
 
-![alt text](https://github.com/LukaKurnjek/cardano-cli-gui/blob/main/images/smart_contract.png)
+![alt text](https://github.com/LukaKurnjek/cardano-cli-gui/blob/main/images/smart_contracts_send.png)
 
-5. **Developer** tab, that lets more experienced users to set a different testnet 
+5. **Smart contracts - receive** tab, that handles creating a spending transactions that spends a 
+script address UTxO You can attach a datum and a redeemer to the transaction and set a validity interval.
+
+![alt text](https://github.com/LukaKurnjek/cardano-cli-gui/blob/main/images/smart_contracts_receive.png)
+
+6. **Query** tab, that lets you query an address for funds, query net information and generate
+the protocol parameters file for the chosen net. 
+
+![alt text](https://github.com/LukaKurnjek/cardano-cli-gui/blob/main/images/query.png)
+
+7. **Developer** tab, that lets more experienced users set a different testnet 
 magic number or update the era parameter. 
 
 ![alt text](https://github.com/LukaKurnjek/cardano-cli-gui/blob/main/images/developer.png)
