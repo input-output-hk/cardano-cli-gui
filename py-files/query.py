@@ -1,6 +1,7 @@
 
 
 import os
+import time
 import settings
 import subprocess
 import traceback
@@ -47,9 +48,9 @@ class Query(QWidget):
         self.button_8_1 = QPushButton("Querry\ninfo")
 
         # Widgets for protocol parameters file section
-        self.label_9_0 = QLabel("Generate protocol parameters file:")
-        self.input_10_0 = QLineEdit("")
-        self.button_10_1 = QPushButton("Generate")
+        self.label_9_0 = QLabel("Show transaction hash for tx.signed file:")
+        self.input_10_0 = QPlainTextEdit()
+        self.button_10_1 = QPushButton("Show")
 
         # Action functions
         self.comboBox_2_0.addItems(["", "mainnet", "testnet"])
@@ -58,7 +59,7 @@ class Query(QWidget):
         self.button_4_1.clicked.connect(self.set_address)
         self.button_6_1.clicked.connect(self.query_address_funds)
         self.button_8_1.clicked.connect(self.query_net)
-        self.button_10_1.clicked.connect(self.generate_protocol_params_file)
+        self.button_10_1.clicked.connect(self.show_transaction)
 
         # Set label fonts 
         labels = [self.label_0_0, self.label_1_0,
@@ -70,10 +71,7 @@ class Query(QWidget):
             label.setFont(font)
 
         # Set lineEdit size 
-        inputs = [self.input_4_0, self.input_6_0,
-                  self.input_8_0, self.input_10_0] 
-        for input in inputs:
-            input.setFixedSize(500, 30)
+        self.input_4_0.setFixedSize(500, 30)
 
         # Set plainTextEdit properties
         consolas_font = QFont()
@@ -86,10 +84,15 @@ class Query(QWidget):
                          "--------------------------------------------------------------------------------------------"
         self.input_6_0.setPlainText(self.init_text)
 
-        self.input_8_0.setFixedSize(500,140) 
+        self.input_8_0.setFixedSize(500,110) 
         self.input_8_0.setFont(consolas_font)
         self.input_8_0.setLineWrapMode(QPlainTextEdit.LineWrapMode.NoWrap) 
         self.input_8_0.setPlainText("")
+
+        self.input_10_0.setFixedSize(500,60) 
+        #self.input_10_0.setFont(consolas_font)
+        self.input_10_0.setLineWrapMode(QPlainTextEdit.LineWrapMode.NoWrap) 
+        self.input_10_0.setPlainText("")
 
         # Set button size 
         self.button_6_1.setFixedSize(80,30)
@@ -223,54 +226,30 @@ class Query(QWidget):
                 QMessageBox.warning(self, "Notification:", msg,
                                     QMessageBox.Close)
 
-    def generate_protocol_params_file(self):
-        if self.net == "":
-            msg = "Select option mainnet or testnet."    
+    def show_transaction(self):
+        tx_signed_path = settings.folder_path + "/" + "tx.signed"
+        tx_signed_exists = os.path.isfile(tx_signed_path)
+
+        if not tx_signed_exists:
+            msg = "tx.signed file does not exists.\n" + \
+                  "Please submit first a transaction." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
 
-        if self.net == "mainnet": 
-            net_part =  "--mainnet "
-        elif self.net == "testnet":
-            net_part = "--testnet-magic " + settings.testnet_magic + " "
-        
-        file_number_count = 0
-        while(True):
-            if file_number_count == 0:
-                prepend_num = ""
-            else:
-                prepend_num = str(file_number_count)
+        command = "cardano-cli transaction txid --tx-file tx.signed"
+
+        try:
+            response = subprocess.Popen(command.split(), stdout=subprocess.PIPE, cwd=settings.folder_path) 
+            # time.spleep(1) 
+            output = response.communicate()[0].decode("utf-8")
+            self.input_10_0.setPlainText("https://preview.cardanoscan.io/transaction/\n" + output)
+        except Exception:
+            output = traceback.format_exc()
+            common_functions.log_error_msg(output)
             
-            pp_file_name = "protocol" + prepend_num + ".json"
-            pp_file_path = settings.folder_path + "/" + pp_file_name
-            pp_file_exists = os.path.isfile(pp_file_path)
-            
-            if not pp_file_exists:
-                self.pp_file_name = pp_file_name
-                break
-
-            file_number_count += 1
-
-        command = "cardano-cli query protocol-parameters " + \
-                  net_part + \
-                  "--out-file " + self.pp_file_name 
-
-        if settings.debug_mode:
-            print("Command below is defined in py-files/query.py line 255:")
-            print(common_functions.format_command(command) + "\n")
-        else:
-            try:
-                subprocess.Popen(command.split(), cwd=settings.folder_path) 
-                self.input_10_0.setText(self.pp_file_name)
-                msg = "Protocol parameters file successfully generated." 
-                QMessageBox.information(self, "Notification:", msg)
-            except Exception:
-                output = traceback.format_exc()
-                common_functions.log_error_msg(output)
-                
-                msg = "Address could not be querried.\n" + \
-                      "Check if cardano node is running and is synced.\n" + \
-                      "Look at the error.log file for error output."                    
-                QMessageBox.warning(self, "Notification:", msg,
-                                    QMessageBox.Close)   
+            msg = "Signed transaction could not be querried.\n" + \
+                  "Check if cardano node is running and is synced.\n" + \
+                  "Look at the error.log file for error output." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
