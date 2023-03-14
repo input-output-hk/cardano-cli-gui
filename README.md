@@ -16,9 +16,9 @@ python cardano-cli-gui.py
 ```
 
 **IMPORTANT:** To use the *query* and *send* command in the GUI a cardano node has to be 
-running and synced to the test or main network. You will know that the node is synced once
-you will see in your terminal output the statements *Chain extended, new tip:* being displayed 
-every 10 to 30 seconds.
+running and synced to the test or main network. You can check how much the node is synced 
+if you go to the Query tab of the GUI, select mainnet or testnet and press the *Query info*
+button. If you then scroll down in the text box you will see the field *syncProgress*. 
 
 To run a cardano node download it from [here](https://github.com/input-output-hk/cardano-node/releases) 
 and install it. Then download the configurations files for the Preview testnet from 
