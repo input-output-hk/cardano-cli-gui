@@ -713,65 +713,61 @@ class Transactions(QWidget):
         self.label_1_0 = QLabel("Type in your address name (will be also used as change address):")
         self.input_2_0 = QLineEdit()
         self.button_2_1 = QPushButton("Set")
-        self.label_3_0 = QLabel("Type in your signing key name:")
-        self.input_4_0 = QLineEdit()
-        self.button_4_1 = QPushButton("Set")
+        self.label_3_0 = QLabel("Select mainnet or testnet:")
+        self.comboBox_4_0 = QComboBox()
         self.label_5_0 = QLabel("Funds for above payment address:")
         self.input_6_0 = QPlainTextEdit()
         self.button_6_1 = QPushButton("Querry\nfunds")
-        self.label_7_0 = QLabel("Select mainnet or testnet:")
-        self.comboBox_8_0 = QComboBox()
 
         # Widget actions for payment address section
         self.button_2_1.clicked.connect(self.set_address_name)
-        self.button_4_1.clicked.connect(self.set_skey_name)
         self.button_6_1.clicked.connect(self.querry_address_funds)
-
-        self.comboBox_8_0.addItems(["", "mainnet", "testnet"])
-        self.comboBox_8_0.currentTextChanged.connect(self.set_net)
+        self.comboBox_4_0.addItems(["", "mainnet", "testnet"])
+        self.comboBox_4_0.currentTextChanged.connect(self.set_net)
 
         # Widgets for sending funds section 
-        self.label_9_0 = QLabel("Send amount (seperat decimal number with dot):")
-        self.radioButton_9_1 = QRadioButton("Ada")
+        self.label_7_0 = QLabel("Send amount (seperat decimal number with dot):")
+        self.radioButton_7_1 = QRadioButton("Ada")
+        self.input_8_0 = QLineEdit()
+        self.radioButton_8_1 = QRadioButton("Lovelace")
+        self.label_9_0 = QLabel("Input receiving address name:")
         self.input_10_0 = QLineEdit()
-        self.radioButton_10_1 = QRadioButton("Lovelace")
-        self.label_11_0 = QLabel("Current era parameter set to:")
-        self.label_12_0 = QLabel(current_era)
-        self.label_13_0 = QLabel("Input UTxO address:")
+        self.button_10_1 = QPushButton("Set")
+        self.label_11_0 = QLabel("Input UTxO from sending address:")
+        self.input_12_0 = QLineEdit()
+        self.button_12_1 = QPushButton("Set")
+        self.label_13_0 = QLabel("Type in your signing key name:")
         self.input_14_0 = QLineEdit()
         self.button_14_1 = QPushButton("Set")
-        self.label_15_0 = QLabel("Input receiving address name:")
-        self.input_16_0 = QLineEdit()
-        self.button_16_1 = QPushButton("Set")
-        self.button_18_0 = QPushButton("Send")
-        self.button_18_1 = QPushButton("Set all")
+        self.button_16_0 = QPushButton("Send")
+        self.button_16_1 = QPushButton("Set all")
 
         # Widget actions for sending funds section 
-        self.button_14_1.clicked.connect(self.set_utxo)
-        self.button_16_1.clicked.connect(self.set_receiving_address)
-        self.button_18_0.clicked.connect(self.send_funds)
-        self.button_18_1.clicked.connect(self.set_all)
+        self.button_10_1.clicked.connect(self.set_receiving_address)
+        self.button_12_1.clicked.connect(self.set_utxo)
+        self.button_14_1.clicked.connect(self.set_skey_name)
+        self.button_16_0.clicked.connect(self.send_funds)
+        self.button_16_1.clicked.connect(self.set_all)
 
         # Set label fonts 
         labels = [self.label_0_0, self.label_1_0, 
                   self.label_3_0, self.label_5_0,
                   self.label_7_0, self.label_9_0, 
-                  self.label_11_0, self.label_12_0,
-                  self.label_13_0, self.label_15_0]
+                  self.label_11_0, self.label_13_0]
         for label in labels:
             font = label.font()
             font.setPointSize(12)
             label.setFont(font)
 
         # Set lineEdit sizes 
-        inputs = [self.input_2_0, self.input_4_0, 
-                  self.input_6_0, self.input_10_0,
-                  self.input_14_0, self.input_16_0]
+        inputs = [self.input_2_0, self.input_6_0, 
+                  self.input_8_0, self.input_10_0,
+                  self.input_12_0, self.input_14_0]
         for input in inputs:
             input.setFixedSize(500,30)
 
         # Set plainTextEdit properties
-        self.input_6_0.setFixedSize(500,80) 
+        self.input_6_0.setFixedSize(500,160) 
         consolas_font = QFont()
         consolas_font.setFamily("Consolas")
         self.input_6_0.setFont(consolas_font)
@@ -786,14 +782,14 @@ class Transactions(QWidget):
                          "--------------------------------------------------------------------------------------------"
         self.input_6_0.setPlainText(self.init_text)
 
-        # Set button sizes         
+        # Set button sizes      
         self.button_2_1.setFixedSize(80,30)
-        self.button_4_1.setFixedSize(80,30)
         self.button_6_1.setFixedSize(80,60)
+        self.button_10_1.setFixedSize(80,30)
+        self.button_12_1.setFixedSize(80,30)
         self.button_14_1.setFixedSize(80,30)
+        self.button_16_0.setFixedSize(160,30)
         self.button_16_1.setFixedSize(80,30)
-        self.button_18_0.setFixedSize(160,30)
-        self.button_18_1.setFixedSize(80,30)
 
         # Space between the sections
         self.emptyLabel = QLabel()
@@ -808,31 +804,27 @@ class Transactions(QWidget):
         layout.addWidget(self.input_2_0, 2, 0)
         layout.addWidget(self.button_2_1, 2, 1)
         layout.addWidget(self.label_3_0, 3, 0)
-        layout.addWidget(self.input_4_0, 4, 0)
-        layout.addWidget(self.button_4_1, 4, 1)
+        layout.addWidget(self.comboBox_4_0, 4, 0)
         layout.addWidget(self.label_5_0, 5, 0)
         layout.addWidget(self.input_6_0, 6, 0)
         layout.addWidget(self.button_6_1, 6, 1)
-        layout.addWidget(self.label_7_0, 7, 0)
-        layout.addWidget(self.comboBox_8_0, 8, 0)
-        layout.addWidget(self.emptyLabel, 7, 0)
-        layout.addWidget(self.emptyLabel, 8, 0)
         # Adding widgets for payment address section 
-        layout.addWidget(self.label_9_0, 9, 0)
-        layout.addWidget(self.radioButton_9_1, 9, 1)
-        layout.addWidget(self.input_10_0, 10, 0)
-        layout.addWidget(self.radioButton_10_1, 10, 1)
-        layout.addWidget(self.label_11_0, 11, 0)
-        layout.addWidget(self.label_12_0, 12, 0)
-        layout.addWidget(self.label_13_0, 13, 0)
-        layout.addWidget(self.input_14_0, 14, 0)
-        layout.addWidget(self.button_14_1, 14, 1)
-        layout.addWidget(self.label_15_0, 15, 0)
-        layout.addWidget(self.input_16_0, 16, 0)
-        layout.addWidget(self.button_16_1, 16, 1)
+        layout.addWidget(self.label_7_0, 9, 0)
+        layout.addWidget(self.radioButton_7_1, 9, 1)
+        layout.addWidget(self.input_8_0, 10, 0)
+        layout.addWidget(self.radioButton_8_1, 10, 1)
+        layout.addWidget(self.label_9_0, 11, 0)
+        layout.addWidget(self.input_10_0, 12, 0)
+        layout.addWidget(self.button_10_1, 12, 1)
+        layout.addWidget(self.label_11_0, 13, 0)
+        layout.addWidget(self.input_12_0, 14, 0)
+        layout.addWidget(self.button_12_1, 14, 1)
+        layout.addWidget(self.label_13_0, 15, 0)
+        layout.addWidget(self.input_14_0, 16, 0)
+        layout.addWidget(self.button_14_1, 16, 1)
         layout.addWidget(self.emptyLabel, 17, 0)
-        layout.addWidget(self.button_18_0, 18, 0)
-        layout.addWidget(self.button_18_1, 18, 1)
+        layout.addWidget(self.button_16_0, 18, 0)
+        layout.addWidget(self.button_16_1, 18, 1)
         layout.addWidget(self.emptyLabel, 19, 0)
 
         self.setLayout(layout)
@@ -862,29 +854,9 @@ class Transactions(QWidget):
         msg = "Address file successfully set."  
         QMessageBox.information(self, "Notification:", msg)
 
-    def set_skey_name(self):
+    def set_net(self, selected_net):
         global folder_path, debug_mode, testnet_magic 
-        skey_name = self.input_4_0.text()
-        skey_path = folder_path + "/" + skey_name
-        skey_exists = os.path.isfile(skey_path)
-        
-        if not (".skey" in skey_name):
-            msg = "Signing key has to have a .skey file extension name.\n" + \
-                  "Please type in a file name with a .skey extension." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
-
-        if not skey_exists:
-            msg = "Signing key file does not exists.\n" + \
-                  "Please enter a valid file name."  
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close) 
-            return None
-
-        self.skey_name = skey_name
-        msg = "Signing key file successfully set."  
-        QMessageBox.information(self, "Notification:", msg)
+        self.net = selected_net 
 
     def querry_address_funds(self):
         global folder_path, debug_mode, testnet_magic 
@@ -911,7 +883,7 @@ class Transactions(QWidget):
                   net_part 
         
         if debug_mode:
-            print("Command below is defined in py-files/transactions.py line 232:")
+            print("Command below is defined in py-files/transactions.py line 224:")
             print(format_command(command) + "\n")
         else:
             try:
@@ -928,35 +900,9 @@ class Transactions(QWidget):
                 QMessageBox.warning(self, "Notification:", msg,
                                     QMessageBox.Close)
 
-    def set_net(self, selected_net):
-        global folder_path, debug_mode, testnet_magic 
-        self.net = selected_net 
-
-    def set_utxo(self):
-        global folder_path, debug_mode, testnet_magic 
-        utxo_input = self.input_14_0.text()
-        if not ("#" in utxo_input):
-            msg = "UTxO transaction input has to contain # sign and transaction index." + \
-                  "Please enter a valid transaction input." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
-
-        trans_hash = utxo_input.split("#")[0]
-        if len(trans_hash) != 64:
-            msg = "UTxO transaction hash has to be 64 characters long." + \
-                  "Please enter a valid transaction hash." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
-
-        self.utxo = utxo_input 
-        msg = "UTxO address successfully set." 
-        QMessageBox.information(self, "Notification:", msg)
-
     def set_receiving_address(self):
         global folder_path, debug_mode, testnet_magic 
-        receiving_address_name = self.input_16_0.text()
+        receiving_address_name = self.input_10_0.text()
         receiving_address_path = folder_path + "/" + receiving_address_name
         receiving_address_exists = os.path.isfile(receiving_address_path)
         
@@ -977,6 +923,52 @@ class Transactions(QWidget):
         with open(receiving_address_path, "r") as file:
             self.receiving_address = file.read()
         msg = "Receiving address file successfully set."  
+        QMessageBox.information(self, "Notification:", msg)
+
+    def set_utxo(self):
+        global folder_path, debug_mode, testnet_magic 
+        utxo_input = self.input_12_0.text()
+        if not ("#" in utxo_input):
+            msg = "UTxO transaction input has to contain # sign and transaction index." + \
+                  "Please enter a valid transaction input." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        trans_hash = utxo_input.split("#")[0]
+        if len(trans_hash) != 64:
+            msg = "UTxO transaction hash has to be 64 characters long." + \
+                  "Please enter a valid transaction hash." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        self.utxo = utxo_input 
+        msg = "UTxO address successfully set." 
+        QMessageBox.information(self, "Notification:", msg)
+
+    def set_skey_name(self):
+        global folder_path, debug_mode, testnet_magic 
+        skey_name = self.input_14_0.text()
+        skey_path = folder_path + "/" + skey_name
+        skey_exists = os.path.isfile(skey_path)
+        
+        if not (".skey" in skey_name):
+            msg = "Signing key has to have a .skey file extension name.\n" + \
+                  "Please type in a file name with a .skey extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        if not skey_exists:
+            msg = "Signing key file does not exists.\n" + \
+                  "Please enter a valid file name."  
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close) 
+            return None
+
+        self.skey_name = skey_name
+        msg = "Signing key file successfully set."  
         QMessageBox.information(self, "Notification:", msg)
 
     def set_all(self):
@@ -1006,8 +998,8 @@ class Transactions(QWidget):
                                 QMessageBox.Close)
             return None
 
-        is_ada = self.radioButton_9_1.isChecked()
-        is_lovelace = self.radioButton_10_1.isChecked()
+        is_ada = self.radioButton_7_1.isChecked()
+        is_lovelace = self.radioButton_8_1.isChecked() 
 
         if (not is_ada) and (not is_lovelace):
             msg = "Select option ada or lovelace."    
@@ -1020,10 +1012,10 @@ class Transactions(QWidget):
         elif is_lovelace: 
             currency = "Lovelace"
         
-        amount_text = self.input_10_0.text() 
+        amount_text = self.input_8_0.text() 
         amount_in_lovelace = parse_amount(amount_text, currency)
 
-        if amount_in_lovelace == -1:
+        if amount_in_lovelace == -1: 
             msg = "The specified amount in " + currency + " is not a valid input.\n" + \
                   "Amount in ADA can have max 6 decimal numbers.\n" + \
                   "Spaces and characters are not allowed." 
@@ -1095,9 +1087,9 @@ class Transactions(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/transactions.py line 386:"
-        debug_msg_sign = "Command below is defined in py-files/transactions.py line 399:"
-        debug_msg_submit = "Command below is defined in py-files/transactions.py line 405:" 
+        debug_msg_build = "Command below is defined in py-files/transactions.py line 378:"
+        debug_msg_sign = "Command below is defined in py-files/transactions.py line 391:"
+        debug_msg_submit = "Command below is defined in py-files/transactions.py line 397:" 
                     
         manage_command(command_build_processed, msg_build, debug_msg_build)
         time.sleep(1)
@@ -2285,9 +2277,9 @@ class Smart_contracts_receive(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/smart_contracts_receive.py line 557:" 
-        debug_msg_sign = "Command below is defined in py-files/smart_contracts_receive.py line 571:" 
-        debug_msg_submit = "Command below is defined in py-files/smart_contracts_receive.py line 577:" 
+        debug_msg_build = "Command below is defined in py-files/smart_contracts_receive.py line 573:" 
+        debug_msg_sign = "Command below is defined in py-files/smart_contracts_receive.py line 587:" 
+        debug_msg_submit = "Command below is defined in py-files/smart_contracts_receive.py line 593:" 
                     
         manage_command(command_build, msg_build, debug_msg_build)
         time.sleep(1)
@@ -2312,8 +2304,7 @@ class Query(QWidget):
         self.address = ""
 
         # Header text 
-        self.label_0_0 = QLabel("Query the blockchain for parameters and funds.\n" + \
-                                "Generate protocol parameter file for an anddress.")
+        self.label_0_0 = QLabel("Query the blockchain for funds and parameters.")
 
         # Cardano picture
 
@@ -2349,10 +2340,10 @@ class Query(QWidget):
         self.input_8_0 = QPlainTextEdit()
         self.button_8_1 = QPushButton("Querry\ninfo")
 
-        # Widgets for protocol parameters file section
-        self.label_9_0 = QLabel("Generate protocol parameters file:")
-        self.input_10_0 = QLineEdit("")
-        self.button_10_1 = QPushButton("Generate")
+        # Widgets for transaction hash section
+        self.label_9_0 = QLabel("Show transaction hash for tx.signed file:")
+        self.input_10_0 = QPlainTextEdit()
+        self.button_10_1 = QPushButton("Show")
 
         # Action functions
         self.comboBox_2_0.addItems(["", "mainnet", "testnet"])
@@ -2361,7 +2352,7 @@ class Query(QWidget):
         self.button_4_1.clicked.connect(self.set_address)
         self.button_6_1.clicked.connect(self.query_address_funds)
         self.button_8_1.clicked.connect(self.query_net)
-        self.button_10_1.clicked.connect(self.generate_protocol_params_file)
+        self.button_10_1.clicked.connect(self.show_transaction)
 
         # Set label fonts 
         labels = [self.label_0_0, self.label_1_0,
@@ -2373,10 +2364,7 @@ class Query(QWidget):
             label.setFont(font)
 
         # Set lineEdit size 
-        inputs = [self.input_4_0, self.input_6_0,
-                  self.input_8_0, self.input_10_0] 
-        for input in inputs:
-            input.setFixedSize(500, 30)
+        self.input_4_0.setFixedSize(500, 30)
 
         # Set plainTextEdit properties
         consolas_font = QFont()
@@ -2389,10 +2377,14 @@ class Query(QWidget):
                          "--------------------------------------------------------------------------------------------"
         self.input_6_0.setPlainText(self.init_text)
 
-        self.input_8_0.setFixedSize(500,140) 
+        self.input_8_0.setFixedSize(500,110) 
         self.input_8_0.setFont(consolas_font)
         self.input_8_0.setLineWrapMode(QPlainTextEdit.LineWrapMode.NoWrap) 
         self.input_8_0.setPlainText("")
+
+        self.input_10_0.setFixedSize(500,60) 
+        self.input_10_0.setLineWrapMode(QPlainTextEdit.LineWrapMode.NoWrap) 
+        self.input_10_0.setPlainText("")
 
         # Set button size 
         self.button_6_1.setFixedSize(80,30)
@@ -2479,7 +2471,7 @@ class Query(QWidget):
                   net_part 
         
         if debug_mode:
-            print("Command below is defined in py-files/query.py line 171:")
+            print("Command below is defined in py-files/query.py line 172:")
             print(format_command(command) + "\n")
         else:
             try:
@@ -2513,7 +2505,7 @@ class Query(QWidget):
                   net_part 
         
         if debug_mode:
-            print("Command below is defined in py-files/query.py line 205:")
+            print("Command below is defined in py-files/query.py line 206:")
             print(format_command(command) + "\n")
         else:
             try:
@@ -2529,6 +2521,192 @@ class Query(QWidget):
                       "Look at the error.log file for error output." 
                 QMessageBox.warning(self, "Notification:", msg,
                                     QMessageBox.Close)
+
+    def show_transaction(self):
+        global folder_path, debug_mode, testnet_magic 
+        tx_signed_path = folder_path + "/" + "tx.signed"
+        tx_signed_exists = os.path.isfile(tx_signed_path)
+
+        if not tx_signed_exists:
+            msg = "tx.signed file does not exists.\n" + \
+                  "Please submit first a transaction." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        command = "cardano-cli transaction txid --tx-file tx.signed"
+
+        if debug_mode:
+            print("Command below is defined in py-files/query.py line 238:")
+            print(format_command(command) + "\n") 
+        else:
+            try:
+                response = subprocess.Popen(command.split(), stdout=subprocess.PIPE, cwd=folder_path) 
+                output = response.communicate()[0].decode("utf-8")
+                self.input_10_0.setPlainText("https://preview.cardanoscan.io/transaction/\n" + output)
+            except Exception:
+                output = traceback.format_exc()
+                log_error_msg(output)
+                
+                msg = "Signed transaction could not be querried.\n" + \
+                      "Check if cardano node is running and is synced.\n" + \
+                      "Look at the error.log file for error output." 
+                QMessageBox.warning(self, "Notification:", msg,
+                                    QMessageBox.Close)
+
+class Developer(QWidget):
+    def __init__(self):
+        global folder_path, debug_mode, testnet_magic 
+        super().__init__()
+
+        self.net = ""
+
+        # Header text 
+        self.label_1_0 = QLabel("Manage advenced  Only for experienced developers.\n" + \
+                                "If you are not sure keep default parameter values.")
+
+        # Cardano picture
+
+        # Load byte data
+        byte_data = base64.b64decode(cardano_picture)
+        image_data = BytesIO(byte_data)
+        image = Image.open(image_data)
+
+        # PIL to QPixmap
+        qImage = ImageQt.ImageQt(image)
+        image = QPixmap.fromImage(qImage)
+
+        # QPixmap to QLabel        
+        picture_1_1 = QLabel("")
+        picture_1_1.setPixmap(image)
+        picture_1_1.setFixedSize(80,80)
+        picture_1_1.setScaledContents(True)
+
+        # Widgets for testnet magic section 
+        self.label_3_0 = QLabel("Input testnet magic number:")
+        self.input_4_0 = QLineEdit()
+        self.button_4_1 = QPushButton("Set")
+        self.label_5_0 = QLabel("Current testnet magic set to: " + testnet_magic)
+
+        # Widgets for era section
+        self.label_6_0 = QLabel("Input era:")
+        self.input_7_0 = QLineEdit()
+        self.button_7_1 = QPushButton("Set")
+        self.label_8_0 = QLabel("Current era set to: " + current_era)
+
+        # Widgets for default value section
+        self.label_9_0 = QLabel("Reset parameters to default values:")
+        self.button_10_0 = QPushButton("Reset")
+
+        # Widgets for generating protocol parameters file
+        self.label_12_0 = QLabel("Select mainnet or testnet:")
+        self.comboBox_13_0 = QComboBox()
+        self.label_14_0 = QLabel("Generate protocol parameters file:")
+        self.input_15_0 = QLineEdit("")
+        self.button_15_1 = QPushButton("Generate")
+
+        # Button and combobox functions
+        self.button_4_1.clicked.connect(self.set_magic)
+        self.button_7_1.clicked.connect(self.set_era)
+        self.button_10_0.clicked.connect(self.reset_values)
+        self.button_15_1.clicked.connect(self.generate_protocol_params_file)
+
+        self.comboBox_13_0.addItems(["", "mainnet", "testnet"])
+        self.comboBox_13_0.currentTextChanged.connect(self.set_net)
+
+        # Set label fonts 
+        labels = [self.label_1_0, self.label_3_0, 
+                  self.label_5_0, self.label_6_0, 
+                  self.label_8_0, self.label_9_0,
+                  self.label_12_0, self.label_14_0]
+        for label in labels:
+            font = label.font()
+            font.setPointSize(12)
+            label.setFont(font)
+
+        # Set lineEdit size 
+        self.input_4_0.setFixedSize(500,30)
+        self.input_7_0.setFixedSize(500,30)
+        self.input_15_0.setFixedSize(500,30)
+
+        # Set button size 
+        self.button_4_1.setFixedSize(80,30)
+        self.button_7_1.setFixedSize(80,30)
+        self.button_10_0.setFixedSize(160,30)
+        self.button_15_1.setFixedSize(80,30)
+
+        # Space between the sections
+        emptyLabel = QLabel()
+
+        # Layouts 
+        layout = QGridLayout()
+        layout.addWidget(emptyLabel, 0, 0)
+        layout.addWidget(self.label_1_0, 1, 0)
+        layout.addWidget(picture_1_1, 1, 1)
+        layout.addWidget(emptyLabel, 2, 0)
+        layout.addWidget(self.label_3_0, 3, 0)
+        layout.addWidget(self.input_4_0, 4, 0)
+        layout.addWidget(self.button_4_1, 4, 1)
+        layout.addWidget(self.label_5_0, 5, 0)
+        layout.addWidget(self.label_6_0, 6, 0)
+        layout.addWidget(self.input_7_0, 7, 0)
+        layout.addWidget(self.button_7_1, 7, 1)
+        layout.addWidget(self.label_8_0, 8, 0)
+        layout.addWidget(self.label_9_0, 9, 0)
+        layout.addWidget(self.button_10_0, 10, 0)
+        layout.addWidget(emptyLabel, 11, 0)
+        layout.addWidget(self.label_12_0, 12, 0)
+        layout.addWidget(self.comboBox_13_0, 13, 0)
+        layout.addWidget(self.label_14_0, 14, 0)
+        layout.addWidget(self.input_15_0, 15, 0)
+        layout.addWidget(self.button_15_1, 15, 1)
+        layout.addWidget(emptyLabel, 16, 0)
+        self.setLayout(layout)
+
+    # Functions for setting global variables
+    def set_magic(self):
+        global folder_path, debug_mode, testnet_magic 
+        input_magic = self.input_4_0.text()
+        if not input_magic.isdigit():
+            msg = "Testnet magic number should contain only digits."        
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+        else:
+            testnet_magic = input_magic
+            self.label_5_0.setText("Current testnet magic set to: " + testnet_magic)
+            msg = "Testnet magic number successfully set."  
+            QMessageBox.information(self, "Notification:", msg) 
+        
+
+    def set_era(self):
+        global folder_path, debug_mode, testnet_magic 
+        input_era = self.input_7_0.text()
+        if input_era == "":
+            msg = "Era can not be an empty string."        
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+        else:
+            current_era = input_era
+            self.label_8_0.setText("Current era set to: " + current_era) 
+            msg = "Era successfully set."  
+            QMessageBox.information(self, "Notification:", msg) 
+
+    def reset_values(self):
+        global folder_path, debug_mode, testnet_magic 
+        testnet_magic = "2"
+        self.input_4_0.setText("")
+        self.label_5_0.setText("Current testnet magic set to: " + testnet_magic)
+        
+        current_era = "babbage-era"
+        self.input_7_0.setText("")
+        self.label_8_0.setText("Current era set to: " + current_era)   
+
+        msg = "Default values successfully restored."  
+        QMessageBox.information(self, "Notification:", msg) 
+
+    def set_net(self, selected_net):
+        global folder_path, debug_mode, testnet_magic 
+        self.net = selected_net 
 
     def generate_protocol_params_file(self):
         global folder_path, debug_mode, testnet_magic 
@@ -2565,157 +2743,23 @@ class Query(QWidget):
                   "--out-file " + self.pp_file_name 
 
         if debug_mode:
-            print("Command below is defined in py-files/query.py line 255:")
+            print("Command below is defined in py-files/developer.py line 182:")
             print(format_command(command) + "\n")
         else:
             try:
                 subprocess.Popen(command.split(), cwd=folder_path) 
-                self.input_10_0.setText(self.pp_file_name)
+                self.input_15_0.setText(self.pp_file_name)
                 msg = "Protocol parameters file successfully generated." 
                 QMessageBox.information(self, "Notification:", msg)
             except Exception:
                 output = traceback.format_exc()
                 log_error_msg(output)
                 
-                msg = "Address could not be querried.\n" + \
+                msg = "Protocol parameters file could not be generated.\n" + \
                       "Check if cardano node is running and is synced.\n" + \
-                      "Look at the error.log file for error output."                    
+                      "Look at the error.log file for error output." 
                 QMessageBox.warning(self, "Notification:", msg,
-                                    QMessageBox.Close)   
-
-class Developer(QWidget):
-    def __init__(self):
-        global folder_path, debug_mode, testnet_magic 
-        super().__init__()
-
-        # Header text 
-        label_1_0 = QLabel("Manage advenced  Only for experienced developers.\n" + \
-                           "If you are not sure keep default parameter values.")
-
-        # Cardano picture
-
-        # Load byte data
-        byte_data = base64.b64decode(cardano_picture)
-        image_data = BytesIO(byte_data)
-        image = Image.open(image_data)
-
-        # PIL to QPixmap
-        qImage = ImageQt.ImageQt(image)
-        image = QPixmap.fromImage(qImage)
-
-        # QPixmap to QLabel        
-        picture_1_1 = QLabel("")
-        picture_1_1.setPixmap(image)
-        picture_1_1.setFixedSize(80,80)
-        picture_1_1.setScaledContents(True)
-
-        # Widgets for testnet magic section 
-        label_3_0 = QLabel("Input testnet magic number:")
-        self.input_4_0 = QLineEdit()
-        button_4_1 = QPushButton("Set")
-        self.label_5_0 = QLabel("Current testnet magic set to: " + testnet_magic)
-
-        # Widgets for era section
-        label_8_0 = QLabel("Input era:")
-        self.input_9_0 = QLineEdit()
-        button_9_1 = QPushButton("Set")
-        self.label_10_0 = QLabel("Current era set to: " + current_era)
-
-        # Widgets for default value section
-        label_13_0 = QLabel("Reset parameters to default values:")
-        button_14_0 = QPushButton("Reset")
-
-        # Button functions
-        button_4_1.clicked.connect(self.set_magic)
-        button_9_1.clicked.connect(self.set_era)
-        button_14_0.clicked.connect(self.reset_values)
-
-        # Set label fonts 
-        labels = [label_1_0, label_3_0, 
-                  self.label_5_0, label_8_0, 
-                  self.label_10_0, label_13_0]
-        for label in labels:
-            font = label.font()
-            font.setPointSize(12)
-            label.setFont(font)
-
-        # Set lineEdit size 
-        self.input_4_0.setFixedSize(500,30)
-        self.input_9_0.setFixedSize(500,30)
-
-        # Set button size 
-        button_4_1.setFixedSize(80,30)
-        button_9_1.setFixedSize(80,30)
-        button_14_0.setFixedSize(160,30)
-
-        # Space between the sections
-        emptyLabel = QLabel()
-
-        # Layouts 
-        layout = QGridLayout()
-        layout.addWidget(emptyLabel, 0, 0)
-        layout.addWidget(label_1_0, 1, 0)
-        layout.addWidget(picture_1_1, 1, 1)
-        layout.addWidget(emptyLabel, 2, 0)
-        layout.addWidget(label_3_0, 3, 0)
-        layout.addWidget(self.input_4_0, 4, 0)
-        layout.addWidget(button_4_1, 4, 1)
-        layout.addWidget(self.label_5_0, 5, 0)
-        layout.addWidget(emptyLabel, 6, 0)
-        layout.addWidget(emptyLabel, 7, 0)
-        layout.addWidget(label_8_0, 8, 0)
-        layout.addWidget(self.input_9_0, 9, 0)
-        layout.addWidget(button_9_1, 9, 1)
-        layout.addWidget(self.label_10_0, 10, 0)
-        layout.addWidget(emptyLabel, 11, 0)
-        layout.addWidget(emptyLabel, 12, 0)
-        layout.addWidget(label_13_0, 13, 0)
-        layout.addWidget(button_14_0, 14, 0)
-        layout.addWidget(emptyLabel, 15, 0)
-        layout.addWidget(emptyLabel, 16, 0)
-
-        self.setLayout(layout)
-
-    # Functions for setting global variables
-    def set_magic(self):
-        global folder_path, debug_mode, testnet_magic 
-        input_magic = self.input_4_0.text()
-        if not input_magic.isdigit():
-            msg = "Testnet magic number should contain only digits."        
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-        else:
-            testnet_magic = input_magic
-            self.label_5_0.setText("Current testnet magic set to: " + testnet_magic)
-            msg = "Testnet magic number successfully set."  
-            QMessageBox.information(self, "Notification:", msg) 
-        
-
-    def set_era(self):
-        global folder_path, debug_mode, testnet_magic 
-        input_era = self.input_9_0.text()
-        if input_era == "":
-            msg = "Era can not be an empty string."        
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-        else:
-            current_era = input_era
-            self.label_10_0.setText("Current era set to: " + current_era) 
-            msg = "Era successfully set."  
-            QMessageBox.information(self, "Notification:", msg) 
-
-    def reset_values(self):
-        global folder_path, debug_mode, testnet_magic 
-        testnet_magic = "2"
-        self.input_4_0.setText("")
-        self.label_5_0.setText("Current testnet magic set to: " + testnet_magic)
-        
-        current_era = "babbage-era"
-        self.input_9_0.setText("")
-        self.label_10_0.setText("Current era set to: " + current_era)   
-
-        msg = "Default values successfully restored."  
-        QMessageBox.information(self, "Notification:", msg)   
+                                    QMessageBox.Close)  
 
 # Writes an error message to a log file# Writes an error message to a log file 
 def log_error_msg(output):
