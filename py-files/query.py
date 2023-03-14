@@ -20,8 +20,7 @@ class Query(QWidget):
         self.address = ""
 
         # Header text 
-        self.label_0_0 = QLabel("Query the blockchain for parameters and funds.\n" + \
-                                "Generate protocol parameter file for an anddress.")
+        self.label_0_0 = QLabel("Query the blockchain for funds and parameters.")
 
         # Cardano picture
         picture_0_1 = QLabel("")

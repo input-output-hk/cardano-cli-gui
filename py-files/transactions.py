@@ -39,65 +39,61 @@ class Transactions(QWidget):
         self.label_1_0 = QLabel("Type in your address name (will be also used as change address):")
         self.input_2_0 = QLineEdit()
         self.button_2_1 = QPushButton("Set")
-        self.label_3_0 = QLabel("Type in your signing key name:")
-        self.input_4_0 = QLineEdit()
-        self.button_4_1 = QPushButton("Set")
+        self.label_3_0 = QLabel("Select mainnet or testnet:")
+        self.comboBox_4_0 = QComboBox()
         self.label_5_0 = QLabel("Funds for above payment address:")
         self.input_6_0 = QPlainTextEdit()
         self.button_6_1 = QPushButton("Querry\nfunds")
-        self.label_7_0 = QLabel("Select mainnet or testnet:")
-        self.comboBox_8_0 = QComboBox()
 
         # Widget actions for payment address section
         self.button_2_1.clicked.connect(self.set_address_name)
-        self.button_4_1.clicked.connect(self.set_skey_name)
         self.button_6_1.clicked.connect(self.querry_address_funds)
-
-        self.comboBox_8_0.addItems(["", "mainnet", "testnet"])
-        self.comboBox_8_0.currentTextChanged.connect(self.set_net)
+        self.comboBox_4_0.addItems(["", "mainnet", "testnet"])
+        self.comboBox_4_0.currentTextChanged.connect(self.set_net)
 
         # Widgets for sending funds section 
-        self.label_9_0 = QLabel("Send amount (seperat decimal number with dot):")
-        self.radioButton_9_1 = QRadioButton("Ada")
+        self.label_7_0 = QLabel("Send amount (seperat decimal number with dot):")
+        self.radioButton_7_1 = QRadioButton("Ada")
+        self.input_8_0 = QLineEdit()
+        self.radioButton_8_1 = QRadioButton("Lovelace")
+        self.label_9_0 = QLabel("Input receiving address name:")
         self.input_10_0 = QLineEdit()
-        self.radioButton_10_1 = QRadioButton("Lovelace")
-        self.label_11_0 = QLabel("Current era parameter set to:")
-        self.label_12_0 = QLabel(settings.current_era)
-        self.label_13_0 = QLabel("Input UTxO address:")
+        self.button_10_1 = QPushButton("Set")
+        self.label_11_0 = QLabel("Input UTxO from sending address:")
+        self.input_12_0 = QLineEdit()
+        self.button_12_1 = QPushButton("Set")
+        self.label_13_0 = QLabel("Type in your signing key name:")
         self.input_14_0 = QLineEdit()
         self.button_14_1 = QPushButton("Set")
-        self.label_15_0 = QLabel("Input receiving address name:")
-        self.input_16_0 = QLineEdit()
-        self.button_16_1 = QPushButton("Set")
-        self.button_18_0 = QPushButton("Send")
-        self.button_18_1 = QPushButton("Set all")
+        self.button_16_0 = QPushButton("Send")
+        self.button_16_1 = QPushButton("Set all")
 
         # Widget actions for sending funds section 
-        self.button_14_1.clicked.connect(self.set_utxo)
-        self.button_16_1.clicked.connect(self.set_receiving_address)
-        self.button_18_0.clicked.connect(self.send_funds)
-        self.button_18_1.clicked.connect(self.set_all)
+        self.button_10_1.clicked.connect(self.set_receiving_address)
+        self.button_12_1.clicked.connect(self.set_utxo)
+        self.button_14_1.clicked.connect(self.set_skey_name)
+        self.button_16_0.clicked.connect(self.send_funds)
+        self.button_16_1.clicked.connect(self.set_all)
 
         # Set label fonts 
         labels = [self.label_0_0, self.label_1_0, 
                   self.label_3_0, self.label_5_0,
                   self.label_7_0, self.label_9_0, 
-                  self.label_11_0, self.label_12_0,
-                  self.label_13_0, self.label_15_0]
+                  self.label_11_0, self.label_13_0]
         for label in labels:
             font = label.font()
             font.setPointSize(12)
             label.setFont(font)
 
         # Set lineEdit sizes 
-        inputs = [self.input_2_0, self.input_4_0, 
-                  self.input_6_0, self.input_10_0,
-                  self.input_14_0, self.input_16_0]
+        inputs = [self.input_2_0, self.input_6_0, 
+                  self.input_8_0, self.input_10_0,
+                  self.input_12_0, self.input_14_0]
         for input in inputs:
             input.setFixedSize(500,30)
 
         # Set plainTextEdit properties
-        self.input_6_0.setFixedSize(500,80) 
+        self.input_6_0.setFixedSize(500,160) 
         consolas_font = QFont()
         consolas_font.setFamily("Consolas")
         self.input_6_0.setFont(consolas_font)
@@ -112,14 +108,14 @@ class Transactions(QWidget):
                          "--------------------------------------------------------------------------------------------"
         self.input_6_0.setPlainText(self.init_text)
 
-        # Set button sizes         
+        # Set button sizes      
         self.button_2_1.setFixedSize(80,30)
-        self.button_4_1.setFixedSize(80,30)
         self.button_6_1.setFixedSize(80,60)
+        self.button_10_1.setFixedSize(80,30)
+        self.button_12_1.setFixedSize(80,30)
         self.button_14_1.setFixedSize(80,30)
+        self.button_16_0.setFixedSize(160,30)
         self.button_16_1.setFixedSize(80,30)
-        self.button_18_0.setFixedSize(160,30)
-        self.button_18_1.setFixedSize(80,30)
 
         # Space between the sections
         self.emptyLabel = QLabel()
@@ -134,31 +130,27 @@ class Transactions(QWidget):
         layout.addWidget(self.input_2_0, 2, 0)
         layout.addWidget(self.button_2_1, 2, 1)
         layout.addWidget(self.label_3_0, 3, 0)
-        layout.addWidget(self.input_4_0, 4, 0)
-        layout.addWidget(self.button_4_1, 4, 1)
+        layout.addWidget(self.comboBox_4_0, 4, 0)
         layout.addWidget(self.label_5_0, 5, 0)
         layout.addWidget(self.input_6_0, 6, 0)
         layout.addWidget(self.button_6_1, 6, 1)
-        layout.addWidget(self.label_7_0, 7, 0)
-        layout.addWidget(self.comboBox_8_0, 8, 0)
-        layout.addWidget(self.emptyLabel, 7, 0)
-        layout.addWidget(self.emptyLabel, 8, 0)
         # Adding widgets for payment address section 
-        layout.addWidget(self.label_9_0, 9, 0)
-        layout.addWidget(self.radioButton_9_1, 9, 1)
-        layout.addWidget(self.input_10_0, 10, 0)
-        layout.addWidget(self.radioButton_10_1, 10, 1)
-        layout.addWidget(self.label_11_0, 11, 0)
-        layout.addWidget(self.label_12_0, 12, 0)
-        layout.addWidget(self.label_13_0, 13, 0)
-        layout.addWidget(self.input_14_0, 14, 0)
-        layout.addWidget(self.button_14_1, 14, 1)
-        layout.addWidget(self.label_15_0, 15, 0)
-        layout.addWidget(self.input_16_0, 16, 0)
-        layout.addWidget(self.button_16_1, 16, 1)
+        layout.addWidget(self.label_7_0, 9, 0)
+        layout.addWidget(self.radioButton_7_1, 9, 1)
+        layout.addWidget(self.input_8_0, 10, 0)
+        layout.addWidget(self.radioButton_8_1, 10, 1)
+        layout.addWidget(self.label_9_0, 11, 0)
+        layout.addWidget(self.input_10_0, 12, 0)
+        layout.addWidget(self.button_10_1, 12, 1)
+        layout.addWidget(self.label_11_0, 13, 0)
+        layout.addWidget(self.input_12_0, 14, 0)
+        layout.addWidget(self.button_12_1, 14, 1)
+        layout.addWidget(self.label_13_0, 15, 0)
+        layout.addWidget(self.input_14_0, 16, 0)
+        layout.addWidget(self.button_14_1, 16, 1)
         layout.addWidget(self.emptyLabel, 17, 0)
-        layout.addWidget(self.button_18_0, 18, 0)
-        layout.addWidget(self.button_18_1, 18, 1)
+        layout.addWidget(self.button_16_0, 18, 0)
+        layout.addWidget(self.button_16_1, 18, 1)
         layout.addWidget(self.emptyLabel, 19, 0)
 
         self.setLayout(layout)
@@ -187,28 +179,8 @@ class Transactions(QWidget):
         msg = "Address file successfully set."  
         QMessageBox.information(self, "Notification:", msg)
 
-    def set_skey_name(self):
-        skey_name = self.input_4_0.text()
-        skey_path = settings.folder_path + "/" + skey_name
-        skey_exists = os.path.isfile(skey_path)
-        
-        if not (".skey" in skey_name):
-            msg = "Signing key has to have a .skey file extension name.\n" + \
-                  "Please type in a file name with a .skey extension." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
-
-        if not skey_exists:
-            msg = "Signing key file does not exists.\n" + \
-                  "Please enter a valid file name."  
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close) 
-            return None
-
-        self.skey_name = skey_name
-        msg = "Signing key file successfully set."  
-        QMessageBox.information(self, "Notification:", msg)
+    def set_net(self, selected_net):
+        self.net = selected_net 
 
     def querry_address_funds(self):
         if self.address == "":
@@ -234,7 +206,7 @@ class Transactions(QWidget):
                   net_part 
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/transactions.py line 232:")
+            print("Command below is defined in py-files/transactions.py line 224:")
             print(common_functions.format_command(command) + "\n")
         else:
             try:
@@ -251,32 +223,8 @@ class Transactions(QWidget):
                 QMessageBox.warning(self, "Notification:", msg,
                                     QMessageBox.Close)
 
-    def set_net(self, selected_net):
-        self.net = selected_net 
-
-    def set_utxo(self):
-        utxo_input = self.input_14_0.text()
-        if not ("#" in utxo_input):
-            msg = "UTxO transaction input has to contain # sign and transaction index." + \
-                  "Please enter a valid transaction input." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
-
-        trans_hash = utxo_input.split("#")[0]
-        if len(trans_hash) != 64:
-            msg = "UTxO transaction hash has to be 64 characters long." + \
-                  "Please enter a valid transaction hash." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
-
-        self.utxo = utxo_input 
-        msg = "UTxO address successfully set." 
-        QMessageBox.information(self, "Notification:", msg)
-
     def set_receiving_address(self):
-        receiving_address_name = self.input_16_0.text()
+        receiving_address_name = self.input_10_0.text()
         receiving_address_path = settings.folder_path + "/" + receiving_address_name
         receiving_address_exists = os.path.isfile(receiving_address_path)
         
@@ -297,6 +245,50 @@ class Transactions(QWidget):
         with open(receiving_address_path, "r") as file:
             self.receiving_address = file.read()
         msg = "Receiving address file successfully set."  
+        QMessageBox.information(self, "Notification:", msg)
+
+    def set_utxo(self):
+        utxo_input = self.input_12_0.text()
+        if not ("#" in utxo_input):
+            msg = "UTxO transaction input has to contain # sign and transaction index." + \
+                  "Please enter a valid transaction input." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        trans_hash = utxo_input.split("#")[0]
+        if len(trans_hash) != 64:
+            msg = "UTxO transaction hash has to be 64 characters long." + \
+                  "Please enter a valid transaction hash." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        self.utxo = utxo_input 
+        msg = "UTxO address successfully set." 
+        QMessageBox.information(self, "Notification:", msg)
+
+    def set_skey_name(self):
+        skey_name = self.input_14_0.text()
+        skey_path = settings.folder_path + "/" + skey_name
+        skey_exists = os.path.isfile(skey_path)
+        
+        if not (".skey" in skey_name):
+            msg = "Signing key has to have a .skey file extension name.\n" + \
+                  "Please type in a file name with a .skey extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        if not skey_exists:
+            msg = "Signing key file does not exists.\n" + \
+                  "Please enter a valid file name."  
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close) 
+            return None
+
+        self.skey_name = skey_name
+        msg = "Signing key file successfully set."  
         QMessageBox.information(self, "Notification:", msg)
 
     def set_all(self):
@@ -324,8 +316,8 @@ class Transactions(QWidget):
                                 QMessageBox.Close)
             return None
 
-        is_ada = self.radioButton_9_1.isChecked()
-        is_lovelace = self.radioButton_10_1.isChecked()
+        is_ada = self.radioButton_7_1.isChecked()
+        is_lovelace = self.radioButton_8_1.isChecked() 
 
         if (not is_ada) and (not is_lovelace):
             msg = "Select option ada or lovelace."    
@@ -338,10 +330,10 @@ class Transactions(QWidget):
         elif is_lovelace: 
             currency = "Lovelace"
         
-        amount_text = self.input_10_0.text() 
+        amount_text = self.input_8_0.text() 
         amount_in_lovelace = common_functions.parse_amount(amount_text, currency)
 
-        if amount_in_lovelace == -1:
+        if amount_in_lovelace == -1: 
             msg = "The specified amount in " + currency + " is not a valid input.\n" + \
                   "Amount in ADA can have max 6 decimal numbers.\n" + \
                   "Spaces and characters are not allowed." 
@@ -412,9 +404,9 @@ class Transactions(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/transactions.py line 386:"
-        debug_msg_sign = "Command below is defined in py-files/transactions.py line 399:"
-        debug_msg_submit = "Command below is defined in py-files/transactions.py line 405:" 
+        debug_msg_build = "Command below is defined in py-files/transactions.py line 378:"
+        debug_msg_sign = "Command below is defined in py-files/transactions.py line 391:"
+        debug_msg_submit = "Command below is defined in py-files/transactions.py line 397:" 
                     
         manage_command(command_build_processed, msg_build, debug_msg_build)
         time.sleep(1)
