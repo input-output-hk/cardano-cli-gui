@@ -600,9 +600,9 @@ class Smart_contracts_receive(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/smart_contracts_receive.py line 557:" 
-        debug_msg_sign = "Command below is defined in py-files/smart_contracts_receive.py line 571:" 
-        debug_msg_submit = "Command below is defined in py-files/smart_contracts_receive.py line 577:" 
+        debug_msg_build = "Command below is defined in py-files/smart_contracts_receive.py line 573:" 
+        debug_msg_sign = "Command below is defined in py-files/smart_contracts_receive.py line 587:" 
+        debug_msg_submit = "Command below is defined in py-files/smart_contracts_receive.py line 593:" 
                     
         manage_command(command_build, msg_build, debug_msg_build)
         time.sleep(1)

@@ -1,7 +1,6 @@
 
 
 import os
-import time
 import settings
 import subprocess
 import traceback
@@ -47,7 +46,7 @@ class Query(QWidget):
         self.input_8_0 = QPlainTextEdit()
         self.button_8_1 = QPushButton("Querry\ninfo")
 
-        # Widgets for protocol parameters file section
+        # Widgets for transaction hash section
         self.label_9_0 = QLabel("Show transaction hash for tx.signed file:")
         self.input_10_0 = QPlainTextEdit()
         self.button_10_1 = QPushButton("Show")
@@ -90,7 +89,6 @@ class Query(QWidget):
         self.input_8_0.setPlainText("")
 
         self.input_10_0.setFixedSize(500,60) 
-        #self.input_10_0.setFont(consolas_font)
         self.input_10_0.setLineWrapMode(QPlainTextEdit.LineWrapMode.NoWrap) 
         self.input_10_0.setPlainText("")
 
@@ -176,7 +174,7 @@ class Query(QWidget):
                   net_part 
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/query.py line 171:")
+            print("Command below is defined in py-files/query.py line 172:")
             print(common_functions.format_command(command) + "\n")
         else:
             try:
@@ -209,7 +207,7 @@ class Query(QWidget):
                   net_part 
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/query.py line 205:")
+            print("Command below is defined in py-files/query.py line 206:")
             print(common_functions.format_command(command) + "\n")
         else:
             try:
@@ -239,17 +237,20 @@ class Query(QWidget):
 
         command = "cardano-cli transaction txid --tx-file tx.signed"
 
-        try:
-            response = subprocess.Popen(command.split(), stdout=subprocess.PIPE, cwd=settings.folder_path) 
-            # time.spleep(1) 
-            output = response.communicate()[0].decode("utf-8")
-            self.input_10_0.setPlainText("https://preview.cardanoscan.io/transaction/\n" + output)
-        except Exception:
-            output = traceback.format_exc()
-            common_functions.log_error_msg(output)
-            
-            msg = "Signed transaction could not be querried.\n" + \
-                  "Check if cardano node is running and is synced.\n" + \
-                  "Look at the error.log file for error output." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
+        if settings.debug_mode:
+            print("Command below is defined in py-files/query.py line 238:")
+            print(common_functions.format_command(command) + "\n") 
+        else:
+            try:
+                response = subprocess.Popen(command.split(), stdout=subprocess.PIPE, cwd=settings.folder_path) 
+                output = response.communicate()[0].decode("utf-8")
+                self.input_10_0.setPlainText("https://preview.cardanoscan.io/transaction/\n" + output)
+            except Exception:
+                output = traceback.format_exc()
+                common_functions.log_error_msg(output)
+                
+                msg = "Signed transaction could not be querried.\n" + \
+                      "Check if cardano node is running and is synced.\n" + \
+                      "Look at the error.log file for error output." 
+                QMessageBox.warning(self, "Notification:", msg,
+                                    QMessageBox.Close)
