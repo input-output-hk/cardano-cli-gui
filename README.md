@@ -3,7 +3,7 @@ Simple GUI that cover some basic functionality of the
 [Cardano CLI](https://github.com/input-output-hk/cardano-cli) 
 command line tool.
 
-**WARNING:** 
+**WARNING:** <br/>
 The GUI was created for educational purposes and is not regularly updated with changes in the Cardano CLI. 
 If you want to use the GUI for submitting transactions on the main net you are doing so at your own risk. 
 
