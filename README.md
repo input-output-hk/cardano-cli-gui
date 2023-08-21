@@ -3,12 +3,9 @@ Simple GUI that cover some basic functionality of the
 [Cardano CLI](https://github.com/input-output-hk/cardano-cli) 
 command line tool.
 
-```html
-<div class="alert alert-block alert-warning">
-<b>WARNING:</b> The GUI was created for educational purposes and is not regularly updated with changes in the Cardano CLI. 
+**WARNING:** 
+The GUI was created for educational purposes and is not regularly updated with changes in the Cardano CLI. 
 If you want to use the GUI for submitting transactions on the main net you are doing so at your own risk. 
-</div>
-```
 
 To run the GUI you can use the executable files in the `executables/` folder. Download 
 the executable for your OS. If you want to use the GUI also in debug mode you should run 
