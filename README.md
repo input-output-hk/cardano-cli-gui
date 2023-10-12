@@ -4,8 +4,7 @@ Simple GUI that cover some basic functionality of the
 command line tool.
 
 **WARNING:** <br/>
-The GUI was created for educational purposes and is not regularly updated with changes in the Cardano CLI. 
-If you want to use the GUI for submitting transactions on the main net you are doing so at your own risk. 
+**The GUI was created for educational purposes and is not regularly updated with changes in the Cardano CLI. If you want to use the GUI for submitting transactions on the main net you are doing so at your own risk.**
 
 To run the GUI you can use the executable files in the `executables/` folder. Download 
 the executable for your OS. If you want to use the GUI also in debug mode you should run 
@@ -19,15 +18,12 @@ downloaded folder and run:
 python cardano-cli-gui.py
 ```
 
-**IMPORTANT:** To use the *query* and *send* command in the GUI a cardano node has to be 
-running and synced to the test or main network. You can check how much the node is synced 
-if you go to the Query tab of the GUI, select mainnet or testnet and press the *Query info*
-button. If you then scroll down in the text box you will see the field *syncProgress*. 
+**IMPORTANT: To use the *query* and *send* command in the GUI a cardano node has to be running and synced to the test or main network.**
 
-To run a cardano node download it from [here](https://github.com/input-output-hk/cardano-node/releases) 
-and install it. Then download the configurations files for the Preview testnet from 
-[here](https://book.world.dev.cardano.org/environments.html#preview-testnet) or for the Production 
-mainnet from [here](https://book.world.dev.cardano.org/environments.html#production-mainnet). 
+To run a cardano node download it from [here](https://github.com/input-output-hk/cardano-node/releases) and install it. The installer files are located under the Assets section that needs to be expanded. Add all executable files including the `cardano-node` and `cardano-cli` to you system path, e.g. copy them to `/usr/local/bin/`. 
+
+Then download the configurations files for the Preview testnet from [here](https://book.world.dev.cardano.org/environments.html#preview-testnet) or for the Preprod testnet from [here](https://book.world.dev.cardano.org/environments.html#pre-production-testnet). 
+
 From the folder that contains your configuration files run: 
 ```console
 cardano-node run \
@@ -40,11 +36,25 @@ cardano-node run \
 ```
 
 The `node.socket` file will be created in the folder from where you ran the above command. 
-Before you use the GUI create the environment variable `CARDANO_NODE_SOCKET_PATH`. If you 
-are using bash add the following line to the end of your `.bashrc` file and source it:
+Stop the node and add to the end of your *.bashrc* file that is located in your HOME folder the follwoing line:
 ```console
-export CARDANO_NODE_SOCKET_PATH="$HOME/path/to/node.socket"
+export CARDANO_NODE_SOCKET_PATH="$HOME/<path>/<to>/node.socket"
 ```
+Source the *.bashrc* file:
+```console
+source ~/.bash.rc
+```
+Start the cardano node again. You can check how much the node is synced if you go to the **Query** tab of the GUI. 
+There select mainnet or testnet and press the *Query info* button. If you then scroll down in the text box you will see the field *syncProgress*. 
+
+You can also check the sync progress for the testnet with the following command: 
+```console
+cardano-cli query tip --testnet-magic <testnet_number> 
+```
+For the testnet number use 1 for preprod and 2 for preview. 
+
+GUI design
+----------
 
 The GUI functionality is seperated in 7 tabs and covers following things:
 
