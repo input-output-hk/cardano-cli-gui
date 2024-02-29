@@ -14,7 +14,7 @@ the executable for your OS.
 If you want to use the GUI also in debug mode you should run the executable from a terminal window. 
 
 You can also run the GUI from source. In that case you need to have `python 3` and the `PyQt 5` 
-library installed. Then download this repository, open a terminal in it and run:  
+library installed. Once they are installed download this repository, open a terminal in it and run:  
 ```console
 python cardano-cli-gui.py
 ```
@@ -41,18 +41,18 @@ Stop the node and add to your system path the following environment variable
 ```console
 CARDANO_NODE_SOCKET_PATH="<path>/<to>/node.socket"
 ```
-If you are using a Linux OS then add to the end of your *.bashrc* file that is located in your HOME folder the follwoing line:
+If you are using a Linux OS you can do this by adding to the the follwoing line at end of your *.bashrc* file that is located in your HOME folder: 
 ```console
 export CARDANO_NODE_SOCKET_PATH="$HOME/<path>/<to>/node.socket"
 ```
-And then source the *.bashrc* file:
+After that source the *.bashrc* file:  
 ```console
 source ~/.bash.rc
 ```
-Start the cardano node again. You can check how much the node is synced if you go to the **Query** tab of the GUI. 
+Once you have added this envrionment variable start the cardano node again. You can check how much the node is synced if you go to the **Query** tab of the GUI. 
 There select mainnet or testnet and press the *Query info* button. If you then scroll down in the text box you will see the field *syncProgress*. 
 
-You can also check the sync progress for the preview or preprod testnet with the following command: 
+You can also check the sync progress for the preview or preprod testnet with the following command:  
 ```console
 cardano-cli query tip --testnet-magic <testnet_number> 
 ```
@@ -69,30 +69,31 @@ displays if the *Debug mode* is set ON or OFF.
 
 ![alt text](https://github.com/input-output-hk/cardano-cli-gui/blob/main/images/start.png) 
 
-2. **Wallet** tab: load or generate verification and signing keys, payment addresses and 
+2. **Wallet** tab: loads or generates verification and signing keys, payment addresses and 
 payment public key hashes.  
 
 ![alt text](https://github.com/input-output-hk/cardano-cli-gui/blob/main/images/wallet.png)
 
-3. **Transactions** tab: check funds for a payment address and send funds to a receiving address.  
+3. **Transactions** tab: checks funds for a payment address and sends funds to a receiving address.  
 
 ![alt text](https://github.com/input-output-hk/cardano-cli-gui/blob/main/images/transactions.png)
 
-4. **Smart contracts - send** tab: build a script payment address for a script file, send funds 
-to the generated script address and attach a datum to the transaction.  
+4. **Smart contracts - send** tab: builds a script payment address for a script file and sends funds 
+to the generated script address. You can attach a datum to the transaction.  
 
 ![alt text](https://github.com/input-output-hk/cardano-cli-gui/blob/main/images/smart_contracts_send.png)
 
-5. **Smart contracts - receive** tab: create a spending transactions that spends a script address UTxO. 
+5. **Smart contracts - receive** tab: creates a spending transactions that spends a script address UTxO. 
 You can attach a datum and a redeemer to the transaction and set a validity interval.  
 
 ![alt text](https://github.com/input-output-hk/cardano-cli-gui/blob/main/images/smart_contracts_receive.png)
 
-6. **Query** tab: query an address for funds, query net information and generate
-the protocol parameters file for the chosen network.  
+6. **Query** tab: queries an address for funds, queries network information and shows the transaction 
+hash for a signed transaction file.   
 
 ![alt text](https://github.com/input-output-hk/cardano-cli-gui/blob/main/images/query.png)
 
-7. **Developer** tab: set a different testnet magic number or update the era parameter.  
+7. **Developer** tab: sets the testnet number, updates the era parameter and generates
+the protocol parameters file for the chosen network.  
 
 ![alt text](https://github.com/input-output-hk/cardano-cli-gui/blob/main/images/developer.png)
