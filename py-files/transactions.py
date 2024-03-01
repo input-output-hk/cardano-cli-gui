@@ -27,7 +27,7 @@ class Transactions(QWidget):
         self.command_failed = False
 
         # Header text 
-        self.label_0_0 = QLabel("Send funds from your address to another one.")
+        self.label_0_0 = QLabel("Send funds from your address to another address.")   
         
         # Cardano picture
         picture_0_1 = QLabel("")
@@ -36,7 +36,7 @@ class Transactions(QWidget):
         picture_0_1.setScaledContents(True)
 
         # Widgets for payment address section 
-        self.label_1_0 = QLabel("Type in your address name (will be also used as change address):")
+        self.label_1_0 = QLabel("Input your address file name (will be also used as change address):")
         self.input_2_0 = QLineEdit()
         self.button_2_1 = QPushButton("Set")
         self.label_3_0 = QLabel("Select mainnet or testnet:")
@@ -52,17 +52,17 @@ class Transactions(QWidget):
         self.comboBox_4_0.currentTextChanged.connect(self.set_net)
 
         # Widgets for sending funds section 
-        self.label_7_0 = QLabel("Send amount (seperat decimal number with dot):")
-        self.radioButton_7_1 = QRadioButton("Ada")
+        self.label_7_0 = QLabel("Send amount (for ADA seperat decimal number with dot):")
+        self.radioButton_7_1 = QRadioButton("ADA")
         self.input_8_0 = QLineEdit()
-        self.radioButton_8_1 = QRadioButton("Lovelace")
-        self.label_9_0 = QLabel("Input receiving address name:")
+        self.radioButton_8_1 = QRadioButton("lovelace")
+        self.label_9_0 = QLabel("Input receiving address file name:")
         self.input_10_0 = QLineEdit()
         self.button_10_1 = QPushButton("Set")
-        self.label_11_0 = QLabel("Input UTxO from sending address:")
+        self.label_11_0 = QLabel("Input UTxO you want to spent from your address:")  
         self.input_12_0 = QLineEdit()
         self.button_12_1 = QPushButton("Set")
-        self.label_13_0 = QLabel("Type in your signing key name:")
+        self.label_13_0 = QLabel("Type in your signing key file name:")   
         self.input_14_0 = QLineEdit()
         self.button_14_1 = QPushButton("Set")
         self.button_16_0 = QPushButton("Send")
@@ -162,7 +162,7 @@ class Transactions(QWidget):
 
         if not (".addr" in address_name):
             msg = "Address file has to have a .addr file extension name.\n" + \
-                  "Please type in a file name with a .addr extension." 
+                  "Please enter a file name with a .addr extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -230,7 +230,7 @@ class Transactions(QWidget):
         
         if not (".addr" in receiving_address_name):
             msg = "Address file has to have a .addr file extension name.\n" + \
-                  "Please type in a file name with a .addr extension." 
+                  "Please enter a file name with a .addr extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -275,7 +275,7 @@ class Transactions(QWidget):
         
         if not (".skey" in skey_name):
             msg = "Signing key has to have a .skey file extension name.\n" + \
-                  "Please type in a file name with a .skey extension." 
+                  "Please enter a file name with a .skey extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None

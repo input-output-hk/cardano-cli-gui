@@ -34,7 +34,7 @@ class Smart_contracts_receive(QWidget):
         self.command_failed = False 
 
         # Header text 
-        self.label_0_0 = QLabel("Receive funds from a cardano script address.")
+        self.label_0_0 = QLabel("Receive funds from a cardano script address.")  
 
         # Cardano picture
         picture_0_1 = QLabel("")
@@ -44,36 +44,36 @@ class Smart_contracts_receive(QWidget):
 
         # Widgets for receiving funds from script address section 
         net_layout = QHBoxLayout()
-        self.label_1_0_1 = QLabel("Select mainnet or testnet:")
+        self.label_1_0_1 = QLabel("Select mainnet or testnet:")  
         self.comboBox_1_0_2 = QComboBox()
         net_layout.addWidget(self.label_1_0_1)
         net_layout.addWidget(self.comboBox_1_0_2)
-        self.label_2_0 = QLabel("Type in your change address name:")
+        self.label_2_0 = QLabel("Input your receiving address file name:")   
         self.input_3_0 = QLineEdit()
         self.button_3_1 = QPushButton("Set")
-        self.label_4_0 = QLabel("Type in transaction input UTxO from script address:")
+        self.label_4_0 = QLabel("Input UTxO from script address you want to consume:")  
         self.input_5_0 = QLineEdit()
         self.button_5_1 = QPushButton("Set")
-        self.label_6_0 = QLabel("Type in script file name:")
+        self.label_6_0 = QLabel("Input script file name:")  
         self.input_7_0 = QLineEdit()
         self.button_7_1 = QPushButton("Set")
-        self.label_8_0 = QLabel("Chosse datum file type and type in file name:")
+        self.label_8_0 = QLabel("Chosse datum file type and input file name:")  
         datum_layout = QHBoxLayout()
         self.comboBox_9_0_1 = QComboBox()
         self.input_9_0_2 = QLineEdit()
         datum_layout.addWidget(self.comboBox_9_0_1)
         datum_layout.addWidget(self.input_9_0_2)
         self.button_9_1 = QPushButton("Set")
-        self.label_10_0 = QLabel("Type in redeemer file name:")
+        self.label_10_0 = QLabel("Input redeemer file name:")  
         self.input_11_0 = QLineEdit()
         self.button_11_1 = QPushButton("Set")
-        self.label_12_0 = QLabel("Type in colleteral UTxO from your receiving address:")
+        self.label_12_0 = QLabel("Input colleteral UTxO from your receiving address:")  
         self.input_13_0 = QLineEdit()
         self.button_13_1 = QPushButton("Set")
-        self.label_14_0 = QLabel("Type in public key hash file name from receiving address:")
+        self.label_14_0 = QLabel("Input public key hash file name from receiving address:")  
         self.input_15_0 = QLineEdit()
         self.button_15_1 = QPushButton("Set")
-        self.label_16_0 = QLabel("Chosse validity interval type and type in time slot:")
+        self.label_16_0 = QLabel("Chosse validity interval type and input time slot:")  
         validity_layout = QHBoxLayout()
         self.comboBox_17_0_1 = QComboBox()
         self.input_17_0_2 = QLineEdit()
@@ -81,7 +81,7 @@ class Smart_contracts_receive(QWidget):
         validity_layout.addWidget(self.input_17_0_2)
         self.button_17_1 = QPushButton("Set")
         signing_key_layout = QHBoxLayout()
-        self.label_18_0_1 = QLabel("Type in signing key file name:")
+        self.label_18_0_1 = QLabel("Input signing key file name:")  
         self.input_18_0_2 = QLineEdit()
         signing_key_layout.addWidget(self.label_18_0_1)
         signing_key_layout.addWidget(self.input_18_0_2)
@@ -93,8 +93,7 @@ class Smart_contracts_receive(QWidget):
         # Widget actions for receiving funds from script address section 
         self.comboBox_1_0_2.addItems(["", "mainnet", "testnet"]) 
         self.comboBox_1_0_2.currentTextChanged.connect(self.set_net) 
-        self.comboBox_9_0_1.addItems(["", 
-                                      "tx-in-datum-cbor-file", 
+        self.comboBox_9_0_1.addItems(["tx-in-datum-cbor-file", 
                                       "tx-in-datum-file", 
                                       "tx-in-datum-value", 
                                       "tx-in-inline-datum-present"])
@@ -214,7 +213,7 @@ class Smart_contracts_receive(QWidget):
 
         if not (".addr" in change_address_name):
             msg = "Change address file has to have a .addr file extension name.\n" + \
-                  "Please type in a file name with a .addr extension." 
+                  "Please enter a file name with a .addr extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -259,7 +258,7 @@ class Smart_contracts_receive(QWidget):
         
         if not (".plutus" in script_file_name):
             msg = "Script file has to have a .plutus file extension name.\n" + \
-                  "Please type in a file name with a .plutus extension." 
+                  "Please enter a file name with a .plutus extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -280,8 +279,8 @@ class Smart_contracts_receive(QWidget):
         datum_file_path = settings.folder_path + "/" + datum_file_name
         datum_file_exists = os.path.isfile(datum_file_path)
 
-        if self.datum_file_type == "":
-            msg = "Select first datum file type."
+        if self.datum_file_type == "":  
+            msg = "Select datum file type."  
             QMessageBox.warning(self, "Notification:", msg,
                                         QMessageBox.Close)
             return None
@@ -322,7 +321,7 @@ class Smart_contracts_receive(QWidget):
         else:
             if not (".json" in redeemer_file_name):
                 msg = "Redeemer has to be a file in JSON fromat.\n" + \
-                      "Please type in a name with a .json extension." 
+                      "Please enter a name with a .json extension." 
                 QMessageBox.warning(self, "Notification:", msg,
                                     QMessageBox.Close)
                 return None
@@ -366,7 +365,7 @@ class Smart_contracts_receive(QWidget):
         
         if not (".pkh" in pkh_name):
             msg = "Public key hash has to have a .pkh file extension name.\n" + \
-                  "Please type in a file name with a .pkh extension." 
+                  "Please enter a file name with a .pkh extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -403,7 +402,7 @@ class Smart_contracts_receive(QWidget):
 
         if not (".skey" in skey_name):
             msg = "Signing key has to have a .skey file extension name.\n" + \
-                  "Please type in a file name with a .skey extension." 
+                  "Please enter a file name with a .skey extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None

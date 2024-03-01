@@ -33,10 +33,10 @@ class Query(QWidget):
         self.comboBox_2_0 = QComboBox()
 
         # Widgets for querying address section 
-        self.label_3_0 = QLabel("Type in a address file name:")
+        self.label_3_0 = QLabel("Input a address file name:")  
         self.input_4_0 = QLineEdit()
         self.button_4_1 = QPushButton("Set")
-        self.label_5_0 = QLabel("Funds for above payment address:")
+        self.label_5_0 = QLabel("Funds for above payment address:")  
         self.input_6_0 = QPlainTextEdit()
         self.button_6_1 = QPushButton("Querry\nfunds")
 
@@ -46,7 +46,7 @@ class Query(QWidget):
         self.button_8_1 = QPushButton("Querry\ninfo")
 
         # Widgets for transaction hash section
-        self.label_9_0 = QLabel("Show transaction hash for tx.signed file:")
+        self.label_9_0 = QLabel("Show transaction hash for tx.signed file:")  
         self.input_10_0 = QPlainTextEdit()
         self.button_10_1 = QPushButton("Show")
 

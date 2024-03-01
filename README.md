@@ -1,7 +1,6 @@
 # cardano-cli-gui
-Simple GUI that cover some basic functionality of the 
-[Cardano CLI](https://github.com/input-output-hk/cardano-cli) 
-command line tool.
+Simple GUI that covers some basic functionality of the [Cardano CLI](https://github.com/intersectmbo/cardano-cli/) 
+command line tool. The GUI was tested with [Cardano node 8.7.3](https://github.com/IntersectMBO/cardano-node/releases/tag/8.7.3). 
 
 **WARNING:** <br/>
 **The GUI was created for educational purposes and is not regularly updated with changes in the Cardano CLI. If you want to use the GUI for submitting transactions on the main net you are doing so at your own risk.**

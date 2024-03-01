@@ -22,7 +22,7 @@ class Wallet(QWidget):
         self.pkh_name = ""
 
         # Header text 
-        self.label_0_0 = QLabel("Manage wallet address and its keys.")
+        self.label_0_0 = QLabel("Manage Cardano address and its keys.")
 
         # Cardano picture
         picture_0_2 = QLabel("")
@@ -31,12 +31,12 @@ class Wallet(QWidget):
         picture_0_2.setScaledContents(True)
 
         # Widgets for verification key section 
-        self.label_1_0 = QLabel("Input verification key name:")
+        self.label_1_0 = QLabel("Input verification key file name or generate it:")
         self.input_2_0 = QLineEdit()
         self.button_2_1 = QPushButton("Set")
 
         # Widgets for signing key section 
-        self.label_3_0 = QLabel("Signing key name:")
+        self.label_3_0 = QLabel("Signing key file name:")
         self.input_4_0 = QLineEdit()
         self.button_5_0 = QPushButton("Generate both keys")
 
@@ -45,7 +45,7 @@ class Wallet(QWidget):
         self.button_5_0.clicked.connect(self.generate_skey_and_vkey)
 
         # Widgets for payment address section 
-        self.label_7_0 = QLabel("Input payment address name:")
+        self.label_7_0 = QLabel("Input payment address file name or generate it:")
         self.input_8_0 = QLineEdit()
         self.button_8_1 = QPushButton("Set")
         self.button_8_2 = QPushButton("Generate")
@@ -61,11 +61,11 @@ class Wallet(QWidget):
         self.button_10_1.clicked.connect(self.show_address) 
 
         # Widgets for payment address key hash section 
-        self.label_12_0 = QLabel("Payment public key hash name:")
+        self.label_12_0 = QLabel("Input payment public key hash file name or generate it:")  
         self.input_13_0 = QLineEdit()
         self.button_13_1 = QPushButton("Set")
         self.button_13_2 = QPushButton("Generate")
-        self.label_14_0 = QLabel("Key hash:")
+        self.label_14_0 = QLabel("Payment public key hash:")   
         self.input_15_0 = QLineEdit()
         self.button_15_1 = QPushButton("Show")
 
@@ -159,7 +159,7 @@ class Wallet(QWidget):
 
         if not (".vkey" in vkey_name):
             msg = "Verification key has to have a .vkey file extension name.\n" + \
-                  "Please type in a file name with a .vkey extension." 
+                  "Please enter a file name with a .vkey extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -219,7 +219,7 @@ class Wallet(QWidget):
 
         if not (".addr" in address_name):
             msg = "Address file has to have a .addr file extension name.\n" + \
-                  "Please type in a file name with a .addr extension." 
+                  "Please enter a file name with a .addr extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -331,7 +331,7 @@ class Wallet(QWidget):
 
         if not (".pkh" in pkh_name):
             msg = "Public key hash has to have a .pkh file extension name.\n" + \
-                  "Please type in a file name with a .pkh extension." 
+                  "Please enter a file name with a .pkh extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None

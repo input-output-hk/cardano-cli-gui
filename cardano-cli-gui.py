@@ -118,7 +118,7 @@ class MainWindow(QMainWindow):
                            "commands to the terminal instead of executing them.")
         label_11_0 = QLabel("IMPORTANT:")
         label_12_0 = QLabel("A cardano node has to be synced and running\n" + \
-                            "for the query and send command to work.")
+                            "for most of the GUI functionality to work.")  
 
         # Widget actions
         button_4_1.clicked.connect(self.set_folder_path)
@@ -186,7 +186,7 @@ class MainWindow(QMainWindow):
             except:
                 pass
 
-            self.tabs.addTab(Wallet(),"Wallet")
+            self.tabs.addTab(Wallet(),"Address")
             self.tabs.addTab(Transactions(),"Transactions")
             self.tabs.addTab(Smart_contracts_send(),"Smart contrancts - send")
             self.tabs.addTab(Smart_contracts_receive(),"Smart contrancts - receive")
