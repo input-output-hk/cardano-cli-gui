@@ -1,15 +1,10 @@
 
 
-import os
 import settings
-import subprocess
-import traceback
-import common_functions
 
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QPushButton, QLabel, QLineEdit, 
-                             QWidget, QGridLayout, QMessageBox,
-                             QComboBox)
+                             QWidget, QGridLayout, QMessageBox)
 
 # Widgets and functions for the developer tab
 class Developer(QWidget):
@@ -19,7 +14,7 @@ class Developer(QWidget):
         self.net = ""
 
         # Header text 
-        self.label_1_0 = QLabel("Manage advenced settings. Only for experienced developers.\n" + \
+        self.label_1_0 = QLabel("Manage advanced settings: testnet network and era.\n" + \
                                 "If you are not sure keep default parameter values.")
 
         # Cardano picture
@@ -44,27 +39,15 @@ class Developer(QWidget):
         self.label_9_0 = QLabel("Reset parameters to default values:")
         self.button_10_0 = QPushButton("Reset")
 
-        # Widgets for generating protocol parameters file
-        self.label_12_0 = QLabel("Select mainnet or testnet:")
-        self.comboBox_13_0 = QComboBox()
-        self.label_14_0 = QLabel("Generate protocol parameters file:")
-        self.input_15_0 = QLineEdit("")
-        self.button_15_1 = QPushButton("Generate")
-
         # Button and combobox functions
         self.button_4_1.clicked.connect(self.set_magic)
         self.button_7_1.clicked.connect(self.set_era)
         self.button_10_0.clicked.connect(self.reset_values)
-        self.button_15_1.clicked.connect(self.generate_protocol_params_file)
-
-        self.comboBox_13_0.addItems(["", "mainnet", "testnet"])
-        self.comboBox_13_0.currentTextChanged.connect(self.set_net)
 
         # Set label fonts 
         labels = [self.label_1_0, self.label_3_0, 
                   self.label_5_0, self.label_6_0, 
-                  self.label_8_0, self.label_9_0,
-                  self.label_12_0, self.label_14_0]
+                  self.label_8_0, self.label_9_0]
         for label in labels:
             font = label.font()
             font.setPointSize(12)
@@ -73,13 +56,11 @@ class Developer(QWidget):
         # Set lineEdit size 
         self.input_4_0.setFixedSize(500,30)
         self.input_7_0.setFixedSize(500,30)
-        self.input_15_0.setFixedSize(500,30)
 
         # Set button size 
         self.button_4_1.setFixedSize(80,30)
         self.button_7_1.setFixedSize(80,30)
         self.button_10_0.setFixedSize(160,30)
-        self.button_15_1.setFixedSize(80,30)
 
         # Space between the sections
         emptyLabel = QLabel()
@@ -101,11 +82,10 @@ class Developer(QWidget):
         layout.addWidget(self.label_9_0, 9, 0)
         layout.addWidget(self.button_10_0, 10, 0)
         layout.addWidget(emptyLabel, 11, 0)
-        layout.addWidget(self.label_12_0, 12, 0)
-        layout.addWidget(self.comboBox_13_0, 13, 0)
-        layout.addWidget(self.label_14_0, 14, 0)
-        layout.addWidget(self.input_15_0, 15, 0)
-        layout.addWidget(self.button_15_1, 15, 1)
+        layout.addWidget(emptyLabel, 12, 0)
+        layout.addWidget(emptyLabel, 13, 0)
+        layout.addWidget(emptyLabel, 14, 0)
+        layout.addWidget(emptyLabel, 15, 0)
         layout.addWidget(emptyLabel, 16, 0)
         self.setLayout(layout)
 
@@ -146,58 +126,3 @@ class Developer(QWidget):
 
         msg = "Default values successfully restored."  
         QMessageBox.information(self, "Notification:", msg) 
-
-    def set_net(self, selected_net):
-        self.net = selected_net 
-
-    def generate_protocol_params_file(self):
-        if self.net == "":
-            msg = "Select option mainnet or testnet."    
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
-
-        if self.net == "mainnet": 
-            net_part =  "--mainnet "
-        elif self.net == "testnet":
-            net_part = "--testnet-magic " + settings.testnet_magic + " "
-        
-        file_number_count = 0
-        while(True):
-            if file_number_count == 0:
-                prepend_num = ""
-            else:
-                prepend_num = str(file_number_count)
-            
-            pp_file_name = "protocol" + prepend_num + ".json"
-            pp_file_path = settings.folder_path + "/" + pp_file_name
-            pp_file_exists = os.path.isfile(pp_file_path)
-            
-            if not pp_file_exists:
-                self.pp_file_name = pp_file_name
-                break
-
-            file_number_count += 1
-
-        command = "cardano-cli query protocol-parameters " + \
-                  net_part + \
-                  "--out-file " + self.pp_file_name 
-
-        if settings.debug_mode:
-            print("Command below is defined in py-files/developer.py line 182:")
-            print(common_functions.format_command(command) + "\n")
-        else:
-            try:
-                subprocess.Popen(command.split(), cwd=settings.folder_path) 
-                self.input_15_0.setText(self.pp_file_name)
-                msg = "Protocol parameters file successfully generated." 
-                QMessageBox.information(self, "Notification:", msg)
-            except Exception:
-                output = traceback.format_exc()
-                common_functions.log_error_msg(output)
-                
-                msg = "Protocol parameters file could not be generated.\n" + \
-                      "Check if cardano node is running and is synced.\n" + \
-                      "Look at the error.log file for error output." 
-                QMessageBox.warning(self, "Notification:", msg,
-                                    QMessageBox.Close)  

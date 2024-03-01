@@ -9,8 +9,8 @@ import common_functions
 
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QPushButton, QLabel, QLineEdit, 
-                             QWidget, QGridLayout, QRadioButton,
-                             QComboBox, QMessageBox, QHBoxLayout)
+                             QWidget, QGridLayout, QComboBox, 
+                             QMessageBox, QHBoxLayout)
 
 # Widgets and functions for the smart contracts tab
 class Smart_contracts_receive(QWidget):
@@ -29,7 +29,6 @@ class Smart_contracts_receive(QWidget):
         self.signer_pkh = ""
         self.validity_type = ""
         self.validity_slot = ""
-        self.protocol_parameter_file_name = ""
         self.skey_name = ""
         self.era = settings.current_era
         self.command_failed = False 
@@ -81,21 +80,15 @@ class Smart_contracts_receive(QWidget):
         validity_layout.addWidget(self.comboBox_17_0_1)
         validity_layout.addWidget(self.input_17_0_2)
         self.button_17_1 = QPushButton("Set")
-        protocol_layout = QHBoxLayout()
-        self.label_18_0_1 = QLabel("Type in protocol param file name:")
-        self.input_18_0_2 = QLineEdit()
-        protocol_layout.addWidget(self.label_18_0_1)
-        protocol_layout.addWidget(self.input_18_0_2)
-        self.button_18_1 = QPushButton("Set")
         signing_key_layout = QHBoxLayout()
-        self.label_19_0_1 = QLabel("Type in signing key file name:")
-        self.input_19_0_2 = QLineEdit()
-        signing_key_layout.addWidget(self.label_19_0_1)
-        signing_key_layout.addWidget(self.input_19_0_2)
-        self.button_19_1 = QPushButton("Set")
+        self.label_18_0_1 = QLabel("Type in signing key file name:")
+        self.input_18_0_2 = QLineEdit()
+        signing_key_layout.addWidget(self.label_18_0_1)
+        signing_key_layout.addWidget(self.input_18_0_2)
+        self.button_18_1 = QPushButton("Set")
 
-        self.button_22_0 = QPushButton("Submit")
-        self.button_22_1 = QPushButton("Set all")
+        self.button_21_0 = QPushButton("Submit")
+        self.button_21_1 = QPushButton("Set all")
 
         # Widget actions for receiving funds from script address section 
         self.comboBox_1_0_2.addItems(["", "mainnet", "testnet"]) 
@@ -117,10 +110,9 @@ class Smart_contracts_receive(QWidget):
         self.button_13_1.clicked.connect(self.set_colleteral_utxo)
         self.button_15_1.clicked.connect(self.set_pkh)
         self.button_17_1.clicked.connect(self.set_slot)
-        self.button_18_1.clicked.connect(self.set_protocol_parameter)
-        self.button_19_1.clicked.connect(self.set_skey_name)
-        self.button_22_0.clicked.connect(self.submit_transaction)
-        self.button_22_1.clicked.connect(self.set_all)
+        self.button_18_1.clicked.connect(self.set_skey_name)
+        self.button_21_0.clicked.connect(self.submit_transaction)
+        self.button_21_1.clicked.connect(self.set_all)
 
         # Set label fonts and size 
         labels = [self.label_0_0, self.label_1_0_1, 
@@ -128,7 +120,7 @@ class Smart_contracts_receive(QWidget):
                   self.label_6_0, self.label_8_0, 
                   self.label_10_0, self.label_12_0, 
                   self.label_14_0, self.label_16_0, 
-                  self.label_18_0_1, self.label_19_0_1] 
+                  self.label_18_0_1] 
         for label in labels:
             font = label.font()
             font.setPointSize(12)
@@ -136,7 +128,6 @@ class Smart_contracts_receive(QWidget):
 
         self.label_1_0_1.setFixedSize(290, 35)
         self.label_18_0_1.setFixedSize(290, 35)
-        self.label_19_0_1.setFixedSize(290, 35)
 
         # Set lineEdit sizes 
         inputs = [self.input_3_0, self.input_5_0, 
@@ -148,7 +139,6 @@ class Smart_contracts_receive(QWidget):
         self.input_9_0_2.setFixedSize(290, 30)
         self.input_17_0_2.setFixedSize(290, 30)
         self.input_18_0_2.setFixedSize(200, 30)
-        self.input_19_0_2.setFixedSize(200, 30)
 
         # Set comboBox size
         self.comboBox_1_0_2.setFixedSize(200,30)
@@ -160,12 +150,11 @@ class Smart_contracts_receive(QWidget):
                    self.button_7_1, self.button_9_1, 
                    self.button_11_1, self.button_13_1, 
                    self.button_15_1, self.button_17_1,
-                   self.button_18_1, self.button_19_1,
-                   self.button_22_1] 
+                   self.button_18_1, self.button_21_1] 
         for button in buttons:
             button.setFixedSize(80,30)
 
-        self.button_22_0.setFixedSize(160,30) 
+        self.button_21_0.setFixedSize(160,30) 
 
         # Space between the sections
         self.emptyLabel = QLabel()
@@ -200,13 +189,12 @@ class Smart_contracts_receive(QWidget):
         layout.addWidget(self.label_16_0, 16, 0)
         layout.addLayout(validity_layout, 17, 0)
         layout.addWidget(self.button_17_1, 17, 1)
-        layout.addLayout(protocol_layout, 18, 0)
+        layout.addLayout(signing_key_layout, 18, 0)
         layout.addWidget(self.button_18_1, 18, 1)
-        layout.addLayout(signing_key_layout, 19, 0)
-        layout.addWidget(self.button_19_1, 19, 1)
-        layout.addWidget(self.emptyLabel, 21, 0) 
-        layout.addWidget(self.button_22_0, 22, 0)
-        layout.addWidget(self.button_22_1, 22, 1) 
+        layout.addWidget(self.emptyLabel, 20, 0) 
+        layout.addWidget(self.button_21_0, 21, 0)
+        layout.addWidget(self.button_21_1, 21, 1) 
+        layout.addWidget(self.emptyLabel, 22, 0)
 
         self.setLayout(layout) 
 
@@ -408,37 +396,8 @@ class Smart_contracts_receive(QWidget):
         msg = "Slot successfully set."  
         QMessageBox.information(self, "Notification:", msg)
 
-    def set_protocol_parameter(self):
-        pp_file_name = self.input_18_0_2.text()
-        pp_file_path = settings.folder_path + "/" + pp_file_name
-        pp_file_exists = os.path.isfile(pp_file_path)
-
-        if pp_file_name == "":
-            self.protocol_parameter_file_name = pp_file_name
-            msg = "Protocol parameter file successfully unset."
-            QMessageBox.information(self, "Notification:", msg)
-            return None
-        else:
-            if not (".json" in pp_file_name):
-                msg = "Protocol parameter has to be a file in JSON fromat.\n" + \
-                      "Please type in a name with a .json extension." 
-                QMessageBox.warning(self, "Notification:", msg,
-                                    QMessageBox.Close)
-                return None
-
-            if not pp_file_exists:
-                msg = "Protocol parameter file does not exists.\n" + \
-                      "Please enter a valid file name." 
-                QMessageBox.warning(self, "Notification:", msg,
-                                    QMessageBox.Close) 
-                return None
-
-        self.protocol_parameter_file_name = pp_file_name 
-        msg = "Protocol parameter file successfully set." 
-        QMessageBox.information(self, "Notification:", msg)
-
     def set_skey_name(self):
-        skey_name = self.input_19_0_2.text()
+        skey_name = self.input_18_0_2.text()
         skey_path = settings.folder_path + "/" + skey_name
         skey_exists = os.path.isfile(skey_path)
 
@@ -469,7 +428,6 @@ class Smart_contracts_receive(QWidget):
         self.set_colleteral_utxo()
         self.set_pkh()
         self.set_slot()
-        self.set_protocol_parameter()
         self.set_skey_name()
 
     def submit_transaction(self): 
@@ -539,12 +497,6 @@ class Smart_contracts_receive(QWidget):
                                 QMessageBox.Close)
             return None
 
-        if self.protocol_parameter_file_name == "":
-            msg = "Please set a valid protocol parameter file name." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
-
         if self.skey_name == "":
             msg = "Please set a valid signing key." 
             QMessageBox.warning(self, "Notification:", msg,
@@ -581,7 +533,6 @@ class Smart_contracts_receive(QWidget):
                         "--required-signer-hash " + self.signer_pkh + " " + \
                         "--change-address " + self.change_address + " " + \
                         "--" + self.validity_type + " " + self.validity_slot + " " + \
-                        "--protocol-params-file " + self.protocol_parameter_file_name + " " + \
                         "--out-file tx.body"
 
         command_sign = "cardano-cli transaction sign " + \

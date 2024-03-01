@@ -1,5 +1,5 @@
 # Executable files for cardano-cli-gui
-Executable files are provided for Windows, Mac OS and Linux. However on
+Executable files are provided for Windows and Linux. However on
 Windows the GUI fonts and sizes may get distorted, so it is advised to use
 the GUI on a Unix based system. 
 
