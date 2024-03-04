@@ -173,7 +173,7 @@ class Query(QWidget):
                   net_part 
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/query.py line 172:")
+            print("Command for querying funds of an address:")  
             print(common_functions.format_command(command) + "\n")
         else:
             try:
@@ -206,7 +206,7 @@ class Query(QWidget):
                   net_part 
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/query.py line 206:")
+            print("Command for querying network information:")  
             print(common_functions.format_command(command) + "\n")
         else:
             try:
@@ -237,7 +237,7 @@ class Query(QWidget):
         command = "cardano-cli transaction txid --tx-file tx.signed"
 
         if settings.debug_mode:
-            print("Command below is defined in py-files/query.py line 238:")
+            print("Command for showing the hash of a transaction:")  
             print(common_functions.format_command(command) + "\n") 
         else:
             try:

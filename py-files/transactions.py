@@ -206,7 +206,7 @@ class Transactions(QWidget):
                   net_part 
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/transactions.py line 224:")
+            print("Command for querying funds of an address:")  
             print(common_functions.format_command(command) + "\n")
         else:
             try:
@@ -404,9 +404,9 @@ class Transactions(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/transactions.py line 378:"
-        debug_msg_sign = "Command below is defined in py-files/transactions.py line 391:"
-        debug_msg_submit = "Command below is defined in py-files/transactions.py line 397:" 
+        debug_msg_build = "Command for building a transaction:"  
+        debug_msg_sign = "Command for signing a transaction:"  
+        debug_msg_submit = "Command for submitting a transaction:"   
                     
         manage_command(command_build_processed, msg_build, debug_msg_build)
         time.sleep(1)
@@ -416,6 +416,7 @@ class Transactions(QWidget):
         if not self.command_failed:
             manage_command(command_submit.split(), msg_submit, debug_msg_submit)
         if not self.command_failed and not settings.debug_mode:
-            msg = "Send transaction successfully submitted."  
+            msg = "Commads successfully executed.\n" + \
+                  "Look at console output for transaction info."  
             QMessageBox.information(self, "Notification:", msg) 
         self.command_failed = False

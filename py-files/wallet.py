@@ -192,7 +192,7 @@ class Wallet(QWidget):
                           "--signing-key-file " + skey_name 
 
                 if settings.debug_mode:
-                    print("Command below is defined in py-files/wallet.py line 190:")
+                    print("Command for generating signing and verification key:")  
                     print(common_functions.format_command(command) + "\n")
                 else:
                     try:
@@ -288,7 +288,7 @@ class Wallet(QWidget):
                   "--out-file " + address_name
 
         if settings.debug_mode:
-            print("Command below is defined in py-files/wallet.py line 285:")
+            print("Command for generating address:")  
             print(common_functions.format_command(command) + "\n")
         else:
             try:
@@ -338,7 +338,7 @@ class Wallet(QWidget):
 
         self.pkh_name = pkh_name
         msg = "Public key hash file successfully set."  
-        QMessageBox.information(self, "Notification:", msg)
+        QMessageBox.information(self, "Notification:", msg)   
 
     def generate_pkh(self):
         if self.vkey_name == "":
@@ -378,7 +378,7 @@ class Wallet(QWidget):
                   "--out-file " + pkh_name
         
         if settings.debug_mode:
-            print("Command below is defined in py-files/wallet.py line 376:")
+            print("Command for generating public key hash:")  
             print(common_functions.format_command(command) + "\n")
         else:
             try:
