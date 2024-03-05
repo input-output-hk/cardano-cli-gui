@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import (QPushButton, QLabel, QLineEdit,
                              QWidget, QGridLayout, QMessageBox,
                              QRadioButton)
 
-# Widgets and functions for the wallet tab
+# Widgets and functions for the address tab 
 class Wallet(QWidget):
     def __init__(self):
         super().__init__()
@@ -150,16 +150,22 @@ class Wallet(QWidget):
         skey_path = settings.folder_path + "/" + skey_name
         skey_exists = os.path.isfile(skey_path) 
 
-        if not vkey_exists:
-            msg = "Verification key does not exists.\n" + \
-                  "Please enter a valid file name."                       
+        if len(vkey_name) < 6:
+            msg = "Verification key has to have a .vkey file extension name.\n" + \
+                  "Please enter a file name with a .vkey extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (vkey_name[-5:] == ".vkey"):
+            msg = "Verification key has to have a .vkey file extension name.\n" + \
+                  "Please enter a file name with a .vkey extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
 
-        if not (".vkey" in vkey_name):
-            msg = "Verification key has to have a .vkey file extension name.\n" + \
-                  "Please enter a file name with a .vkey extension." 
+        if not vkey_exists:
+            msg = "Verification key file does not exists.\n" + \
+                  "Please enter a valid file name."                       
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -217,7 +223,13 @@ class Wallet(QWidget):
         address_path = settings.folder_path + "/" + address_name
         address_exists = os.path.isfile(address_path)
 
-        if not (".addr" in address_name):
+        if len(address_name) < 6:
+            msg = "Address file has to have a .addr file extension name.\n" + \
+                  "Please enter a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (address_name[-5:] == ".addr"):  
             msg = "Address file has to have a .addr file extension name.\n" + \
                   "Please enter a file name with a .addr extension." 
             QMessageBox.warning(self, "Notification:", msg,
@@ -225,14 +237,14 @@ class Wallet(QWidget):
             return None
 
         if not address_exists:
-            msg = "Address does not exists.\n" + \
+            msg = "Address file does not exists.\n" + \
                   "Please enter a valid file name."                      
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
 
         self.address_name = address_name
-        msg = "Public address file successfully set."  
+        msg = "Address file successfully set."  
         QMessageBox.information(self, "Notification:", msg)
 
     def generate_address(self):
@@ -321,17 +333,23 @@ class Wallet(QWidget):
         pkh_name = self.input_13_0.text()
         pkh_path = settings.folder_path + "/" + pkh_name
         pkh_exists = os.path.isfile(pkh_path)
-        
-        if not pkh_exists:
-            msg = "Public key hash does not exists.\n" + \
-                  "Please specify a valid file name."                        
+
+        if len(pkh_name) < 5:
+            msg = "Public key hash has to have a .pkh file extension name.\n" + \
+                  "Please enter a file name with a .pkh extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (pkh_name[-4:] == ".pkh"):
+            msg = "Public key hash has to have a .pkh file extension name.\n" + \
+                  "Please enter a file name with a .pkh extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
 
-        if not (".pkh" in pkh_name):
-            msg = "Public key hash has to have a .pkh file extension name.\n" + \
-                  "Please enter a file name with a .pkh extension." 
+        if not pkh_exists:
+            msg = "Public key hash does not exists.\n" + \
+                  "Please enter a valid file name."                        
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None

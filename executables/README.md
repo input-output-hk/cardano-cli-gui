@@ -1,14 +1,10 @@
 # Executable files for cardano-cli-gui
-Executable files are provided for Windows and Linux. However on
-Windows the GUI fonts and sizes may get distorted, so it is advised to use
-the GUI on a Unix based system. 
-
-If you are using the debug option that prints commands to the terminal,
+Executable files are provided for Windows and Linux. However on Windows the GUI fonts and 
+sizes may get distorted. If you are using the debug option that prints commands to the terminal, 
 start the executable from your terminal window.
 
-**IMPORTANT**: NixOS users can not use the executable file. Instead start
-a nix shell with the provided shell.nix file and run the gui from the source 
-code as described in the README file on the main page inside the nix shell.
+| :zap: NixOS users can not use the executable file. Instead start a nix shell with the provided shell.nix file and run the gui from the source code as described in the README file on the main page inside the nix shell. |
+|------------------------------------------------------------------------------------------------------|
 
 Executables were created with the `pyinstaller` tool with the command:
 ```console

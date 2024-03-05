@@ -211,7 +211,13 @@ class Smart_contracts_receive(QWidget):
         change_address_path = settings.folder_path + "/" + change_address_name
         change_address_exists = os.path.isfile(change_address_path)
 
-        if not (".addr" in change_address_name):
+        if len(change_address_name) < 6:
+            msg = "Change address file has to have a .addr file extension name.\n" + \
+                  "Please enter a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (change_address_name[-5:] == ".addr"):  
             msg = "Change address file has to have a .addr file extension name.\n" + \
                   "Please enter a file name with a .addr extension." 
             QMessageBox.warning(self, "Notification:", msg,
@@ -256,9 +262,15 @@ class Smart_contracts_receive(QWidget):
         script_file_path = settings.folder_path + "/" + script_file_name
         script_file_exists = os.path.isfile(script_file_path)
         
-        if not (".plutus" in script_file_name):
+        if len(script_file_name) < 8:
             msg = "Script file has to have a .plutus file extension name.\n" + \
-                  "Please enter a file name with a .plutus extension." 
+                  "Please enter a file name with a .plutus extension."
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (script_file_name[-7:] == ".plutus"):
+            msg = "Script file has to have a .plutus file extension name.\n" + \
+                  "Please enter a file name with a .plutus extension."
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -297,6 +309,19 @@ class Smart_contracts_receive(QWidget):
             QMessageBox.information(self, "Notification:", msg)
             return None
 
+        if len(datum_file_name) < 6:
+            msg = "Datum file has to be a file in JSON fromat.\n" + \
+                  "Please enter a name with a .json extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (datum_file_name[-5:] == ".json"):
+            msg = "Datum file has to be a file in JSON fromat.\n" + \
+                  "Please enter a name with a .json extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
         if not datum_file_exists:
             msg = "Datum file does not exists.\n" + \
                   "Please enter a valid file name." 
@@ -313,25 +338,25 @@ class Smart_contracts_receive(QWidget):
         redeemer_file_path = settings.folder_path + "/" + redeemer_file_name
         redeemer_file_exists = os.path.isfile(redeemer_file_path)
 
-        if redeemer_file_name == "":
-            self.redeemer = redeemer_file_name
-            msg = "Redeemer file successfully unset."
-            QMessageBox.information(self, "Notification:", msg)
+        if len(redeemer_file_name) < 6:
+            msg = "Redeemer file has to be a file in JSON fromat.\n" + \
+                  "Please enter a file name with a .json extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
             return None
-        else:
-            if not (".json" in redeemer_file_name):
-                msg = "Redeemer has to be a file in JSON fromat.\n" + \
-                      "Please enter a name with a .json extension." 
-                QMessageBox.warning(self, "Notification:", msg,
-                                    QMessageBox.Close)
-                return None
+        elif not (redeemer_file_name[-5:] == ".json"):
+            msg = "Redeemer file has to be a file in JSON fromat.\n" + \
+                  "Please enter a file name with a .json extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
 
-            if not redeemer_file_exists:
-                msg = "Redeemer file does not exists.\n" + \
-                      "Please enter a valid file name." 
-                QMessageBox.warning(self, "Notification:", msg,
-                                    QMessageBox.Close) 
-                return None
+        if not redeemer_file_exists:
+            msg = "Redeemer file does not exists.\n" + \
+                  "Please enter a valid file name." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close) 
+            return None
 
         self.redeemer = redeemer_file_name 
         msg = "Redeemer file successfully set." 
@@ -362,9 +387,15 @@ class Smart_contracts_receive(QWidget):
         pkh_name = self.input_15_0.text()
         pkh_path = settings.folder_path + "/" + pkh_name
         pkh_exists = os.path.isfile(pkh_path)
-        
-        if not (".pkh" in pkh_name):
-            msg = "Public key hash has to have a .pkh file extension name.\n" + \
+
+        if len(pkh_name) < 5:
+            msg = "Public key hash file has to have a .pkh file extension name.\n" + \
+                  "Please enter a file name with a .pkh extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (pkh_name[-4:] == ".pkh"):
+            msg = "Public key hash file has to have a .pkh file extension name.\n" + \
                   "Please enter a file name with a .pkh extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
@@ -400,13 +431,19 @@ class Smart_contracts_receive(QWidget):
         skey_path = settings.folder_path + "/" + skey_name
         skey_exists = os.path.isfile(skey_path)
 
-        if not (".skey" in skey_name):
-            msg = "Signing key has to have a .skey file extension name.\n" + \
+        if len(skey_name) < 6:
+            msg = "Signing key file has to have a .skey file extension name.\n" + \
                   "Please enter a file name with a .skey extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
-                
+        elif not (skey_name[-5:] == ".skey"):
+            msg = "Signing key file has to have a .skey file extension name.\n" + \
+                  "Please enter a file name with a .skey extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
         if not skey_exists:
             msg = "Signing key file does not exists.\n" + \
                   "Please enter a valid file name."  

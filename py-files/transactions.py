@@ -160,7 +160,13 @@ class Transactions(QWidget):
         address_path = settings.folder_path + "/" + address_name
         address_exists = os.path.isfile(address_path)
 
-        if not (".addr" in address_name):
+        if len(address_name) < 6:
+            msg = "Address file has to have a .addr file extension name.\n" + \
+                  "Please enter a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (address_name[-5:] == ".addr"):  
             msg = "Address file has to have a .addr file extension name.\n" + \
                   "Please enter a file name with a .addr extension." 
             QMessageBox.warning(self, "Notification:", msg,
@@ -197,7 +203,7 @@ class Transactions(QWidget):
             return None
 
         if self.net == "mainnet": 
-            net_part =  "--mainnet "
+            net_part =  "--mainnet " 
         elif self.net == "testnet":
             net_part = "--testnet-magic " + settings.testnet_magic + " "
         
@@ -228,7 +234,13 @@ class Transactions(QWidget):
         receiving_address_path = settings.folder_path + "/" + receiving_address_name
         receiving_address_exists = os.path.isfile(receiving_address_path)
         
-        if not (".addr" in receiving_address_name):
+        if len(receiving_address_name) < 6:
+            msg = "Address file has to have a .addr file extension name.\n" + \
+                  "Please enter a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (receiving_address_name[-5:] == ".addr"):  
             msg = "Address file has to have a .addr file extension name.\n" + \
                   "Please enter a file name with a .addr extension." 
             QMessageBox.warning(self, "Notification:", msg,
@@ -272,8 +284,14 @@ class Transactions(QWidget):
         skey_name = self.input_14_0.text()
         skey_path = settings.folder_path + "/" + skey_name
         skey_exists = os.path.isfile(skey_path)
-        
-        if not (".skey" in skey_name):
+
+        if len(skey_name) < 6:
+            msg = "Signing key has to have a .skey file extension name.\n" + \
+                  "Please enter a file name with a .skey extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (skey_name[-5:] == ".vkey"):
             msg = "Signing key has to have a .skey file extension name.\n" + \
                   "Please enter a file name with a .skey extension." 
             QMessageBox.warning(self, "Notification:", msg,
