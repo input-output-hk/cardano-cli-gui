@@ -23,7 +23,8 @@ library installed. Once installed download this repository, open a terminal in i
 python cardano-cli-gui.py
 ```
 
-**IMPORTANT: For most of the GUIs functionality a cardano node has to be running and synced to the test or main network.**
+| :point_up:    | For most of the GUIs functionality a cardano node has to be running and synced to the test or main network.|
+|---------------|:-----------------------------------------------------------------------------------------------------------|
 
 To run a cardano node download it from the [Cardano node releases](https://github.com/input-output-hk/cardano-node/releases) page and install it. The installer files are located under the Assets section that needs to be expanded. Add all executable files including the `cardano-node` and `cardano-cli` to you system path, e.g. copy them to `/usr/local/bin/` if you are using a Linux OS. 
 
@@ -67,37 +68,36 @@ GUI design
 
 The GUI functionality is seperated in 7 tabs and covers following things:
 
-1. **Start** tab: notifies the user to set a valid folder path to unlock other tabs. 
-The folder path will be used to load and save any filles as key and address files. It also
-displays if the *Debug mode* is set ON or OFF.  
+1. **Start** tab: set a valid folder path to unlock other tabs. The folder path will 
+be used to load and save files, e.g. key and address files. The tab also displays if the 
+*Debug mode* is set to ON or OFF.  
 
 ![alt text](https://github.com/input-output-hk/cardano-cli-gui/blob/main/images/start.png) 
 
-2. **Wallet** tab: loads or generates verification and signing keys, payment addresses and 
+2. **Address** tab: load or generate verification and signing keys, payment addresses and 
 payment public key hashes.  
 
-![alt text](https://github.com/input-output-hk/cardano-cli-gui/blob/main/images/wallet.png)
+![alt text](https://github.com/input-output-hk/cardano-cli-gui/blob/main/images/address.png)
 
-3. **Transactions** tab: checks funds for a payment address and sends funds to a receiving address.  
+3. **Transactions** tab: check funds for a payment address and send funds to a receiving address.  
 
 ![alt text](https://github.com/input-output-hk/cardano-cli-gui/blob/main/images/transactions.png)
 
-4. **Smart contracts - send** tab: builds a script payment address for a script file and sends funds 
+4. **Smart contracts - send** tab: build a script payment address for a script file and send funds 
 to the generated script address. You can attach a datum to the transaction.  
 
 ![alt text](https://github.com/input-output-hk/cardano-cli-gui/blob/main/images/smart_contracts_send.png)
 
-5. **Smart contracts - receive** tab: creates a spending transactions that spends a script address UTxO. 
+5. **Smart contracts - receive** tab: create a spending transactions that spends a script address UTXO. 
 You can attach a datum and a redeemer to the transaction and set a validity interval.  
 
 ![alt text](https://github.com/input-output-hk/cardano-cli-gui/blob/main/images/smart_contracts_receive.png)
 
-6. **Query** tab: queries an address for funds, queries network information and shows the transaction 
+6. **Query** tab: query an address for funds, query network information and display the transaction 
 hash for a signed transaction file.   
 
 ![alt text](https://github.com/input-output-hk/cardano-cli-gui/blob/main/images/query.png)
 
-7. **Developer** tab: sets the testnet number, updates the era parameter and generates
-the protocol parameters file for the chosen network.  
+7. **Developer** tab: set the testnet number and update the era parameter.  
 
 ![alt text](https://github.com/input-output-hk/cardano-cli-gui/blob/main/images/developer.png)
