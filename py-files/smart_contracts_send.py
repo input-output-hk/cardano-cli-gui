@@ -260,7 +260,7 @@ class Smart_contracts_send(QWidget):
                   "--out-file " + script_address_file
         
         if settings.debug_mode:
-            print("Command for generating script address files:")  
+            print("Command for generating script address file:")  
             print(common_functions.format_command(command) + "\n")  
         else:
             try:

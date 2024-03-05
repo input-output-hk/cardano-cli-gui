@@ -192,7 +192,7 @@ class Wallet(QWidget):
                           "--signing-key-file " + skey_name 
 
                 if settings.debug_mode:
-                    print("Command for generating signing and verification key:")  
+                    print("Command for generating signing and verification key files:")  
                     print(common_functions.format_command(command) + "\n")
                 else:
                     try:
@@ -288,7 +288,7 @@ class Wallet(QWidget):
                   "--out-file " + address_name
 
         if settings.debug_mode:
-            print("Command for generating address:")  
+            print("Command for generating address file:")  
             print(common_functions.format_command(command) + "\n")
         else:
             try:
@@ -378,7 +378,7 @@ class Wallet(QWidget):
                   "--out-file " + pkh_name
         
         if settings.debug_mode:
-            print("Command for generating public key hash:")  
+            print("Command for generating public key hash file:")  
             print(common_functions.format_command(command) + "\n")
         else:
             try:

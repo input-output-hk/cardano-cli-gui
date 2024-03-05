@@ -1,19 +1,24 @@
 # cardano-cli-gui
 Simple GUI that covers some basic functionality of the [Cardano CLI](https://github.com/intersectmbo/cardano-cli/) 
-command line tool. The GUI was tested with [Cardano node 8.7.3](https://github.com/IntersectMBO/cardano-node/releases/tag/8.7.3). 
+command line tool. The GUI was created by IOGs education team for learning purposes and was tested with 
+[Cardano node 8.7.3](https://github.com/IntersectMBO/cardano-node/releases/tag/8.7.3).  
 
-**WARNING:** <br/>
-**The GUI was created for educational purposes and is not regularly updated with changes in the Cardano CLI. If you want to use the GUI for submitting transactions on the main net you are doing so at your own risk.**
+| :warning: WARNING                                                                                         |
+|:----------------------------------------------------------------------------------------------------------|
+| The GUI was created for educational purposes and is not regularly updated with changes in the Cardano CLI.
+Using the GUI with a different version of a Cardano node may break some functionality of the GUI.
+If you are using the GUI for submitting transactions on the main net you are doing so at your own risk.     |
 
-To run the GUI you can use the executable files in the `executables/` folder. Download 
-the executable for your OS. 
+To run the GUI you can use the executable files in the `executables/` folder. Download the executable for your OS. 
 
-**FEATURE: The GUI can also run in debug mode where it prints the cardano-cli commands to the terminal window instead of executing them.**
+| :memo:        | The GUI can also run in debug mode where it prints the `cardano-cli` commands to the terminal window instead of executing them.|
+|---------------|:-------------------------------------------------------------------------------------------------------------------------------|
 
-If you want to use the GUI also in debug mode you should run the executable from a terminal window. 
+If you want to use the GUI in debug mode you should run the executable from a terminal window. 
+In non-debug mode the GUI writer possible errors to the error.log file.  
 
 You can also run the GUI from source. In that case you need to have `python 3` and the `PyQt 5` 
-library installed. Once they are installed download this repository, open a terminal in it and run:  
+library installed. Once installed download this repository, open a terminal in it and run:  
 ```console
 python cardano-cli-gui.py
 ```
