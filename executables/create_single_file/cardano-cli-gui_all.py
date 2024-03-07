@@ -168,7 +168,7 @@ class MainWindow(QMainWindow):
                            "commands to the terminal instead of executing them.")
         label_11_0 = QLabel("IMPORTANT:")
         label_12_0 = QLabel("A cardano node has to be synced and running\n" + \
-                            "for the query and send command to work.")
+                            "for most of the GUI functionality to work.")  
 
         # Widget actions
         button_4_1.clicked.connect(self.set_folder_path)
@@ -237,7 +237,7 @@ class MainWindow(QMainWindow):
             except:
                 pass
 
-            self.tabs.addTab(Wallet(),"Wallet")
+            self.tabs.addTab(Wallet(),"Address")
             self.tabs.addTab(Transactions(),"Transactions")
             self.tabs.addTab(Smart_contracts_send(),"Smart contrancts - send")
             self.tabs.addTab(Smart_contracts_receive(),"Smart contrancts - receive")
@@ -269,7 +269,7 @@ class Wallet(QWidget):
         self.pkh_name = ""
 
         # Header text 
-        self.label_0_0 = QLabel("Manage wallet address and its keys.")
+        self.label_0_0 = QLabel("Manage Cardano address and its keys.")
 
         # Cardano picture
 
@@ -289,12 +289,12 @@ class Wallet(QWidget):
         picture_0_2.setScaledContents(True)
 
         # Widgets for verification key section 
-        self.label_1_0 = QLabel("Input verification key name:")
+        self.label_1_0 = QLabel("Input verification key file name or generate it:")
         self.input_2_0 = QLineEdit()
         self.button_2_1 = QPushButton("Set")
 
         # Widgets for signing key section 
-        self.label_3_0 = QLabel("Signing key name:")
+        self.label_3_0 = QLabel("Signing key file name:")
         self.input_4_0 = QLineEdit()
         self.button_5_0 = QPushButton("Generate both keys")
 
@@ -303,7 +303,7 @@ class Wallet(QWidget):
         self.button_5_0.clicked.connect(self.generate_skey_and_vkey)
 
         # Widgets for payment address section 
-        self.label_7_0 = QLabel("Input payment address name:")
+        self.label_7_0 = QLabel("Input payment address file name or generate it:")
         self.input_8_0 = QLineEdit()
         self.button_8_1 = QPushButton("Set")
         self.button_8_2 = QPushButton("Generate")
@@ -319,11 +319,11 @@ class Wallet(QWidget):
         self.button_10_1.clicked.connect(self.show_address) 
 
         # Widgets for payment address key hash section 
-        self.label_12_0 = QLabel("Payment public key hash name:")
+        self.label_12_0 = QLabel("Input payment public key hash file name or generate it:")  
         self.input_13_0 = QLineEdit()
         self.button_13_1 = QPushButton("Set")
         self.button_13_2 = QPushButton("Generate")
-        self.label_14_0 = QLabel("Key hash:")
+        self.label_14_0 = QLabel("Payment public key hash:")   
         self.input_15_0 = QLineEdit()
         self.button_15_1 = QPushButton("Show")
 
@@ -409,16 +409,22 @@ class Wallet(QWidget):
         skey_path = folder_path + "/" + skey_name
         skey_exists = os.path.isfile(skey_path) 
 
-        if not vkey_exists:
-            msg = "Verification key does not exists.\n" + \
-                  "Please enter a valid file name."                       
+        if len(vkey_name) < 6:
+            msg = "Verification key has to have a .vkey file extension name.\n" + \
+                  "Please enter a file name with a .vkey extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (vkey_name[-5:] == ".vkey"):
+            msg = "Verification key has to have a .vkey file extension name.\n" + \
+                  "Please enter a file name with a .vkey extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
 
-        if not (".vkey" in vkey_name):
-            msg = "Verification key has to have a .vkey file extension name.\n" + \
-                  "Please type in a file name with a .vkey extension." 
+        if not vkey_exists:
+            msg = "Verification key file does not exists.\n" + \
+                  "Please enter a valid file name."                       
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -452,7 +458,7 @@ class Wallet(QWidget):
                           "--signing-key-file " + skey_name 
 
                 if debug_mode:
-                    print("Command below is defined in py-files/wallet.py line 190:")
+                    print("Command for generating signing and verification key files:")  
                     print(format_command(command) + "\n")
                 else:
                     try:
@@ -478,22 +484,28 @@ class Wallet(QWidget):
         address_path = folder_path + "/" + address_name
         address_exists = os.path.isfile(address_path)
 
-        if not (".addr" in address_name):
+        if len(address_name) < 6:
             msg = "Address file has to have a .addr file extension name.\n" + \
-                  "Please type in a file name with a .addr extension." 
+                  "Please enter a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (address_name[-5:] == ".addr"):  
+            msg = "Address file has to have a .addr file extension name.\n" + \
+                  "Please enter a file name with a .addr extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
 
         if not address_exists:
-            msg = "Address does not exists.\n" + \
+            msg = "Address file does not exists.\n" + \
                   "Please enter a valid file name."                      
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
 
         self.address_name = address_name
-        msg = "Public address file successfully set."  
+        msg = "Address file successfully set."  
         QMessageBox.information(self, "Notification:", msg)
 
     def generate_address(self):
@@ -550,7 +562,7 @@ class Wallet(QWidget):
                   "--out-file " + address_name
 
         if debug_mode:
-            print("Command below is defined in py-files/wallet.py line 285:")
+            print("Command for generating address file:")  
             print(format_command(command) + "\n")
         else:
             try:
@@ -585,24 +597,30 @@ class Wallet(QWidget):
         pkh_name = self.input_13_0.text()
         pkh_path = folder_path + "/" + pkh_name
         pkh_exists = os.path.isfile(pkh_path)
-        
-        if not pkh_exists:
-            msg = "Public key hash does not exists.\n" + \
-                  "Please specify a valid file name."                        
+
+        if len(pkh_name) < 5:
+            msg = "Public key hash has to have a .pkh file extension name.\n" + \
+                  "Please enter a file name with a .pkh extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (pkh_name[-4:] == ".pkh"):
+            msg = "Public key hash has to have a .pkh file extension name.\n" + \
+                  "Please enter a file name with a .pkh extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
 
-        if not (".pkh" in pkh_name):
-            msg = "Public key hash has to have a .pkh file extension name.\n" + \
-                  "Please type in a file name with a .pkh extension." 
+        if not pkh_exists:
+            msg = "Public key hash does not exists.\n" + \
+                  "Please enter a valid file name."                        
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
 
         self.pkh_name = pkh_name
         msg = "Public key hash file successfully set."  
-        QMessageBox.information(self, "Notification:", msg)
+        QMessageBox.information(self, "Notification:", msg)   
 
     def generate_pkh(self):
         global folder_path, debug_mode, testnet_magic 
@@ -643,7 +661,7 @@ class Wallet(QWidget):
                   "--out-file " + pkh_name
         
         if debug_mode:
-            print("Command below is defined in py-files/wallet.py line 376:")
+            print("Command for generating public key hash file:")  
             print(format_command(command) + "\n")
         else:
             try:
@@ -690,7 +708,7 @@ class Transactions(QWidget):
         self.command_failed = False
 
         # Header text 
-        self.label_0_0 = QLabel("Send funds from your address to another one.")
+        self.label_0_0 = QLabel("Send funds from your address to another address.")   
         
         # Cardano picture
 
@@ -710,7 +728,7 @@ class Transactions(QWidget):
         picture_0_1.setScaledContents(True)
 
         # Widgets for payment address section 
-        self.label_1_0 = QLabel("Type in your address name (will be also used as change address):")
+        self.label_1_0 = QLabel("Input your address file name (will be also used as change address):")
         self.input_2_0 = QLineEdit()
         self.button_2_1 = QPushButton("Set")
         self.label_3_0 = QLabel("Select mainnet or testnet:")
@@ -726,17 +744,17 @@ class Transactions(QWidget):
         self.comboBox_4_0.currentTextChanged.connect(self.set_net)
 
         # Widgets for sending funds section 
-        self.label_7_0 = QLabel("Send amount (seperat decimal number with dot):")
-        self.radioButton_7_1 = QRadioButton("Ada")
+        self.label_7_0 = QLabel("Send amount (for ADA seperat decimal number with dot):")
+        self.radioButton_7_1 = QRadioButton("ADA")
         self.input_8_0 = QLineEdit()
-        self.radioButton_8_1 = QRadioButton("Lovelace")
-        self.label_9_0 = QLabel("Input receiving address name:")
+        self.radioButton_8_1 = QRadioButton("lovelace")
+        self.label_9_0 = QLabel("Input receiving address file name:")
         self.input_10_0 = QLineEdit()
         self.button_10_1 = QPushButton("Set")
-        self.label_11_0 = QLabel("Input UTxO from sending address:")
+        self.label_11_0 = QLabel("Input UTxO you want to spent from your address:")  
         self.input_12_0 = QLineEdit()
         self.button_12_1 = QPushButton("Set")
-        self.label_13_0 = QLabel("Type in your signing key name:")
+        self.label_13_0 = QLabel("Type in your signing key file name:")   
         self.input_14_0 = QLineEdit()
         self.button_14_1 = QPushButton("Set")
         self.button_16_0 = QPushButton("Send")
@@ -835,9 +853,15 @@ class Transactions(QWidget):
         address_path = folder_path + "/" + address_name
         address_exists = os.path.isfile(address_path)
 
-        if not (".addr" in address_name):
+        if len(address_name) < 6:
             msg = "Address file has to have a .addr file extension name.\n" + \
-                  "Please type in a file name with a .addr extension." 
+                  "Please enter a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (address_name[-5:] == ".addr"):  
+            msg = "Address file has to have a .addr file extension name.\n" + \
+                  "Please enter a file name with a .addr extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -874,7 +898,7 @@ class Transactions(QWidget):
             return None
 
         if self.net == "mainnet": 
-            net_part =  "--mainnet "
+            net_part =  "--mainnet " 
         elif self.net == "testnet":
             net_part = "--testnet-magic " + testnet_magic + " "
         
@@ -883,7 +907,7 @@ class Transactions(QWidget):
                   net_part 
         
         if debug_mode:
-            print("Command below is defined in py-files/transactions.py line 224:")
+            print("Command for querying funds of an address:")  
             print(format_command(command) + "\n")
         else:
             try:
@@ -906,9 +930,15 @@ class Transactions(QWidget):
         receiving_address_path = folder_path + "/" + receiving_address_name
         receiving_address_exists = os.path.isfile(receiving_address_path)
         
-        if not (".addr" in receiving_address_name):
+        if len(receiving_address_name) < 6:
             msg = "Address file has to have a .addr file extension name.\n" + \
-                  "Please type in a file name with a .addr extension." 
+                  "Please enter a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (receiving_address_name[-5:] == ".addr"):  
+            msg = "Address file has to have a .addr file extension name.\n" + \
+                  "Please enter a file name with a .addr extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -952,10 +982,16 @@ class Transactions(QWidget):
         skey_name = self.input_14_0.text()
         skey_path = folder_path + "/" + skey_name
         skey_exists = os.path.isfile(skey_path)
-        
-        if not (".skey" in skey_name):
+
+        if len(skey_name) < 6:
             msg = "Signing key has to have a .skey file extension name.\n" + \
-                  "Please type in a file name with a .skey extension." 
+                  "Please enter a file name with a .skey extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (skey_name[-5:] == ".skey"):
+            msg = "Signing key has to have a .skey file extension name.\n" + \
+                  "Please enter a file name with a .skey extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -1087,9 +1123,9 @@ class Transactions(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/transactions.py line 378:"
-        debug_msg_sign = "Command below is defined in py-files/transactions.py line 391:"
-        debug_msg_submit = "Command below is defined in py-files/transactions.py line 397:" 
+        debug_msg_build = "Command for building a transaction:"  
+        debug_msg_sign = "Command for signing a transaction:"  
+        debug_msg_submit = "Command for submitting a transaction:"   
                     
         manage_command(command_build_processed, msg_build, debug_msg_build)
         time.sleep(1)
@@ -1099,7 +1135,8 @@ class Transactions(QWidget):
         if not self.command_failed:
             manage_command(command_submit.split(), msg_submit, debug_msg_submit)
         if not self.command_failed and not debug_mode:
-            msg = "Send transaction successfully submitted."  
+            msg = "Commads successfully executed.\n" + \
+                  "Look at console output for transaction info."  
             QMessageBox.information(self, "Notification:", msg) 
         self.command_failed = False
 
@@ -1122,7 +1159,7 @@ class Smart_contracts_send(QWidget):
         self.command_failed = False
 
         # Header text 
-        self.label_0_0 = QLabel("Generate cardano script address and send funds to it.")
+        self.label_0_0 = QLabel("Generate cardano script address and send funds to it.")  
 
         # Cardano picture
 
@@ -1142,16 +1179,16 @@ class Smart_contracts_send(QWidget):
         picture_0_2.setScaledContents(True)
 
         # Widgets for building script address section 
-        self.label_1_0 = QLabel("Type in script file name:")
+        self.label_1_0 = QLabel("Input script file name:")  
         self.input_2_0 = QLineEdit()
         self.button_2_1 = QPushButton("Set")
-        self.label_3_0 = QLabel("Script address file name:")
+        self.label_3_0 = QLabel("Input or generate script address file name:")  
         self.input_4_0 = QLineEdit()
         self.button_4_1 = QPushButton("Set")
         self.button_4_2 = QPushButton("Generate")
         self.label_5_0 = QLabel("Select mainnet or testnet:")
         self.comboBox_6_0 = QComboBox()
-        self.label_7_0 = QLabel("Script address:")
+        self.label_7_0 = QLabel("Show script address:")  
         self.input_8_0 = QLineEdit() 
         self.button_8_1 = QPushButton("Show")
 
@@ -1164,20 +1201,20 @@ class Smart_contracts_send(QWidget):
         self.button_8_1.clicked.connect(self.show_script_address)
 
         # Widgets for sending funds to script address section
-        self.label_9_0 = QLabel("Type in your change address name:")
+        self.label_9_0 = QLabel("Input your address file name:")   
         self.input_10_0 = QLineEdit()
         self.button_10_1 = QPushButton("Set")
-        self.label_11_0 = QLabel("Type in your signing key file name:")
+        self.label_11_0 = QLabel("Input signing key file name:")   
         self.input_12_0 = QLineEdit()
         self.button_12_1 = QPushButton("Set")
-        self.label_13_0 = QLabel("Send amount (seperat decimal number with dot):")
+        self.label_13_0 = QLabel("Send amount (for ADA seperat decimal number with dot):")  
         self.input_14_0 = QLineEdit()
-        self.radioButton_14_1 = QRadioButton("Ada")
-        self.radioButton_14_2 = QRadioButton("Lovelace")
-        self.label_15_0 = QLabel("Input UTxO address:")
+        self.radioButton_14_1 = QRadioButton("ADA")  
+        self.radioButton_14_2 = QRadioButton("lovelace")   
+        self.label_15_0 = QLabel("Input UTxO you want to spent:")  
         self.input_16_0 = QLineEdit()
         self.button_16_1 = QPushButton("Set")
-        self.label_17_0 = QLabel("(optional) Chosse datum file type and type in file name:")
+        self.label_17_0 = QLabel("Chosse datum file type and input datum file name:")   
 
         datum_layout = QHBoxLayout()
         self.comboBox_18_0_1 = QComboBox()
@@ -1193,8 +1230,9 @@ class Smart_contracts_send(QWidget):
         self.button_10_1.clicked.connect(self.set_change_address)
         self.button_12_1.clicked.connect(self.set_skey_name)
         self.button_16_1.clicked.connect(self.set_utxo)
-        self.comboBox_18_0_1.addItems(["", "tx-out-datum-hash-file", 
-                                       "tx-out-datum-embed-file", "tx-out-inline-datum-file"])
+        self.comboBox_18_0_1.addItems(["tx-out-datum-hash-file", 
+                                       "tx-out-datum-embed-file", 
+                                       "tx-out-inline-datum-file"])
         self.comboBox_18_0_1.currentTextChanged.connect(self.set_datum_file_type)
         self.button_18_1.clicked.connect(self.set_datum)
         self.button_20_0.clicked.connect(self.send_funds)
@@ -1287,9 +1325,15 @@ class Smart_contracts_send(QWidget):
         script_file_path = folder_path + "/" + script_file_name
         script_file_exists = os.path.isfile(script_file_path)
 
-        if not (".plutus" in script_file_name):
+        if len(script_file_name) < 8:
             msg = "Script file has to have a .plutus file extension name.\n" + \
-                  "Please type in a file name with a .plutus extension." 
+                  "Please enter a file name with a .plutus extension."
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (script_file_name[-7:] == ".plutus"):
+            msg = "Script file has to have a .plutus file extension name.\n" + \
+                  "Please enter a file name with a .plutus extension."
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -1312,9 +1356,15 @@ class Smart_contracts_send(QWidget):
         script_address_file_path = folder_path + "/" + script_address_file_name
         script_address_file_exists = os.path.isfile(script_address_file_path)
 
-        if not (".addr" in script_address_file_name):
+        if len(script_address_file_name) < 6:
             msg = "Address file has to have a .addr file extension name.\n" + \
-                  "Please type in a file name with a .addr extension." 
+                  "Please enter a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (script_address_file_name[-5:] == ".addr"):  
+            msg = "Address file has to have a .addr file extension name.\n" + \
+                  "Please enter a file name with a .addr extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -1364,8 +1414,8 @@ class Smart_contracts_send(QWidget):
                   "--out-file " + script_address_file
         
         if debug_mode:
-            print("Command below is defined in py-files/smart_contracts.py line 256:")
-            print(format_command(command) + "\n") 
+            print("Command for generating script address file:")  
+            print(format_command(command) + "\n")  
         else:
             try:
                 subprocess.Popen(command.split(), cwd=folder_path) 
@@ -1406,9 +1456,15 @@ class Smart_contracts_send(QWidget):
         change_address_path = folder_path + "/" + change_address_name
         change_address_exists = os.path.isfile(change_address_path)
 
-        if not (".addr" in change_address_name):
+        if len(change_address_name) < 6:
             msg = "Change address file has to have a .addr file extension name.\n" + \
-                  "Please type in a file name with a .addr extension." 
+                  "Please enter a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (change_address_name[-5:] == ".addr"):  
+            msg = "Change address file has to have a .addr file extension name.\n" + \
+                  "Please enter a file name with a .addr extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -1431,9 +1487,15 @@ class Smart_contracts_send(QWidget):
         skey_path = folder_path + "/" + skey_name
         skey_exists = os.path.isfile(skey_path)
         
-        if not (".skey" in skey_name):
+        if len(skey_name) < 6:
             msg = "Signing key has to have a .skey file extension name.\n" + \
-                  "Please type in a file name with a .skey extension." 
+                  "Please enter a file name with a .skey extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (skey_name[-5:] == ".skey"):
+            msg = "Signing key has to have a .skey file extension name.\n" + \
+                  "Please enter a file name with a .skey extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -1481,24 +1543,24 @@ class Smart_contracts_send(QWidget):
         datum_file_path = folder_path + "/" + datum_file_name
         datum_file_exists = os.path.isfile(datum_file_path)
 
-        if datum_file_name == "":
-            self.datum_file_name = datum_file_name
-            msg = "Datum file successfully unset."
-            QMessageBox.information(self, "Notification:", msg)
-            return None
-        else:
-            if not datum_file_exists:
-                msg = "Datum file does not exists.\n" + \
-                      "Please enter a valid file name." 
-                QMessageBox.warning(self, "Notification:", msg,
-                                    QMessageBox.Close) 
-                return None
-
-        if not (".json" in datum_file_name):
+        if len(datum_file_name) < 6:
             msg = "Datum has to be a file in JSON fromat.\n" + \
-                  "Please type in a name with a .json extension." 
+                  "Please enter a name with a .json extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
+            return None
+        elif not (datum_file_name[-5:] == ".json"):
+            msg = "Datum has to be a file in JSON fromat.\n" + \
+                  "Please enter a name with a .json extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
+        if not datum_file_exists:
+            msg = "Datum file does not exists.\n" + \
+                    "Please enter a valid file name." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close) 
             return None
 
         self.datum_file_name = datum_file_name 
@@ -1610,10 +1672,7 @@ class Smart_contracts_send(QWidget):
             net_part = "--testnet-magic " + testnet_magic + " "
             split_number = 9
 
-        if self.datum_file_name == "":
-            datum_part = ""
-        else:
-            datum_part = "--" + self.datum_file_type + " " + self.datum_file_name + " "
+        datum_part = "--" + self.datum_file_type + " " + self.datum_file_name + " "
 
         command_build = "cardano-cli transaction build " + \
                         "--" + self.era + " " + \
@@ -1645,9 +1704,9 @@ class Smart_contracts_send(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/smart_contracts_send.py line 503:" 
-        debug_msg_sign = "Command below is defined in py-files/smart_contracts_send.py line 517:" 
-        debug_msg_submit = "Command below is defined in py-files/smart_contracts_send.py line 523:" 
+        debug_msg_build = "Command for building a transaction:"  
+        debug_msg_sign = "Command for signing a transaction:"  
+        debug_msg_submit = "Command for submitting a transaction:"  
                     
         manage_command(command_build_processed, msg_build, debug_msg_build)
         time.sleep(1)
@@ -1679,13 +1738,12 @@ class Smart_contracts_receive(QWidget):
         self.signer_pkh = ""
         self.validity_type = ""
         self.validity_slot = ""
-        self.protocol_parameter_file_name = ""
         self.skey_name = ""
         self.era = current_era
         self.command_failed = False 
 
         # Header text 
-        self.label_0_0 = QLabel("Receive funds from a cardano script address.")
+        self.label_0_0 = QLabel("Receive funds from a cardano script address.")  
 
         # Cardano picture
 
@@ -1706,63 +1764,56 @@ class Smart_contracts_receive(QWidget):
 
         # Widgets for receiving funds from script address section 
         net_layout = QHBoxLayout()
-        self.label_1_0_1 = QLabel("Select mainnet or testnet:")
+        self.label_1_0_1 = QLabel("Select mainnet or testnet:")  
         self.comboBox_1_0_2 = QComboBox()
         net_layout.addWidget(self.label_1_0_1)
         net_layout.addWidget(self.comboBox_1_0_2)
-        self.label_2_0 = QLabel("Type in your change address name:")
+        self.label_2_0 = QLabel("Input your receiving address file name:")   
         self.input_3_0 = QLineEdit()
         self.button_3_1 = QPushButton("Set")
-        self.label_4_0 = QLabel("Type in transaction input UTxO from script address:")
+        self.label_4_0 = QLabel("Input UTxO from script address you want to consume:")  
         self.input_5_0 = QLineEdit()
         self.button_5_1 = QPushButton("Set")
-        self.label_6_0 = QLabel("Type in script file name:")
+        self.label_6_0 = QLabel("Input script file name:")  
         self.input_7_0 = QLineEdit()
         self.button_7_1 = QPushButton("Set")
-        self.label_8_0 = QLabel("Chosse datum file type and type in file name:")
+        self.label_8_0 = QLabel("Chosse datum file type and input file name:")  
         datum_layout = QHBoxLayout()
         self.comboBox_9_0_1 = QComboBox()
         self.input_9_0_2 = QLineEdit()
         datum_layout.addWidget(self.comboBox_9_0_1)
         datum_layout.addWidget(self.input_9_0_2)
         self.button_9_1 = QPushButton("Set")
-        self.label_10_0 = QLabel("Type in redeemer file name:")
+        self.label_10_0 = QLabel("Input redeemer file name:")  
         self.input_11_0 = QLineEdit()
         self.button_11_1 = QPushButton("Set")
-        self.label_12_0 = QLabel("Type in colleteral UTxO from your receiving address:")
+        self.label_12_0 = QLabel("Input colleteral UTxO from your receiving address:")  
         self.input_13_0 = QLineEdit()
         self.button_13_1 = QPushButton("Set")
-        self.label_14_0 = QLabel("Type in public key hash file name from receiving address:")
+        self.label_14_0 = QLabel("Input public key hash file name from receiving address:")  
         self.input_15_0 = QLineEdit()
         self.button_15_1 = QPushButton("Set")
-        self.label_16_0 = QLabel("Chosse validity interval type and type in time slot:")
+        self.label_16_0 = QLabel("Chosse validity interval type and input time slot:")  
         validity_layout = QHBoxLayout()
         self.comboBox_17_0_1 = QComboBox()
         self.input_17_0_2 = QLineEdit()
         validity_layout.addWidget(self.comboBox_17_0_1)
         validity_layout.addWidget(self.input_17_0_2)
         self.button_17_1 = QPushButton("Set")
-        protocol_layout = QHBoxLayout()
-        self.label_18_0_1 = QLabel("Type in protocol param file name:")
-        self.input_18_0_2 = QLineEdit()
-        protocol_layout.addWidget(self.label_18_0_1)
-        protocol_layout.addWidget(self.input_18_0_2)
-        self.button_18_1 = QPushButton("Set")
         signing_key_layout = QHBoxLayout()
-        self.label_19_0_1 = QLabel("Type in signing key file name:")
-        self.input_19_0_2 = QLineEdit()
-        signing_key_layout.addWidget(self.label_19_0_1)
-        signing_key_layout.addWidget(self.input_19_0_2)
-        self.button_19_1 = QPushButton("Set")
+        self.label_18_0_1 = QLabel("Input signing key file name:")  
+        self.input_18_0_2 = QLineEdit()
+        signing_key_layout.addWidget(self.label_18_0_1)
+        signing_key_layout.addWidget(self.input_18_0_2)
+        self.button_18_1 = QPushButton("Set")
 
-        self.button_22_0 = QPushButton("Submit")
-        self.button_22_1 = QPushButton("Set all")
+        self.button_21_0 = QPushButton("Submit")
+        self.button_21_1 = QPushButton("Set all")
 
         # Widget actions for receiving funds from script address section 
         self.comboBox_1_0_2.addItems(["", "mainnet", "testnet"]) 
         self.comboBox_1_0_2.currentTextChanged.connect(self.set_net) 
-        self.comboBox_9_0_1.addItems(["", 
-                                      "tx-in-datum-cbor-file", 
+        self.comboBox_9_0_1.addItems(["tx-in-datum-cbor-file", 
                                       "tx-in-datum-file", 
                                       "tx-in-datum-value", 
                                       "tx-in-inline-datum-present"])
@@ -1778,10 +1829,9 @@ class Smart_contracts_receive(QWidget):
         self.button_13_1.clicked.connect(self.set_colleteral_utxo)
         self.button_15_1.clicked.connect(self.set_pkh)
         self.button_17_1.clicked.connect(self.set_slot)
-        self.button_18_1.clicked.connect(self.set_protocol_parameter)
-        self.button_19_1.clicked.connect(self.set_skey_name)
-        self.button_22_0.clicked.connect(self.submit_transaction)
-        self.button_22_1.clicked.connect(self.set_all)
+        self.button_18_1.clicked.connect(self.set_skey_name)
+        self.button_21_0.clicked.connect(self.submit_transaction)
+        self.button_21_1.clicked.connect(self.set_all)
 
         # Set label fonts and size 
         labels = [self.label_0_0, self.label_1_0_1, 
@@ -1789,7 +1839,7 @@ class Smart_contracts_receive(QWidget):
                   self.label_6_0, self.label_8_0, 
                   self.label_10_0, self.label_12_0, 
                   self.label_14_0, self.label_16_0, 
-                  self.label_18_0_1, self.label_19_0_1] 
+                  self.label_18_0_1] 
         for label in labels:
             font = label.font()
             font.setPointSize(12)
@@ -1797,7 +1847,6 @@ class Smart_contracts_receive(QWidget):
 
         self.label_1_0_1.setFixedSize(290, 35)
         self.label_18_0_1.setFixedSize(290, 35)
-        self.label_19_0_1.setFixedSize(290, 35)
 
         # Set lineEdit sizes 
         inputs = [self.input_3_0, self.input_5_0, 
@@ -1809,7 +1858,6 @@ class Smart_contracts_receive(QWidget):
         self.input_9_0_2.setFixedSize(290, 30)
         self.input_17_0_2.setFixedSize(290, 30)
         self.input_18_0_2.setFixedSize(200, 30)
-        self.input_19_0_2.setFixedSize(200, 30)
 
         # Set comboBox size
         self.comboBox_1_0_2.setFixedSize(200,30)
@@ -1821,12 +1869,11 @@ class Smart_contracts_receive(QWidget):
                    self.button_7_1, self.button_9_1, 
                    self.button_11_1, self.button_13_1, 
                    self.button_15_1, self.button_17_1,
-                   self.button_18_1, self.button_19_1,
-                   self.button_22_1] 
+                   self.button_18_1, self.button_21_1] 
         for button in buttons:
             button.setFixedSize(80,30)
 
-        self.button_22_0.setFixedSize(160,30) 
+        self.button_21_0.setFixedSize(160,30) 
 
         # Space between the sections
         self.emptyLabel = QLabel()
@@ -1861,13 +1908,12 @@ class Smart_contracts_receive(QWidget):
         layout.addWidget(self.label_16_0, 16, 0)
         layout.addLayout(validity_layout, 17, 0)
         layout.addWidget(self.button_17_1, 17, 1)
-        layout.addLayout(protocol_layout, 18, 0)
+        layout.addLayout(signing_key_layout, 18, 0)
         layout.addWidget(self.button_18_1, 18, 1)
-        layout.addLayout(signing_key_layout, 19, 0)
-        layout.addWidget(self.button_19_1, 19, 1)
-        layout.addWidget(self.emptyLabel, 21, 0) 
-        layout.addWidget(self.button_22_0, 22, 0)
-        layout.addWidget(self.button_22_1, 22, 1) 
+        layout.addWidget(self.emptyLabel, 20, 0) 
+        layout.addWidget(self.button_21_0, 21, 0)
+        layout.addWidget(self.button_21_1, 21, 1) 
+        layout.addWidget(self.emptyLabel, 22, 0)
 
         self.setLayout(layout) 
 
@@ -1889,9 +1935,15 @@ class Smart_contracts_receive(QWidget):
         change_address_path = folder_path + "/" + change_address_name
         change_address_exists = os.path.isfile(change_address_path)
 
-        if not (".addr" in change_address_name):
+        if len(change_address_name) < 6:
             msg = "Change address file has to have a .addr file extension name.\n" + \
-                  "Please type in a file name with a .addr extension." 
+                  "Please enter a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (change_address_name[-5:] == ".addr"):  
+            msg = "Change address file has to have a .addr file extension name.\n" + \
+                  "Please enter a file name with a .addr extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -1936,9 +1988,15 @@ class Smart_contracts_receive(QWidget):
         script_file_path = folder_path + "/" + script_file_name
         script_file_exists = os.path.isfile(script_file_path)
         
-        if not (".plutus" in script_file_name):
+        if len(script_file_name) < 8:
             msg = "Script file has to have a .plutus file extension name.\n" + \
-                  "Please type in a file name with a .plutus extension." 
+                  "Please enter a file name with a .plutus extension."
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (script_file_name[-7:] == ".plutus"):
+            msg = "Script file has to have a .plutus file extension name.\n" + \
+                  "Please enter a file name with a .plutus extension."
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -1960,8 +2018,8 @@ class Smart_contracts_receive(QWidget):
         datum_file_path = folder_path + "/" + datum_file_name
         datum_file_exists = os.path.isfile(datum_file_path)
 
-        if self.datum_file_type == "":
-            msg = "Select first datum file type."
+        if self.datum_file_type == "":  
+            msg = "Select datum file type."  
             QMessageBox.warning(self, "Notification:", msg,
                                         QMessageBox.Close)
             return None
@@ -1976,6 +2034,19 @@ class Smart_contracts_receive(QWidget):
             self.datum_file_name = ""
             msg = "Inline datum present option successfully set." 
             QMessageBox.information(self, "Notification:", msg)
+            return None
+
+        if len(datum_file_name) < 6:
+            msg = "Datum file has to be a file in JSON fromat.\n" + \
+                  "Please enter a name with a .json extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (datum_file_name[-5:] == ".json"):
+            msg = "Datum file has to be a file in JSON fromat.\n" + \
+                  "Please enter a name with a .json extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
             return None
 
         if not datum_file_exists:
@@ -1995,25 +2066,25 @@ class Smart_contracts_receive(QWidget):
         redeemer_file_path = folder_path + "/" + redeemer_file_name
         redeemer_file_exists = os.path.isfile(redeemer_file_path)
 
-        if redeemer_file_name == "":
-            self.redeemer = redeemer_file_name
-            msg = "Redeemer file successfully unset."
-            QMessageBox.information(self, "Notification:", msg)
+        if len(redeemer_file_name) < 6:
+            msg = "Redeemer file has to be a file in JSON fromat.\n" + \
+                  "Please enter a file name with a .json extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
             return None
-        else:
-            if not (".json" in redeemer_file_name):
-                msg = "Redeemer has to be a file in JSON fromat.\n" + \
-                      "Please type in a name with a .json extension." 
-                QMessageBox.warning(self, "Notification:", msg,
-                                    QMessageBox.Close)
-                return None
+        elif not (redeemer_file_name[-5:] == ".json"):
+            msg = "Redeemer file has to be a file in JSON fromat.\n" + \
+                  "Please enter a file name with a .json extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
 
-            if not redeemer_file_exists:
-                msg = "Redeemer file does not exists.\n" + \
-                      "Please enter a valid file name." 
-                QMessageBox.warning(self, "Notification:", msg,
-                                    QMessageBox.Close) 
-                return None
+        if not redeemer_file_exists:
+            msg = "Redeemer file does not exists.\n" + \
+                  "Please enter a valid file name." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close) 
+            return None
 
         self.redeemer = redeemer_file_name 
         msg = "Redeemer file successfully set." 
@@ -2046,10 +2117,16 @@ class Smart_contracts_receive(QWidget):
         pkh_name = self.input_15_0.text()
         pkh_path = folder_path + "/" + pkh_name
         pkh_exists = os.path.isfile(pkh_path)
-        
-        if not (".pkh" in pkh_name):
-            msg = "Public key hash has to have a .pkh file extension name.\n" + \
-                  "Please type in a file name with a .pkh extension." 
+
+        if len(pkh_name) < 5:
+            msg = "Public key hash file has to have a .pkh file extension name.\n" + \
+                  "Please enter a file name with a .pkh extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (pkh_name[-4:] == ".pkh"):
+            msg = "Public key hash file has to have a .pkh file extension name.\n" + \
+                  "Please enter a file name with a .pkh extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -2080,49 +2157,25 @@ class Smart_contracts_receive(QWidget):
         msg = "Slot successfully set."  
         QMessageBox.information(self, "Notification:", msg)
 
-    def set_protocol_parameter(self):
-        global folder_path, debug_mode, testnet_magic 
-        pp_file_name = self.input_18_0_2.text()
-        pp_file_path = folder_path + "/" + pp_file_name
-        pp_file_exists = os.path.isfile(pp_file_path)
-
-        if pp_file_name == "":
-            self.protocol_parameter_file_name = pp_file_name
-            msg = "Protocol parameter file successfully unset."
-            QMessageBox.information(self, "Notification:", msg)
-            return None
-        else:
-            if not (".json" in pp_file_name):
-                msg = "Protocol parameter has to be a file in JSON fromat.\n" + \
-                      "Please type in a name with a .json extension." 
-                QMessageBox.warning(self, "Notification:", msg,
-                                    QMessageBox.Close)
-                return None
-
-            if not pp_file_exists:
-                msg = "Protocol parameter file does not exists.\n" + \
-                      "Please enter a valid file name." 
-                QMessageBox.warning(self, "Notification:", msg,
-                                    QMessageBox.Close) 
-                return None
-
-        self.protocol_parameter_file_name = pp_file_name 
-        msg = "Protocol parameter file successfully set." 
-        QMessageBox.information(self, "Notification:", msg)
-
     def set_skey_name(self):
         global folder_path, debug_mode, testnet_magic 
-        skey_name = self.input_19_0_2.text()
+        skey_name = self.input_18_0_2.text()
         skey_path = folder_path + "/" + skey_name
         skey_exists = os.path.isfile(skey_path)
 
-        if not (".skey" in skey_name):
-            msg = "Signing key has to have a .skey file extension name.\n" + \
-                  "Please type in a file name with a .skey extension." 
+        if len(skey_name) < 6:
+            msg = "Signing key file has to have a .skey file extension name.\n" + \
+                  "Please enter a file name with a .skey extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
-                
+        elif not (skey_name[-5:] == ".skey"):
+            msg = "Signing key file has to have a .skey file extension name.\n" + \
+                  "Please enter a file name with a .skey extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+
         if not skey_exists:
             msg = "Signing key file does not exists.\n" + \
                   "Please enter a valid file name."  
@@ -2144,7 +2197,6 @@ class Smart_contracts_receive(QWidget):
         self.set_colleteral_utxo()
         self.set_pkh()
         self.set_slot()
-        self.set_protocol_parameter()
         self.set_skey_name()
 
     def submit_transaction(self): 
@@ -2215,12 +2267,6 @@ class Smart_contracts_receive(QWidget):
                                 QMessageBox.Close)
             return None
 
-        if self.protocol_parameter_file_name == "":
-            msg = "Please set a valid protocol parameter file name." 
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
-
         if self.skey_name == "":
             msg = "Please set a valid signing key." 
             QMessageBox.warning(self, "Notification:", msg,
@@ -2258,7 +2304,6 @@ class Smart_contracts_receive(QWidget):
                         "--required-signer-hash " + self.signer_pkh + " " + \
                         "--change-address " + self.change_address + " " + \
                         "--" + self.validity_type + " " + self.validity_slot + " " + \
-                        "--protocol-params-file " + self.protocol_parameter_file_name + " " + \
                         "--out-file tx.body"
 
         command_sign = "cardano-cli transaction sign " + \
@@ -2277,9 +2322,9 @@ class Smart_contracts_receive(QWidget):
         msg_sign = "Transaction sign command failed.\n" + msg_common
         msg_submit = "Transaction submit command failed.\n" + msg_common
 
-        debug_msg_build = "Command below is defined in py-files/smart_contracts_receive.py line 573:" 
-        debug_msg_sign = "Command below is defined in py-files/smart_contracts_receive.py line 587:" 
-        debug_msg_submit = "Command below is defined in py-files/smart_contracts_receive.py line 593:" 
+        debug_msg_build = "Command for building a transaction:"  
+        debug_msg_sign = "Command for signing a transaction:"  
+        debug_msg_submit = "Command for submitting a transaction:"  
                     
         manage_command(command_build, msg_build, debug_msg_build)
         time.sleep(1)
@@ -2328,10 +2373,10 @@ class Query(QWidget):
         self.comboBox_2_0 = QComboBox()
 
         # Widgets for querying address section 
-        self.label_3_0 = QLabel("Type in a address file name:")
+        self.label_3_0 = QLabel("Input a address file name:")  
         self.input_4_0 = QLineEdit()
         self.button_4_1 = QPushButton("Set")
-        self.label_5_0 = QLabel("Funds for above payment address:")
+        self.label_5_0 = QLabel("Funds for above payment address:")  
         self.input_6_0 = QPlainTextEdit()
         self.button_6_1 = QPushButton("Querry\nfunds")
 
@@ -2341,7 +2386,7 @@ class Query(QWidget):
         self.button_8_1 = QPushButton("Querry\ninfo")
 
         # Widgets for transaction hash section
-        self.label_9_0 = QLabel("Show transaction hash for tx.signed file:")
+        self.label_9_0 = QLabel("Show transaction hash for tx.signed file:")  
         self.input_10_0 = QPlainTextEdit()
         self.button_10_1 = QPushButton("Show")
 
@@ -2427,9 +2472,15 @@ class Query(QWidget):
         address_path = folder_path + "/" + address_name
         address_exists = os.path.isfile(address_path)
         
-        if not (".addr" in address_name):
+        if len(address_name) < 6:
             msg = "Address file has to have a .addr file extension name.\n" + \
-                  "Please type in a file name with a .addr extension." 
+                  "Please enter a file name with a .addr extension." 
+            QMessageBox.warning(self, "Notification:", msg,
+                                QMessageBox.Close)
+            return None
+        elif not (address_name[-5:] == ".addr"):  
+            msg = "Address file has to have a .addr file extension name.\n" + \
+                  "Please enter a file name with a .addr extension." 
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
@@ -2471,7 +2522,7 @@ class Query(QWidget):
                   net_part 
         
         if debug_mode:
-            print("Command below is defined in py-files/query.py line 172:")
+            print("Command for querying funds of an address:")  
             print(format_command(command) + "\n")
         else:
             try:
@@ -2505,7 +2556,7 @@ class Query(QWidget):
                   net_part 
         
         if debug_mode:
-            print("Command below is defined in py-files/query.py line 206:")
+            print("Command for querying network information:")  
             print(format_command(command) + "\n")
         else:
             try:
@@ -2537,7 +2588,7 @@ class Query(QWidget):
         command = "cardano-cli transaction txid --tx-file tx.signed"
 
         if debug_mode:
-            print("Command below is defined in py-files/query.py line 238:")
+            print("Command for showing the hash of a transaction:")  
             print(format_command(command) + "\n") 
         else:
             try:
@@ -2562,7 +2613,7 @@ class Developer(QWidget):
         self.net = ""
 
         # Header text 
-        self.label_1_0 = QLabel("Manage advenced  Only for experienced developers.\n" + \
+        self.label_1_0 = QLabel("Manage advanced settings: testnet network and era.\n" + \
                                 "If you are not sure keep default parameter values.")
 
         # Cardano picture
@@ -2598,27 +2649,15 @@ class Developer(QWidget):
         self.label_9_0 = QLabel("Reset parameters to default values:")
         self.button_10_0 = QPushButton("Reset")
 
-        # Widgets for generating protocol parameters file
-        self.label_12_0 = QLabel("Select mainnet or testnet:")
-        self.comboBox_13_0 = QComboBox()
-        self.label_14_0 = QLabel("Generate protocol parameters file:")
-        self.input_15_0 = QLineEdit("")
-        self.button_15_1 = QPushButton("Generate")
-
         # Button and combobox functions
         self.button_4_1.clicked.connect(self.set_magic)
         self.button_7_1.clicked.connect(self.set_era)
         self.button_10_0.clicked.connect(self.reset_values)
-        self.button_15_1.clicked.connect(self.generate_protocol_params_file)
-
-        self.comboBox_13_0.addItems(["", "mainnet", "testnet"])
-        self.comboBox_13_0.currentTextChanged.connect(self.set_net)
 
         # Set label fonts 
         labels = [self.label_1_0, self.label_3_0, 
                   self.label_5_0, self.label_6_0, 
-                  self.label_8_0, self.label_9_0,
-                  self.label_12_0, self.label_14_0]
+                  self.label_8_0, self.label_9_0]
         for label in labels:
             font = label.font()
             font.setPointSize(12)
@@ -2627,13 +2666,11 @@ class Developer(QWidget):
         # Set lineEdit size 
         self.input_4_0.setFixedSize(500,30)
         self.input_7_0.setFixedSize(500,30)
-        self.input_15_0.setFixedSize(500,30)
 
         # Set button size 
         self.button_4_1.setFixedSize(80,30)
         self.button_7_1.setFixedSize(80,30)
         self.button_10_0.setFixedSize(160,30)
-        self.button_15_1.setFixedSize(80,30)
 
         # Space between the sections
         emptyLabel = QLabel()
@@ -2655,11 +2692,10 @@ class Developer(QWidget):
         layout.addWidget(self.label_9_0, 9, 0)
         layout.addWidget(self.button_10_0, 10, 0)
         layout.addWidget(emptyLabel, 11, 0)
-        layout.addWidget(self.label_12_0, 12, 0)
-        layout.addWidget(self.comboBox_13_0, 13, 0)
-        layout.addWidget(self.label_14_0, 14, 0)
-        layout.addWidget(self.input_15_0, 15, 0)
-        layout.addWidget(self.button_15_1, 15, 1)
+        layout.addWidget(emptyLabel, 12, 0)
+        layout.addWidget(emptyLabel, 13, 0)
+        layout.addWidget(emptyLabel, 14, 0)
+        layout.addWidget(emptyLabel, 15, 0)
         layout.addWidget(emptyLabel, 16, 0)
         self.setLayout(layout)
 
@@ -2704,62 +2740,6 @@ class Developer(QWidget):
         msg = "Default values successfully restored."  
         QMessageBox.information(self, "Notification:", msg) 
 
-    def set_net(self, selected_net):
-        global folder_path, debug_mode, testnet_magic 
-        self.net = selected_net 
-
-    def generate_protocol_params_file(self):
-        global folder_path, debug_mode, testnet_magic 
-        if self.net == "":
-            msg = "Select option mainnet or testnet."    
-            QMessageBox.warning(self, "Notification:", msg,
-                                QMessageBox.Close)
-            return None
-
-        if self.net == "mainnet": 
-            net_part =  "--mainnet "
-        elif self.net == "testnet":
-            net_part = "--testnet-magic " + testnet_magic + " "
-        
-        file_number_count = 0
-        while(True):
-            if file_number_count == 0:
-                prepend_num = ""
-            else:
-                prepend_num = str(file_number_count)
-            
-            pp_file_name = "protocol" + prepend_num + ".json"
-            pp_file_path = folder_path + "/" + pp_file_name
-            pp_file_exists = os.path.isfile(pp_file_path)
-            
-            if not pp_file_exists:
-                self.pp_file_name = pp_file_name
-                break
-
-            file_number_count += 1
-
-        command = "cardano-cli query protocol-parameters " + \
-                  net_part + \
-                  "--out-file " + self.pp_file_name 
-
-        if debug_mode:
-            print("Command below is defined in py-files/developer.py line 182:")
-            print(format_command(command) + "\n")
-        else:
-            try:
-                subprocess.Popen(command.split(), cwd=folder_path) 
-                self.input_15_0.setText(self.pp_file_name)
-                msg = "Protocol parameters file successfully generated." 
-                QMessageBox.information(self, "Notification:", msg)
-            except Exception:
-                output = traceback.format_exc()
-                log_error_msg(output)
-                
-                msg = "Protocol parameters file could not be generated.\n" + \
-                      "Check if cardano node is running and is synced.\n" + \
-                      "Look at the error.log file for error output." 
-                QMessageBox.warning(self, "Notification:", msg,
-                                    QMessageBox.Close)  
 
 # Writes an error message to a log file# Writes an error message to a log file 
 def log_error_msg(output):

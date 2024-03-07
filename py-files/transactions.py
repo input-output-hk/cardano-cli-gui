@@ -291,7 +291,7 @@ class Transactions(QWidget):
             QMessageBox.warning(self, "Notification:", msg,
                                 QMessageBox.Close)
             return None
-        elif not (skey_name[-5:] == ".vkey"):
+        elif not (skey_name[-5:] == ".skey"):
             msg = "Signing key has to have a .skey file extension name.\n" + \
                   "Please enter a file name with a .skey extension." 
             QMessageBox.warning(self, "Notification:", msg,
