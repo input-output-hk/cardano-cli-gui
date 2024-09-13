@@ -23,8 +23,11 @@ library installed. Once installed download this repository, open a terminal in i
 python cardano-cli-gui.py
 ```
 
-| :point_up:    | Most of the GUIs functionality requires a Cardano node to be running on the same OS you are running the GUI. The node has to be synced to a test or main network.|
-|---------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| :information_source: | Most of the GUIs functionality requires a Cardano node to be running on the same OS you are running the GUI. The node has to be synced to a test or main network.|
+|----------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+
+Installing cardano-node and cardano-cli
+---------------------------------------
 
 To run a cardano node download it from the [Cardano node releases](https://github.com/input-output-hk/cardano-node/releases) page and install it. The installer files are located under the Assets section that needs to be expanded. Add all executable files including the `cardano-node` and `cardano-cli` to you system path, e.g. copy them to `/usr/local/bin/` if you are using a Linux OS. 
 
@@ -62,6 +65,9 @@ You can also check the sync progress for the preview or preprod testnet with the
 cardano-cli query tip --testnet-magic <testnet_number> 
 ```
 For the testnet number use 1 for preprod and 2 for preview. 
+
+| :information_source: | In oder to use cardano-cli actions that interact with the blockchain the cardano node has to be running and synced. |  
+|----------------------|:--------------------------------------------------------------------------------------------------------------------|  
 
 GUI layout
 ----------
